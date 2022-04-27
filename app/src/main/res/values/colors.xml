@@ -5,6 +5,16 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="grey">#808080</color>
+    <color name="dark_grey">#111212</color>
+
+    <color name="cork">#44281D</color>
+    <color name="tonys_pink">#E4A788</color>
+    <color name="starship">#F0E14A</color>
+    <color name="atlantis">#83B540</color>
+    <color name="kobi">#E89AC7</color>
+
 </resources>
