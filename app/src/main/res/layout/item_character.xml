@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="185dp"
     android:gravity="center">
 
     <androidx.cardview.widget.CardView
@@ -18,8 +18,8 @@
 
             <ImageView
                 android:id="@+id/character_image_view"
-                android:layout_width="180dp"
-                android:layout_height="180dp"
+                android:layout_width="170dp"
+                android:layout_height="170dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +29,7 @@
             <ImageView
                 android:id="@+id/shadow"
                 android:layout_width="0dp"
-                android:layout_height="180dp"
+                android:layout_height="170dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/gradient_shadow"
                 app:layout_constraintEnd_toEndOf="@+id/character_image_view"
@@ -38,7 +38,6 @@
 
             <TextView
                 android:id="@+id/character_name_textView"
-
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:paddingStart="8dp"

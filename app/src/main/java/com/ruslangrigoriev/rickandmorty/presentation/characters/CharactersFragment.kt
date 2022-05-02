@@ -9,28 +9,39 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.ruslangrigoriev.rickandmorty.R
+import com.ruslangrigoriev.rickandmorty.common.appComponent
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentCharactersBinding
 import com.ruslangrigoriev.rickandmorty.presentation.FragmentNavigator
 import com.ruslangrigoriev.rickandmorty.presentation.MainActivity
+import com.ruslangrigoriev.rickandmorty.presentation.adapters.LoaderStateAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.characterDetails.CharacterDetailsFragment
+import com.ruslangrigoriev.rickandmorty.presentation.adapters.CharactersPagingAdapter
+import javax.inject.Inject
 
 class CharactersFragment : Fragment(R.layout.fragment_characters) {
-    private var navigator: FragmentNavigator? = null
+
+    @Inject
+    lateinit var navigator: FragmentNavigator
+    @Inject
+    lateinit var viewModel: CharactersViewModel
     private val binding: FragmentCharactersBinding by viewBinding()
-    private val viewModel: CharactersViewModel by viewModels()
+    private lateinit var pagingAdapter: CharactersPagingAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is FragmentNavigator) {
-            navigator = context
-        }
+        context.appComponent.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,7 +49,47 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
         (activity as MainActivity).supportActionBar?.title = "Characters"
         createMenu()
+        initRecyclerView()
+        subscribeUI()
+    }
 
+    private fun initRecyclerView() {
+        pagingAdapter = CharactersPagingAdapter { id -> onListItemClick(id) }
+        val gridLM = GridLayoutManager(activity, 2)
+        val loaderStateAdapter = LoaderStateAdapter { pagingAdapter.retry() }
+        gridLM.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (position == pagingAdapter.itemCount && loaderStateAdapter.itemCount > 0) {
+                    2
+                } else {
+                    1
+                }
+            }
+        }
+        pagingAdapter.addLoadStateListener { loadState ->
+            binding.charactersProgressBar.isVisible = loadState.refresh is LoadState.Loading
+        }
+
+        binding.charactersRecView.apply {
+            layoutManager = gridLM
+            adapter = pagingAdapter.withLoadStateFooter(loaderStateAdapter)
+        }
+    }
+
+    private fun subscribeUI() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.getAllCharacters().collect { pagingData ->
+                pagingAdapter.submitData(pagingData)
+            }
+        }
+    }
+
+    private fun onListItemClick(id: Int) {
+        navigator.navigate(
+            requireActivity() as AppCompatActivity,
+            CharacterDetailsFragment.newInstance(id),
+            true
+        )
     }
 
     private fun createMenu() {
