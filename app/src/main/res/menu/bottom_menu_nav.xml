@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/characters"
+        android:icon="@drawable/selector_characters"
+        android:orderInCategory="1"
+        android:title="Characters" />
+    <item
+        android:id="@+id/locations"
+        android:icon="@drawable/selector_locations"
+        android:orderInCategory="2"
+        android:title="Locations" />
+    <item
+        android:id="@+id/episodes"
+        android:icon="@drawable/selector_episodes"
+        android:orderInCategory="3"
+        android:title="Episodes" />
+
+</menu>

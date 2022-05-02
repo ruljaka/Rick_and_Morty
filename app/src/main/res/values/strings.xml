@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Rick and Morty</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="status">
+        <item>alive</item>
+        <item>dead</item>
+        <item>unknown</item>
+    </string-array>
+
+    <string-array name="gender">
+        <item>female</item>
+        <item>male</item>
+        <item>genderless</item>
+        <item>unknown</item>
+    </string-array>
+
 </resources>
