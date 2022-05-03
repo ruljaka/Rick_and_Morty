@@ -22,13 +22,6 @@ class CharacterRepositoryImpl @Inject constructor(
 
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    override fun getAllCharacters(): Flow<PagingData<CharacterDTO>> {
-        return Pager(
-            config = PagingConfig(pageSize = 20),
-            pagingSourceFactory = { CharactersPagingSource(apiService) }
-        ).flow.flowOn(ioDispatcher)
-    }
-
     override suspend fun getCharacterById(characterID: Int): CharacterDTO? {
         return withContext(ioDispatcher) {
             apiService.getCharacterById(characterID).processApiCall()
@@ -41,13 +34,26 @@ class CharacterRepositoryImpl @Inject constructor(
         }
     }
 
-//    override suspend fun getCharacterById(characterID: Int): Flow<NetworkResult<CharacterDTO>> {
-//        return flow {
-//            emit(NetworkResult.Loading())
-//            emit(safeApiCall { apiService.getCharacterById(characterID) })
-//        }.flowOn(ioDispatcher)
-//
-//        //TODO
-//        // переписать без флоу, без  networkResult
-//    }
+    override fun getCharacters(
+        name: String?,
+        status: String?,
+        species: String?,
+        type: String?,
+        gender: String?
+    ): Flow<PagingData<CharacterDTO>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20),
+            pagingSourceFactory = {
+                CharactersPagingSource(
+                    name = name,
+                    status = status,
+                    species = species,
+                    type = type,
+                    gender = gender,
+                    apiService = apiService
+                )
+            }
+        ).flow.flowOn(ioDispatcher)
+    }
+
 }

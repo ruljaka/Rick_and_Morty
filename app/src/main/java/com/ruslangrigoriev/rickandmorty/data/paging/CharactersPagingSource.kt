@@ -9,6 +9,11 @@ import com.ruslangrigoriev.rickandmorty.data.remote.ApiService
 import retrofit2.Response
 
 class CharactersPagingSource(
+    private val name: String? = null,
+    private val status: String? = null,
+    private val species: String? = null,
+    private val type: String? = null,
+    private val gender: String? = null,
     private val apiService: ApiService,
 ) : PagingSource<Int, CharacterDTO>() {
 
@@ -24,7 +29,14 @@ class CharactersPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CharacterDTO> {
         return try {
             val currentPage = params.key ?: 1
-            val response: Response<CharacterResponse> = apiService.getAllCharacters(currentPage)
+            val response: Response<CharacterResponse> = apiService.getCharacters(
+                page = currentPage,
+                name = name,
+                status = status,
+                species = species,
+                type = type,
+                gender = gender
+            )
             responseData = response.body()?.characters ?: emptyList()  // TODO fix this
             Log.d("TAG", " page $currentPage responseData = $responseData")
             LoadResult.Page(

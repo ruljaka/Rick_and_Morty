@@ -7,8 +7,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface CharacterRepository {
 
-    fun getAllCharacters() : Flow<PagingData<CharacterDTO>>
-    //suspend fun getCharacterById(characterID: Int): Flow<NetworkResult<CharacterDTO>>
     suspend fun getCharacterById(characterID: Int): CharacterDTO?
-    suspend fun getCharacterEpisodes(ids: String) : List<EpisodeDTO>?
+    suspend fun getCharacterEpisodes(ids: String): List<EpisodeDTO>?
+    fun getCharacters(
+        name: String? = null,
+        status: String? = null,
+        species: String? = null,
+        type: String? = null,
+        gender: String? = null
+    ) : Flow<PagingData<CharacterDTO>>
 }

@@ -6,9 +6,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -19,21 +16,23 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.common.appComponent
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentCharactersBinding
 import com.ruslangrigoriev.rickandmorty.presentation.FragmentNavigator
 import com.ruslangrigoriev.rickandmorty.presentation.MainActivity
+import com.ruslangrigoriev.rickandmorty.presentation.adapters.CharactersPagingAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.adapters.LoaderStateAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.characterDetails.CharacterDetailsFragment
-import com.ruslangrigoriev.rickandmorty.presentation.adapters.CharactersPagingAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.characters.CharactersFilterDialog.Companion.CHARACTERS_DIALOG_ARG
+import com.ruslangrigoriev.rickandmorty.presentation.characters.CharactersFilterDialog.Companion.CHARACTERS_DIALOG_REQUEST_KEY
 import javax.inject.Inject
 
 class CharactersFragment : Fragment(R.layout.fragment_characters) {
 
     @Inject
     lateinit var navigator: FragmentNavigator
+
     @Inject
     lateinit var viewModel: CharactersViewModel
     private val binding: FragmentCharactersBinding by viewBinding()
@@ -78,7 +77,7 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
 
     private fun subscribeUI() {
         lifecycleScope.launchWhenStarted {
-            viewModel.getAllCharacters().collect { pagingData ->
+            viewModel.charactersFlow?.collect { pagingData ->
                 pagingAdapter.submitData(pagingData)
             }
         }
@@ -112,28 +111,16 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
     }
 
     private fun showFilter() {
-        val dialog = BottomSheetDialog(requireContext())
-        dialog.setContentView(R.layout.dialog_filter_characters)
-
-        val statusAdapter = ArrayAdapter(
-            requireContext(),
-            R.layout.item_dropdown_menu,
-            resources.getStringArray(R.array.status)
-        )
-        val statusSpinner = dialog.findViewById<AutoCompleteTextView>(R.id.status_ch_dg_act)
-        statusSpinner?.setAdapter(statusAdapter)
-        val genderAdapter = ArrayAdapter(
-            requireContext(),
-            R.layout.item_dropdown_menu,
-            resources.getStringArray(R.array.gender)
-        )
-        val genderSpinner = dialog.findViewById<AutoCompleteTextView>(R.id.gender_ch_dg_act)
-        genderSpinner?.setAdapter(genderAdapter)
-        val okBtn = dialog.findViewById<Button>(R.id.filter_char_btn)
-        okBtn?.setOnClickListener {
-            dialog.dismiss()
+        val dialog = CharactersFilterDialog.newInstance(viewModel.filter)
+        dialog.show(childFragmentManager, null)
+        childFragmentManager.setFragmentResultListener(
+            CHARACTERS_DIALOG_REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val filter = bundle.getSerializable(CHARACTERS_DIALOG_ARG) as CharactersFilter
+            viewModel.getCharacters(filter)
+            subscribeUI()
         }
-        dialog.show()
     }
 
 }
