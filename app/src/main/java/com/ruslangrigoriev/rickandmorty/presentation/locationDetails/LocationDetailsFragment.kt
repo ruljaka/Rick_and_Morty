@@ -9,7 +9,7 @@ import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.common.appComponent
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentLocationDetailsBinding
 import com.ruslangrigoriev.rickandmorty.presentation.FragmentNavigator
-import com.ruslangrigoriev.rickandmorty.presentation.MainActivity
+import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
 import javax.inject.Inject
 
 class LocationDetailsFragment : Fragment(R.layout.fragment_location_details) {

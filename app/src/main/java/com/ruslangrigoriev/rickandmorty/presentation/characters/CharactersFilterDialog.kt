@@ -10,22 +10,21 @@ import androidx.fragment.app.setFragmentResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.databinding.DialogFilterCharactersBinding
-import java.util.*
 
 class CharactersFilterDialog : BottomSheetDialogFragment() {
 
     lateinit var binding: DialogFilterCharactersBinding
-    private val filter: CharactersFilter?
-        get() = requireArguments().getSerializable(CHARACTERS_DIALOG_ARG) as CharactersFilter?
+    private val savedFilter: CharactersFilter?
+        get() = requireArguments().getSerializable(CHARACTERS_DIALOG_FILTER_ARG) as CharactersFilter?
 
     companion object {
-        const val CHARACTERS_DIALOG_ARG = "CHARACTERS_DIALOG_ARG"
+        const val CHARACTERS_DIALOG_FILTER_ARG = "CHARACTERS_DIALOG_FILTER_ARG"
         const val CHARACTERS_DIALOG_REQUEST_KEY = "CHARACTERS_DIALOG_REQUEST_KEY"
 
         @JvmStatic
-        fun newInstance(filter: CharactersFilter?) =
+        fun newInstance(savedFilter: CharactersFilter?) =
             CharactersFilterDialog().apply {
-                arguments = bundleOf(CHARACTERS_DIALOG_ARG to filter)
+                arguments = bundleOf(CHARACTERS_DIALOG_FILTER_ARG to savedFilter)
             }
     }
 
@@ -58,33 +57,38 @@ class CharactersFilterDialog : BottomSheetDialogFragment() {
                 resources.getStringArray(R.array.gender)
             )
             genderChDgAct.setAdapter(genderAdapter)
-            filter?.let {
+            savedFilter?.let {
                 nameChDgEditText.setText(it.name)
-                statusChDgAct.setText(it.status,false)
+                statusChDgAct.setText(it.status, false)
                 speciesChDgEditText.setText(it.species)
                 typeChDgEditText.setText(it.type)
-                genderChDgAct.setText(it.gender,false)
-            }
-            filterCharBtn.setOnClickListener {
-                val newFilter = CharactersFilter(
-                    name = nameChDgEditText.text.toString().lowercase(Locale.getDefault()).trim(),
-                    status = statusChDgAct.text.toString(),
-                    species = speciesChDgEditText.text.toString().lowercase(Locale.getDefault()).trim(),
-                    type = typeChDgEditText.text.toString().lowercase(Locale.getDefault()).trim(),
-                    gender = genderChDgAct.text.toString()
-                )
-                setFragmentResult(
-                    CHARACTERS_DIALOG_REQUEST_KEY,
-                    bundleOf(CHARACTERS_DIALOG_ARG to newFilter)
-                )
-                dismiss()
+                genderChDgAct.setText(it.gender, false)
             }
             resetCharBtn.setOnClickListener {
                 nameChDgEditText.text = null
-                statusChDgAct.setText(null,false)
+                statusChDgAct.setText(null, false)
                 speciesChDgEditText.text = null
                 typeChDgEditText.text = null
-                genderChDgAct.setText(null,false)
+                genderChDgAct.setText(null, false)
+            }
+            filterCharBtn.setOnClickListener {
+                val newFilter = CharactersFilter(
+                    name = if (nameChDgEditText.text.isNullOrEmpty()) null
+                    else nameChDgEditText.text.toString().trim(),
+                    status = if (statusChDgAct.text.isNullOrEmpty()) null
+                    else statusChDgAct.text.toString(),
+                    species = if (speciesChDgEditText.text.isNullOrEmpty()) null
+                    else speciesChDgEditText.text.toString().trim(),
+                    type = if (typeChDgEditText.text.isNullOrEmpty()) null
+                    else typeChDgEditText.text.toString().trim(),
+                    gender = if (genderChDgAct.text.isNullOrEmpty()) null
+                    else genderChDgAct.text.toString()
+                )
+                setFragmentResult(
+                    CHARACTERS_DIALOG_REQUEST_KEY,
+                    bundleOf(CHARACTERS_DIALOG_FILTER_ARG to newFilter)
+                )
+                dismiss()
             }
         }
     }

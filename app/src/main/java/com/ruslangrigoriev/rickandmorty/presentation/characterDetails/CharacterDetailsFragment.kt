@@ -15,8 +15,8 @@ import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentCharacterDetailsBinding
 import com.ruslangrigoriev.rickandmorty.domain.model.CharacterModel
 import com.ruslangrigoriev.rickandmorty.presentation.FragmentNavigator
-import com.ruslangrigoriev.rickandmorty.presentation.MainActivity
-import com.ruslangrigoriev.rickandmorty.presentation.adapters.EpisodesAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
+import com.ruslangrigoriev.rickandmorty.presentation.episodes.adapters.EpisodesAdapter
 import javax.inject.Inject
 
 class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {

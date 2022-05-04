@@ -41,8 +41,18 @@ fun List<String>.collectIds(): String {
     }
 }
 
+fun List<String>.toListIds(): List<Int> {
+    return this.map { (it.replace("\"", "").substring(it.lastIndexOf('/') + 1)).toInt() }
+}
+
+fun List<Int>.toRequestString(): String {
+    return this.joinToString(prefix = "[", postfix = "]")
+
+}
+
+
 fun String.getId(): Int {
-    return if(this.isNotEmpty()) {
+    return if (this.isNotEmpty()) {
         this.replace("\"", "")
             .substring(this.lastIndexOf('/') + 1).toInt()
     } else 0

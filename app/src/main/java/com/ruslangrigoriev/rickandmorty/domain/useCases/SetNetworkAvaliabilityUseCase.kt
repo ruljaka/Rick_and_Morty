@@ -3,9 +3,10 @@ package com.ruslangrigoriev.rickandmorty.domain.useCases
 import com.ruslangrigoriev.rickandmorty.domain.repository.CharacterRepository
 import javax.inject.Inject
 
-class GetCharacterEpisodesUseCase @Inject constructor(
+class SetNetworkAvaliabilityUseCase @Inject constructor(
     private val characterRepository: CharacterRepository
 ) {
-    suspend operator fun invoke(ids: List<Int>) =
-        characterRepository.getCharacterEpisodes(ids)
+    operator fun invoke(status: Boolean) {
+        characterRepository.setNetworkStatus(status)
+    }
 }

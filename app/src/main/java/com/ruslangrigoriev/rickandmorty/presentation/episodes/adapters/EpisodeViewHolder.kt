@@ -1,4 +1,4 @@
-package com.ruslangrigoriev.rickandmorty.presentation.adapters
+package com.ruslangrigoriev.rickandmorty.presentation.episodes.adapters
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

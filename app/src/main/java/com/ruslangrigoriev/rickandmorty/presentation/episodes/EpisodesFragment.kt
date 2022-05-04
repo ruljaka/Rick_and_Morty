@@ -10,7 +10,6 @@ import android.widget.Button
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -18,7 +17,7 @@ import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.common.appComponent
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentEpisodesBinding
 import com.ruslangrigoriev.rickandmorty.presentation.FragmentNavigator
-import com.ruslangrigoriev.rickandmorty.presentation.MainActivity
+import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
 import javax.inject.Inject
 
 class EpisodesFragment : Fragment(R.layout.fragment_episodes) {

@@ -1,4 +1,4 @@
-package com.ruslangrigoriev.rickandmorty.presentation.adapters
+package com.ruslangrigoriev.rickandmorty.presentation.characters.adapters
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
@@ -12,17 +12,17 @@ class CharacterViewHolder(
     private val onItemClicked: (id: Int) -> Unit,
 ) : RecyclerView.ViewHolder(view) {
 
-    fun bind(characterDTO: CharacterDTO) {
+    fun bind(character: CharacterDTO) {
         val binding = ItemCharacterBinding.bind(view)
         with(binding) {
             root.setOnClickListener {
-                onItemClicked(characterDTO.id)
+                onItemClicked(character.id)
             }
-            characterNameTextView.text = characterDTO.name
-            characterSpeciesTextView.text = characterDTO.species
-            characterGenderTextView.text = characterDTO.gender
-            characterImageView.load(characterDTO.image)
-            when (characterDTO.status) {
+            characterNameTextView.text = character.name
+            characterSpeciesTextView.text = character.species
+            characterGenderTextView.text = character.gender
+            characterImageView.load(character.image)
+            when (character.status) {
                 "Alive" -> {
                     characterStatusImageView.setImageResource(R.drawable.icon_status_alive)
                 }

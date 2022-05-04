@@ -35,7 +35,6 @@ class LoaderStateAdapter(private val retry: () -> Unit) :
         fun bind(loadState: LoadState) {
             val binding = ItemLoadStateFooterBinding.bind(view)
             with(binding) {
-                footerProgressBar.isVisible = loadState is LoadState.Loading
                 footerRetryBtn.isVisible = loadState is LoadState.Error
                 footerRetryBtn.setOnClickListener { retry.invoke() }
                 footerErrorTextView.isVisible = loadState is LoadState.Error

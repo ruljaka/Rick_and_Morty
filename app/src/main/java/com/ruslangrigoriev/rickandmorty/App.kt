@@ -2,6 +2,7 @@ package com.ruslangrigoriev.rickandmorty
 
 import android.app.Application
 import com.ruslangrigoriev.rickandmorty.di.AppComponent
+import com.ruslangrigoriev.rickandmorty.di.AppModule
 import com.ruslangrigoriev.rickandmorty.di.DaggerAppComponent
 
 class App : Application() {
@@ -11,6 +12,8 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        appComponent = DaggerAppComponent.create()
+        appComponent = DaggerAppComponent.builder()
+            .appModule( AppModule(this))
+            .build();
     }
 }

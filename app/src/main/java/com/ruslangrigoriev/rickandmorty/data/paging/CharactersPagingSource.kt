@@ -1,10 +1,10 @@
 package com.ruslangrigoriev.rickandmorty.data.paging
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
 import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterResponse
+import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
 import com.ruslangrigoriev.rickandmorty.data.remote.ApiService
 import retrofit2.Response
 
@@ -15,6 +15,7 @@ class CharactersPagingSource(
     private val type: String? = null,
     private val gender: String? = null,
     private val apiService: ApiService,
+    private val charactersDao: CharactersDao
 ) : PagingSource<Int, CharacterDTO>() {
 
     private lateinit var responseData: List<CharacterDTO>
@@ -37,8 +38,10 @@ class CharactersPagingSource(
                 type = type,
                 gender = gender
             )
-            responseData = response.body()?.characters ?: emptyList()  // TODO fix this
-            Log.d("TAG", " page $currentPage responseData = $responseData")
+            responseData = response.body()?.characters ?: emptyList()
+            if (responseData.isNotEmpty()) {
+                charactersDao.insertCharacters(responseData)
+            }
             LoadResult.Page(
                 data = responseData,
                 prevKey = if (currentPage == 1) null else currentPage.minus(1),

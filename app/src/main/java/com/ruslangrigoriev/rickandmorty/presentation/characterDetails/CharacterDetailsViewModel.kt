@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ruslangrigoriev.rickandmorty.common.collectIds
+import com.ruslangrigoriev.rickandmorty.common.toListIds
 import com.ruslangrigoriev.rickandmorty.domain.mappers.CharacterMapper
 import com.ruslangrigoriev.rickandmorty.domain.model.CharacterModel
 import com.ruslangrigoriev.rickandmorty.domain.useCases.GetCharacterByIdUseCase
@@ -30,12 +30,10 @@ class CharacterDetailsViewModel @Inject constructor(
         _requestState.value = RequestState.Loading()
         viewModelScope.launch(exceptionHandler) {
             val characterDTO = getCharacterByIdUseCase(characterID)
-            characterDTO?.let {
-                val episodeIds = characterDTO.episode.collectIds()
-                val episodes = getCharacterEpisodesUseCase(episodeIds)
-                val result = CharacterMapper.map(characterDTO, episodes ?: emptyList())
-                _requestState.postValue(RequestState.Success(data = result))
-            }
+            val episodeIds = characterDTO.episode.toListIds()
+            val episodes = getCharacterEpisodesUseCase(episodeIds)
+            val result = CharacterMapper.map(characterDTO, episodes ?: emptyList())
+            _requestState.postValue(RequestState.Success(data = result))
         }
     }
 }
