@@ -3,6 +3,7 @@ package com.ruslangrigoriev.rickandmorty.presentation.characterDetails
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -16,7 +17,8 @@ import com.ruslangrigoriev.rickandmorty.databinding.FragmentCharacterDetailsBind
 import com.ruslangrigoriev.rickandmorty.domain.model.CharacterModel
 import com.ruslangrigoriev.rickandmorty.presentation.FragmentNavigator
 import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
-import com.ruslangrigoriev.rickandmorty.presentation.episodes.adapters.EpisodesAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.characters.adapters.EpisodesAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.episodeDetails.EpisodeDetailsFragment
 import javax.inject.Inject
 
 class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
@@ -55,15 +57,15 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
 
     private fun fetchData() {
         viewModel.fetchCharacter(characterId)
-        viewModel.requestState.observe(this) { response ->
-            when (response) {
+        viewModel.requestState.observe(this) { state ->
+            when (state) {
                 is RequestState.Success -> {
                     binding.characterProgressBar.isVisible = false
-                    response.data?.let { bindUi(it) }
+                    state.data?.let { bindUi(it) }
                 }
                 is RequestState.Error -> {
                     binding.characterProgressBar.isVisible = false
-                    response.message?.showToast(requireContext())
+                    state.message?.showToast(requireContext())
                 }
                 is RequestState.Loading -> {
                     binding.characterProgressBar.isVisible = true
@@ -86,7 +88,10 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
                 genderChDetTv.text = getString(R.string.character_gender, gender)
                 originChDetTv.text = getString(R.string.character_origin, originName)
                 locationChDetTv.text = getString(R.string.character_location, locationName)
-                imageChDetImv.load(image)
+                imageChDetImv.load(image){
+                    placeholder(R.drawable.placeholder)
+                    error(R.drawable.placeholder)
+                }
                 when (status) {
                     "Alive" -> {
                         statusChDetImv.setImageResource(R.drawable.icon_status_alive)
@@ -104,10 +109,10 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
     }
 
     private fun onListItemClick(id: Int) {
-//        navigator.navigate(
-//            requireActivity() as AppCompatActivity,
-//            ?????????
-//            true
-//        )
+        navigator.navigate(
+            requireActivity() as AppCompatActivity,
+            EpisodeDetailsFragment.newInstance(id),
+            true
+        )
     }
 }

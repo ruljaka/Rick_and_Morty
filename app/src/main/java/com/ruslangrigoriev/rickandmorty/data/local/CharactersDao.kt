@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
-import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
 
 @Dao
 interface CharactersDao {
@@ -18,10 +17,10 @@ interface CharactersDao {
 
     @Query(
         """SELECT * FROM CharacterDTO 
-        WHERE (:name IS NULL OR name LIKE :name || '%' ) 
+        WHERE (:name IS NULL OR name LIKE '%' || :name || '%' ) 
         AND (:status IS NULL OR status = :status) 
-        AND (:species IS NULL OR species LIKE :species || '%' ) 
-        AND (:type IS NULL OR type LIKE :type || '%')
+        AND (:species IS NULL OR species LIKE '%' || :species || '%' ) 
+        AND (:type IS NULL OR type LIKE '%' || :type || '%')
         AND (:gender IS NULL OR gender = :gender)"""
     )
     fun getCharacters(

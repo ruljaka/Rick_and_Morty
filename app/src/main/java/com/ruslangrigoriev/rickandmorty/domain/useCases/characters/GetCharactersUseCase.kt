@@ -1,10 +1,10 @@
-package com.ruslangrigoriev.rickandmorty.domain.useCases
+package com.ruslangrigoriev.rickandmorty.domain.useCases.characters
 
-import com.ruslangrigoriev.rickandmorty.domain.repository.CharacterRepository
+import com.ruslangrigoriev.rickandmorty.domain.repository.CharactersRepository
 import javax.inject.Inject
 
 class GetCharactersUseCase @Inject constructor(
-    private val characterRepository: CharacterRepository
+    private val charactersRepository: CharactersRepository
 ) {
     operator fun invoke(
         name: String? = null,
@@ -12,7 +12,7 @@ class GetCharactersUseCase @Inject constructor(
         species: String? = null,
         type: String? = null,
         gender: String? = null
-    ) = characterRepository.getCharacters(
+    ) = charactersRepository.getCharacters(
         name = name,
         status = status,
         species = species,

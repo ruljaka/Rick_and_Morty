@@ -1,12 +1,16 @@
 package com.ruslangrigoriev.rickandmorty.domain.useCases
 
-import com.ruslangrigoriev.rickandmorty.domain.repository.CharacterRepository
+import com.ruslangrigoriev.rickandmorty.domain.repository.CharactersRepository
+import com.ruslangrigoriev.rickandmorty.domain.repository.EpisodesRepository
 import javax.inject.Inject
 
 class SetNetworkAvailabilityUseCase @Inject constructor(
-    private val characterRepository: CharacterRepository
+    private val charactersRepository: CharactersRepository,
+    private val episodesRepository: EpisodesRepository,
+
 ) {
     operator fun invoke(status: Boolean) {
-        characterRepository.setNetworkStatus(status)
+        charactersRepository.setNetworkStatus(status)
+        episodesRepository.setNetworkStatus(status)
     }
 }

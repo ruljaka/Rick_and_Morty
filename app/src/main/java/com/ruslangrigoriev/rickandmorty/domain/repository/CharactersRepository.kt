@@ -5,7 +5,7 @@ import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
 import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
 import kotlinx.coroutines.flow.Flow
 
-interface CharacterRepository {
+interface CharactersRepository {
 
     fun setNetworkStatus(status: Boolean)
     suspend fun getCharacterById(characterID: Int): CharacterDTO

@@ -1,7 +1,5 @@
 package com.ruslangrigoriev.rickandmorty.domain.model
 
-import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.Location
-import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.Origin
 import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
 
 data class CharacterModel(

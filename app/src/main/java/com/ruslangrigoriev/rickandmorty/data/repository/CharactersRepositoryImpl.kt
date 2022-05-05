@@ -11,7 +11,7 @@ import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
 import com.ruslangrigoriev.rickandmorty.data.local.EpisodesDao
 import com.ruslangrigoriev.rickandmorty.data.paging.CharactersPagingSource
 import com.ruslangrigoriev.rickandmorty.data.remote.ApiService
-import com.ruslangrigoriev.rickandmorty.domain.repository.CharacterRepository
+import com.ruslangrigoriev.rickandmorty.domain.repository.CharactersRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -19,12 +19,12 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class CharacterRepositoryImpl @Inject constructor(
+class CharactersRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val charactersDao: CharactersDao,
     private val episodesDao: EpisodesDao
 
-) : CharacterRepository {
+) : CharactersRepository {
 
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private var isNetworkAvailable: Boolean = false
@@ -57,9 +57,10 @@ class CharacterRepositoryImpl @Inject constructor(
     override fun getCharacters(
         name: String?, status: String?, species: String?, type: String?, gender: String?
     ): Flow<PagingData<CharacterDTO>> {
+        val pagingConfig = PagingConfig(pageSize = 20, enablePlaceholders = false)
         return when (isNetworkAvailable) {
             false -> {
-                Pager(config = PagingConfig(pageSize = 20))
+                Pager(config = pagingConfig)
                 {
                     charactersDao.getCharacters(
                         name = name,
@@ -71,18 +72,17 @@ class CharacterRepositoryImpl @Inject constructor(
                 }.flow.flowOn(ioDispatcher)
             }
             true -> {
-                Pager(config = PagingConfig(pageSize = 20),
-                    pagingSourceFactory = {
-                        CharactersPagingSource(
-                            name = name,
-                            status = status,
-                            species = species,
-                            type = type,
-                            gender = gender,
-                            apiService = apiService,
-                            charactersDao = charactersDao
-                        )
-                    }
+                Pager(config = pagingConfig, pagingSourceFactory = {
+                    CharactersPagingSource(
+                        name = name,
+                        status = status,
+                        species = species,
+                        type = type,
+                        gender = gender,
+                        apiService = apiService,
+                        charactersDao = charactersDao
+                    )
+                }
                 ).flow.flowOn(ioDispatcher)
             }
         }

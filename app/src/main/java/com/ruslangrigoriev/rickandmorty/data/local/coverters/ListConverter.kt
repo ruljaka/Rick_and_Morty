@@ -6,7 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 @ProvidedTypeConverter
-object EpisodeConverter : Converter<List<String>> {
+object ListConverter : Converter<List<String>> {
     private val gson = Gson()
 
     @TypeConverter

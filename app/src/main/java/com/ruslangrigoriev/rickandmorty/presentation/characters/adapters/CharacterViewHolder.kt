@@ -3,6 +3,7 @@ package com.ruslangrigoriev.rickandmorty.presentation.characters.adapters
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import coil.request.CachePolicy
 import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
 import com.ruslangrigoriev.rickandmorty.databinding.ItemCharacterBinding
@@ -21,7 +22,10 @@ class CharacterViewHolder(
             characterNameTextView.text = character.name
             characterSpeciesTextView.text = character.species
             characterGenderTextView.text = character.gender
-            characterImageView.load(character.image)
+            characterImageView.load(character.image){
+                placeholder(R.drawable.placeholder)
+                error(R.drawable.placeholder)
+            }
             when (character.status) {
                 "Alive" -> {
                     characterStatusImageView.setImageResource(R.drawable.icon_status_alive)

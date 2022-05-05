@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.ruslangrigoriev.rickandmorty.common.toListIds
 import com.ruslangrigoriev.rickandmorty.domain.mappers.CharacterMapper
 import com.ruslangrigoriev.rickandmorty.domain.model.CharacterModel
-import com.ruslangrigoriev.rickandmorty.domain.useCases.GetCharacterByIdUseCase
-import com.ruslangrigoriev.rickandmorty.domain.useCases.GetCharacterEpisodesUseCase
+import com.ruslangrigoriev.rickandmorty.domain.useCases.characters.GetCharacterByIdUseCase
+import com.ruslangrigoriev.rickandmorty.domain.useCases.characters.GetCharacterEpisodesUseCase
 import com.ruslangrigoriev.rickandmorty.presentation.RequestState
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -30,10 +30,10 @@ class CharacterDetailsViewModel @Inject constructor(
         _requestState.value = RequestState.Loading()
         viewModelScope.launch(exceptionHandler) {
             val characterDTO = getCharacterByIdUseCase(characterID)
-            val episodeIds = characterDTO.episode.toListIds()
-            val episodes = getCharacterEpisodesUseCase(episodeIds)
-            val result = CharacterMapper.map(characterDTO, episodes ?: emptyList())
-            _requestState.postValue(RequestState.Success(data = result))
+            val episodesIds = characterDTO.episode.toListIds()
+            val episodes = getCharacterEpisodesUseCase(episodesIds)
+            val characterModel = CharacterMapper.map(characterDTO, episodes ?: emptyList())
+            _requestState.postValue(RequestState.Success(data = characterModel))
         }
     }
 }

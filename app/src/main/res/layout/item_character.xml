@@ -21,10 +21,11 @@
                 android:layout_width="170dp"
                 android:layout_height="170dp"
                 android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="@+id/shadow"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/tools_character_image" />
+                android:src="@drawable/placeholder" />
 
             <ImageView
                 android:id="@+id/shadow"

@@ -31,10 +31,20 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splashScreen = installSplashScreen()
+        startSplashScreen(savedInstanceState)
         super.onCreate(savedInstanceState)
+
         this.appComponent.inject(this)
         checkConnection()
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        setupBottomNavigation()
+        checkConnection()
+
+    }
+
+    private fun startSplashScreen(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         splashScreen.setKeepOnScreenCondition { keep }
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
@@ -43,12 +53,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 binding.bttmNav.selectedItemId = R.id.characters
             }
         }, delay)
-
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        setupBottomNavigation()
-        checkConnection()
-
     }
 
     private fun setupBottomNavigation() {

@@ -93,14 +93,11 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
             adapter = pagingAdapter.withLoadStateFooter(loaderStateAdapter)
         }
 
-        pagingAdapter.addOnPagesUpdatedListener {
-            binding.nothingCharactersTextView.isVisible = pagingAdapter.itemCount < 1
-        }
         pagingAdapter.addLoadStateListener { loadState ->
             binding.charactersSwipeContainer.isRefreshing = loadState.refresh is LoadState.Loading
-                    || loadState.append is LoadState.Loading
             if (loadState.refresh is LoadState.Error)
                 (loadState.refresh as LoadState.Error).error.message?.showToast(requireContext())
+            binding.nothingCharactersTextView.isVisible =loadState.append.endOfPaginationReached && pagingAdapter.itemCount < 1
         }
     }
 
@@ -114,7 +111,7 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
             )
             charactersSwipeContainer.setOnRefreshListener {
                 viewModel.getCharacters()
-                pagingAdapter.refresh()
+                subscribeUI()
             }
         }
     }
@@ -176,5 +173,4 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
             subscribeUI()
         }
     }
-
 }
