@@ -48,7 +48,6 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/filter_ep_btn"
         android:layout_width="wrap_content"
@@ -59,6 +58,18 @@
         android:text="Filter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/reset_ep_btn"
         app:layout_constraintTop_toBottomOf="@+id/episode_ep_dg_til" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/reset_ep_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/atlantis"
+        android:text="Reset"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/filter_ep_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/filter_ep_btn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

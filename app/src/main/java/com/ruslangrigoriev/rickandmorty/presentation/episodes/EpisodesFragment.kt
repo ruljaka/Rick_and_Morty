@@ -10,25 +10,26 @@ import android.widget.Button
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.ruslangrigoriev.rickandmorty.R
+import com.ruslangrigoriev.rickandmorty.common.appComponent
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentEpisodesBinding
 import com.ruslangrigoriev.rickandmorty.presentation.FragmentNavigator
-import com.ruslangrigoriev.rickandmorty.presentation.MainActivity
+import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
+import javax.inject.Inject
 
 class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
-    private var navigator: FragmentNavigator? = null
+    @Inject
+    lateinit var navigator: FragmentNavigator
+    @Inject
+    lateinit var viewModel: EpisodesViewModel
     private val binding: FragmentEpisodesBinding by viewBinding()
-    private val viewModel: EpisodesViewModel by viewModels()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is FragmentNavigator) {
-            navigator = context
-        }
+        context.appComponent.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

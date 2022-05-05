@@ -6,31 +6,45 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import androidx.paging.filter
+import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.ruslangrigoriev.rickandmorty.R
+import com.ruslangrigoriev.rickandmorty.common.appComponent
+import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentCharactersBinding
 import com.ruslangrigoriev.rickandmorty.presentation.FragmentNavigator
-import com.ruslangrigoriev.rickandmorty.presentation.MainActivity
+import com.ruslangrigoriev.rickandmorty.presentation.adapters.LoaderStateAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.characterDetails.CharacterDetailsFragment
+import com.ruslangrigoriev.rickandmorty.presentation.characters.CharactersFilterDialog.Companion.CHARACTERS_DIALOG_FILTER_ARG
+import com.ruslangrigoriev.rickandmorty.presentation.characters.CharactersFilterDialog.Companion.CHARACTERS_DIALOG_REQUEST_KEY
+import com.ruslangrigoriev.rickandmorty.presentation.characters.adapters.CharactersPagingAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
+import java.util.*
+import javax.inject.Inject
 
 class CharactersFragment : Fragment(R.layout.fragment_characters) {
-    private var navigator: FragmentNavigator? = null
+
+    @Inject
+    lateinit var navigator: FragmentNavigator
+    @Inject
+    lateinit var viewModel: CharactersViewModel
     private val binding: FragmentCharactersBinding by viewBinding()
-    private val viewModel: CharactersViewModel by viewModels()
+    private var searchQuery: String? = null
+    private lateinit var pagingAdapter: CharactersPagingAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is FragmentNavigator) {
-            navigator = context
-        }
+        context.appComponent.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,7 +52,93 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
         (activity as MainActivity).supportActionBar?.title = "Characters"
         createMenu()
+        initRecyclerView()
+        initSwipeToRefresh()
+        initSearch()
+        subscribeUI()
+    }
 
+    private fun subscribeUI() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.charactersFlow?.collect { pagingData ->
+                if (searchQuery.isNullOrEmpty()) {
+                    pagingAdapter.submitData(pagingData)
+                } else {
+                    val query = searchQuery!!.lowercase(Locale.getDefault()).trim()
+                    val data = pagingData.filter {
+                        it.name.lowercase(Locale.getDefault()).contains(query)
+                                || it.species.lowercase(Locale.getDefault()).contains(query)
+                    }
+                    pagingAdapter.submitData(data)
+                }
+            }
+        }
+    }
+
+    private fun initRecyclerView() {
+        pagingAdapter = CharactersPagingAdapter { id -> onListItemClick(id) }
+        val gridLM = GridLayoutManager(activity, 2)
+        val loaderStateAdapter = LoaderStateAdapter { pagingAdapter.retry() }
+        gridLM.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (position == pagingAdapter.itemCount && loaderStateAdapter.itemCount > 0) {
+                    2
+                } else {
+                    1
+                }
+            }
+        }
+        binding.charactersRecView.apply {
+            layoutManager = gridLM
+            adapter = pagingAdapter.withLoadStateFooter(loaderStateAdapter)
+        }
+
+        pagingAdapter.addLoadStateListener { loadState ->
+            binding.charactersSwipeContainer.isRefreshing = loadState.refresh is LoadState.Loading
+            if (loadState.refresh is LoadState.Error)
+                (loadState.refresh as LoadState.Error).error.message?.showToast(requireContext())
+            binding.nothingCharactersTextView.isVisible =loadState.append.endOfPaginationReached && pagingAdapter.itemCount < 1
+        }
+    }
+
+    private fun initSwipeToRefresh() {
+        with(binding) {
+            charactersSwipeContainer.setColorSchemeColors(
+                resources.getColor(
+                    R.color.atlantis,
+                    null
+                )
+            )
+            charactersSwipeContainer.setOnRefreshListener {
+                viewModel.getCharacters()
+                subscribeUI()
+            }
+        }
+    }
+
+    private fun initSearch() {
+        binding.charactersSearchView.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchQuery = query
+                pagingAdapter.refresh()
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                searchQuery = newText
+                pagingAdapter.refresh()
+                return false
+            }
+        })
+    }
+
+    private fun onListItemClick(id: Int) {
+        navigator.navigate(
+            requireActivity() as AppCompatActivity,
+            CharacterDetailsFragment.newInstance(id),
+            true
+        )
     }
 
     private fun createMenu() {
@@ -61,28 +161,16 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
     }
 
     private fun showFilter() {
-        val dialog = BottomSheetDialog(requireContext())
-        dialog.setContentView(R.layout.dialog_filter_characters)
+        val dialog = CharactersFilterDialog.newInstance(viewModel.charactersFilter)
+        dialog.show(childFragmentManager, null)
 
-        val statusAdapter = ArrayAdapter(
-            requireContext(),
-            R.layout.item_dropdown_menu,
-            resources.getStringArray(R.array.status)
-        )
-        val statusSpinner = dialog.findViewById<AutoCompleteTextView>(R.id.status_ch_dg_act)
-        statusSpinner?.setAdapter(statusAdapter)
-        val genderAdapter = ArrayAdapter(
-            requireContext(),
-            R.layout.item_dropdown_menu,
-            resources.getStringArray(R.array.gender)
-        )
-        val genderSpinner = dialog.findViewById<AutoCompleteTextView>(R.id.gender_ch_dg_act)
-        genderSpinner?.setAdapter(genderAdapter)
-        val okBtn = dialog.findViewById<Button>(R.id.filter_char_btn)
-        okBtn?.setOnClickListener {
-            dialog.dismiss()
+        childFragmentManager.setFragmentResultListener(
+            CHARACTERS_DIALOG_REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val filter = bundle.getSerializable(CHARACTERS_DIALOG_FILTER_ARG) as CharactersFilter
+            viewModel.getCharacters(filter)
+            subscribeUI()
         }
-        dialog.show()
     }
-
 }
