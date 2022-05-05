@@ -3,26 +3,39 @@ package com.ruslangrigoriev.rickandmorty.presentation.locations
 import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.widget.Button
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import androidx.paging.filter
+import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.common.appComponent
+import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentLocationsBinding
 import com.ruslangrigoriev.rickandmorty.presentation.FragmentNavigator
+import com.ruslangrigoriev.rickandmorty.presentation.adapters.LoaderStateAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.locationDetails.LocationDetailsFragment
+import com.ruslangrigoriev.rickandmorty.presentation.locations.adapters.LocationsPagingAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
+import java.util.*
 import javax.inject.Inject
 
 class LocationsFragment : Fragment(R.layout.fragment_locations) {
     @Inject
     lateinit var navigator: FragmentNavigator
+
     @Inject
     lateinit var viewModel: LocationsViewModel
     private val binding: FragmentLocationsBinding by viewBinding()
+    private var searchQuery: String? = null
+    private lateinit var pagingAdapter: LocationsPagingAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -34,7 +47,95 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
         (activity as MainActivity).supportActionBar?.title = "Locations"
         createMenu()
+        initRecyclerView()
+        initSwipeToRefresh()
+        initSearch()
+        subscribeUI()
+    }
 
+    private fun subscribeUI() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.locationsFlow?.collect { pagingData ->
+                if (searchQuery.isNullOrEmpty()) {
+                    pagingAdapter.submitData(pagingData)
+                } else {
+                    val query = searchQuery!!.lowercase(Locale.getDefault()).trim()
+                    val data = pagingData.filter {
+                        it.name.lowercase(Locale.getDefault()).contains(query)
+                                || it.type.lowercase(Locale.getDefault()).contains(query)
+                                || it.dimension.lowercase(Locale.getDefault()).contains(query)
+                    }
+                    pagingAdapter.submitData(data)
+                }
+            }
+        }
+    }
+
+    private fun initRecyclerView() {
+        pagingAdapter = LocationsPagingAdapter { id -> onListItemClick(id) }
+        val gridLM = GridLayoutManager(activity, 2)
+        val loaderStateAdapter = LoaderStateAdapter { pagingAdapter.retry() }
+        gridLM.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (position == pagingAdapter.itemCount && loaderStateAdapter.itemCount > 0) {
+                    2
+                } else {
+                    1
+                }
+            }
+        }
+        binding.locationsRecyclerView.apply {
+            layoutManager = gridLM
+            adapter = pagingAdapter.withLoadStateFooter(loaderStateAdapter)
+        }
+
+        pagingAdapter.addLoadStateListener { loadState ->
+            binding.locationsSwipeContainer.isRefreshing = loadState.refresh is LoadState.Loading
+            if (loadState.refresh is LoadState.Error)
+                (loadState.refresh as LoadState.Error).error.message?.showToast(requireContext())
+            binding.locationsNothingTextView.isVisible =
+                loadState.append.endOfPaginationReached && pagingAdapter.itemCount < 1
+        }
+    }
+
+    private fun initSwipeToRefresh() {
+        with(binding) {
+            locationsSwipeContainer.setColorSchemeColors(
+                resources.getColor(
+                    R.color.atlantis,
+                    null
+                )
+            )
+            locationsSwipeContainer.setOnRefreshListener {
+                viewModel.getLocations()
+                subscribeUI()
+            }
+        }
+    }
+
+    private fun initSearch() {
+        binding.locationsSearchView.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchQuery = query
+                pagingAdapter.refresh()
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                searchQuery = newText
+                pagingAdapter.refresh()
+                return false
+            }
+        })
+    }
+
+    private fun onListItemClick(id: Int) {
+        navigator.navigate(
+            requireActivity() as AppCompatActivity,
+            LocationDetailsFragment.newInstance(id),
+            true
+        )
     }
 
     private fun createMenu() {
@@ -43,6 +144,7 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_filter, menu)
             }
+
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.filter -> {
@@ -55,14 +157,19 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
         }, viewLifecycleOwner, Lifecycle.State.STARTED)
     }
 
-    private fun showFilter(){
-        val dialog = BottomSheetDialog(requireContext())
-        dialog.setContentView(R.layout.dialog_filter_locations)
-        val okBtn = dialog.findViewById<Button>(R.id.filter_loc_btn)
-        okBtn?.setOnClickListener {
-            dialog.dismiss()
+    private fun showFilter() {
+        val dialog = LocationsFilterDialog.newInstance(viewModel.locationsFilter)
+        dialog.show(childFragmentManager, null)
+
+        childFragmentManager.setFragmentResultListener(
+            LocationsFilterDialog.LOCATIONS_DIALOG_REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val filter =
+                bundle.getSerializable(LocationsFilterDialog.LOCATIONS_DIALOG_FILTER_ARG) as LocationsFilter
+            viewModel.getLocations(filter)
+            subscribeUI()
         }
-        dialog.show()
     }
 
 }

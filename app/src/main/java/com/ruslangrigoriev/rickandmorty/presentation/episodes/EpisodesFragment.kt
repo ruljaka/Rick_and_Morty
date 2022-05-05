@@ -33,7 +33,6 @@ import javax.inject.Inject
 class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
     @Inject
     lateinit var navigator: FragmentNavigator
-
     @Inject
     lateinit var viewModel: EpisodesViewModel
     private val binding: FragmentEpisodesBinding by viewBinding()

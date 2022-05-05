@@ -6,12 +6,12 @@ import androidx.paging.PagingData
 import com.ruslangrigoriev.rickandmorty.common.processApiCall
 import com.ruslangrigoriev.rickandmorty.common.toRequestString
 import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
-import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
+import com.ruslangrigoriev.rickandmorty.data.dto.locationDTO.LocationDTO
 import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
-import com.ruslangrigoriev.rickandmorty.data.local.EpisodesDao
-import com.ruslangrigoriev.rickandmorty.data.paging.EpisodesPagingSource
+import com.ruslangrigoriev.rickandmorty.data.local.LocationsDao
+import com.ruslangrigoriev.rickandmorty.data.paging.LocationsPagingSource
 import com.ruslangrigoriev.rickandmorty.data.remote.ApiService
-import com.ruslangrigoriev.rickandmorty.domain.repository.EpisodesRepository
+import com.ruslangrigoriev.rickandmorty.domain.repository.LocationsRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -19,12 +19,12 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class EpisodesRepositoryImpl @Inject constructor(
+class LocationsRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val charactersDao: CharactersDao,
-    private val episodesDao: EpisodesDao
+    private val locationsDao: LocationsDao
 
-) : EpisodesRepository {
+) : LocationsRepository {
 
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private var isNetworkAvailable: Boolean = false
@@ -33,17 +33,17 @@ class EpisodesRepositoryImpl @Inject constructor(
         isNetworkAvailable = status
     }
 
-    override suspend fun getEpisodeById(episodeID: Int): EpisodeDTO {
+    override suspend fun getLocationById(locationID: Int): LocationDTO {
         return withContext(ioDispatcher) {
             if (isNetworkAvailable) {
-                apiService.getEpisodeById(episodeID).processApiCall()
-                    ?.apply { episodesDao.insertEpisode(this) }
+                apiService.getLocationById(locationID).processApiCall()
+                    ?.apply { locationsDao.insertLocation(this) }
             }
-            episodesDao.getEpisodeById(episodeID)
+            locationsDao.getLocationById(locationID)
         }
     }
 
-    override suspend fun getEpisodeCharacters(ids: List<Int>): List<CharacterDTO> {
+    override suspend fun getLocationResidents(ids: List<Int>): List<CharacterDTO> {
         return withContext(ioDispatcher) {
             if (isNetworkAvailable) {
                 apiService.getListCharactersByIds(ids.toRequestString()).processApiCall()
@@ -54,27 +54,29 @@ class EpisodesRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getEpisodes(
-        name: String?, episode: String?
-    ): Flow<PagingData<EpisodeDTO>> {
+    override fun getLocations(
+        name: String?, type: String?, dimension: String?
+    ): Flow<PagingData<LocationDTO>> {
         return when (isNetworkAvailable) {
             false -> {
                 Pager(config = PagingConfig(pageSize = 20))
                 {
-                    episodesDao.getEpisodes(
+                    locationsDao.getLocations(
                         name = name,
-                        episode = episode,
+                        type = type,
+                        dimension = dimension,
                     )
                 }.flow.flowOn(ioDispatcher)
             }
             true -> {
                 Pager(config = PagingConfig(pageSize = 20),
                     pagingSourceFactory = {
-                        EpisodesPagingSource(
+                        LocationsPagingSource(
                             name = name,
-                            episode = episode,
+                            type = type,
+                            dimension = dimension,
                             apiService = apiService,
-                            episodesDao = episodesDao
+                            locationsDao = locationsDao
                         )
                     }
                 ).flow.flowOn(ioDispatcher)

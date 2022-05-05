@@ -17,7 +17,7 @@ import com.ruslangrigoriev.rickandmorty.databinding.FragmentCharacterDetailsBind
 import com.ruslangrigoriev.rickandmorty.domain.model.CharacterModel
 import com.ruslangrigoriev.rickandmorty.presentation.FragmentNavigator
 import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
-import com.ruslangrigoriev.rickandmorty.presentation.characters.adapters.EpisodesAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.episodes.adapters.EpisodesAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.episodeDetails.EpisodeDetailsFragment
 import javax.inject.Inject
 

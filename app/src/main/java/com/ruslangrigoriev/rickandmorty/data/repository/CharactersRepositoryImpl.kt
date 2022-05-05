@@ -46,7 +46,7 @@ class CharactersRepositoryImpl @Inject constructor(
     override suspend fun getCharacterEpisodes(ids: List<Int>): List<EpisodeDTO> {
         return withContext(ioDispatcher) {
             if (isNetworkAvailable) {
-                apiService.getCharacterEpisodes(ids.toRequestString()).processApiCall()
+                apiService.getListEpisodesByIds(ids.toRequestString()).processApiCall()
                     ?.apply { episodesDao.insertEpisodes(this) }
 
             }

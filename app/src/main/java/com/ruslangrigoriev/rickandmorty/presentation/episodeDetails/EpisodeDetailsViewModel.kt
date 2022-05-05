@@ -31,7 +31,8 @@ class EpisodeDetailsViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             val episodeDTO = getEpisodeByIdUseCase(episodeID)
             val charactersIds = episodeDTO.characters.toListIds()
-            val characters = getEpisodeCharactersUseCase(charactersIds)
+            val characters =
+                if (charactersIds.isNotEmpty()) getEpisodeCharactersUseCase(charactersIds) else null
             val episodeModel = EpisodeMapper.map(episodeDTO, characters ?: emptyList())
             _requestState.postValue(RequestState.Success(data = episodeModel))
         }

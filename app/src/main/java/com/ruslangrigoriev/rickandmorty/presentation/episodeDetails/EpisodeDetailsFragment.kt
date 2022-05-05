@@ -8,30 +8,29 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
-import coil.load
 import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.common.appComponent
 import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentEpisodeDetailsBinding
-import com.ruslangrigoriev.rickandmorty.domain.model.CharacterModel
 import com.ruslangrigoriev.rickandmorty.domain.model.EpisodeModel
 import com.ruslangrigoriev.rickandmorty.presentation.FragmentNavigator
 import com.ruslangrigoriev.rickandmorty.presentation.RequestState
 import com.ruslangrigoriev.rickandmorty.presentation.characterDetails.CharacterDetailsFragment
-import com.ruslangrigoriev.rickandmorty.presentation.episodes.adapters.CharactersAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.characters.adapters.CharactersAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
 import javax.inject.Inject
 
 class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
-
     @Inject
     lateinit var navigator: FragmentNavigator
+
     @Inject
     lateinit var viewModel: EpisodeDetailsViewModel
     private val binding: FragmentEpisodeDetailsBinding by viewBinding()
+    private lateinit var charactersAdapter: CharactersAdapter
     private val characterId: Int
         get() = requireArguments().getInt(EPISODE_ID)
-    private lateinit var charactersAdapter: CharactersAdapter
+
 
     companion object {
         private const val EPISODE_ID = "EPISODE_ID"
@@ -82,10 +81,10 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
 
     private fun bindUi(episode: EpisodeModel) {
         with(binding) {
-                nameEpDetTv.text = episode.name
-                dateEpDetTv.text = episode.airDate
-                episodeEpDetTv.text = episode.episode
-                charactersAdapter.setData(episode.characters)
+            nameEpDetTv.text = episode.name
+            dateEpDetTv.text = episode.airDate
+            episodeEpDetTv.text = episode.episode
+            charactersAdapter.setData(episode.characters)
         }
     }
 
