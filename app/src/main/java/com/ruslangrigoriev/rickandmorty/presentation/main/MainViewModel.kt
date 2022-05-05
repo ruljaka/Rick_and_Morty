@@ -1,7 +1,7 @@
 package com.ruslangrigoriev.rickandmorty.presentation.main
 
 import androidx.lifecycle.ViewModel
-import com.ruslangrigoriev.rickandmorty.domain.useCases.SetNetworkAvaliabilityUseCase
+import com.ruslangrigoriev.rickandmorty.domain.useCases.SetNetworkAvailabilityUseCase
 import com.ruslangrigoriev.rickandmorty.presentation.network.NetworkStatus
 import com.ruslangrigoriev.rickandmorty.presentation.network.NetworkStatusTracker
 import kotlinx.coroutines.Dispatchers
@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     private val networkStatusTracker: NetworkStatusTracker,
-    private val setNetworkAvaliabilityUseCase: SetNetworkAvaliabilityUseCase
+    private val setNetworkAvailabilityUseCase: SetNetworkAvailabilityUseCase
 
 ) : ViewModel() {
 
@@ -20,6 +20,6 @@ class MainViewModel @Inject constructor(
         get() = _state
 
     fun setNetworkStatus(status: Boolean) {
-        setNetworkAvaliabilityUseCase(status)
+        setNetworkAvailabilityUseCase(status)
     }
 }

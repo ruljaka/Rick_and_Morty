@@ -36,5 +36,4 @@ class CharactersPagingAdapter(
         getItem(position)?.let { holder.bind(it) }
     }
 
-
 }

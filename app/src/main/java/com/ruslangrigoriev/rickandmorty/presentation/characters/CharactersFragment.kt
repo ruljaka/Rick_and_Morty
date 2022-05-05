@@ -23,12 +23,12 @@ import com.ruslangrigoriev.rickandmorty.common.appComponent
 import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentCharactersBinding
 import com.ruslangrigoriev.rickandmorty.presentation.FragmentNavigator
-import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
 import com.ruslangrigoriev.rickandmorty.presentation.adapters.LoaderStateAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.characterDetails.CharacterDetailsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.characters.CharactersFilterDialog.Companion.CHARACTERS_DIALOG_FILTER_ARG
 import com.ruslangrigoriev.rickandmorty.presentation.characters.CharactersFilterDialog.Companion.CHARACTERS_DIALOG_REQUEST_KEY
 import com.ruslangrigoriev.rickandmorty.presentation.characters.adapters.CharactersPagingAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
 import java.util.*
 import javax.inject.Inject
 
@@ -36,7 +36,6 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
 
     @Inject
     lateinit var navigator: FragmentNavigator
-
     @Inject
     lateinit var viewModel: CharactersViewModel
     private val binding: FragmentCharactersBinding by viewBinding()
@@ -68,7 +67,7 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
                     val query = searchQuery!!.lowercase(Locale.getDefault()).trim()
                     val data = pagingData.filter {
                         it.name.lowercase(Locale.getDefault()).contains(query)
-                                || it.type.lowercase(Locale.getDefault()).contains(query)
+                                || it.species.lowercase(Locale.getDefault()).contains(query)
                     }
                     pagingAdapter.submitData(data)
                 }
@@ -115,7 +114,7 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
             )
             charactersSwipeContainer.setOnRefreshListener {
                 viewModel.getCharacters()
-                subscribeUI()
+                pagingAdapter.refresh()
             }
         }
     }
@@ -125,17 +124,13 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
             SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 searchQuery = query
-                viewModel.getCharacters()
-                subscribeUI()
+                pagingAdapter.refresh()
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (binding.charactersSearchView.hasFocus()) {
-                    searchQuery = newText
-                    viewModel.getCharacters()
-                    subscribeUI()
-                }
+                searchQuery = newText
+                pagingAdapter.refresh()
                 return false
             }
         })

@@ -27,15 +27,15 @@ class CharacterRepositoryImpl @Inject constructor(
 ) : CharacterRepository {
 
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-    private var isNetworkAvaliable: Boolean = false
+    private var isNetworkAvailable: Boolean = false
 
     override fun setNetworkStatus(status: Boolean) {
-        isNetworkAvaliable = status
+        isNetworkAvailable = status
     }
 
     override suspend fun getCharacterById(characterID: Int): CharacterDTO {
         return withContext(ioDispatcher) {
-            if (isNetworkAvaliable) {
+            if (isNetworkAvailable) {
                 apiService.getCharacterById(characterID).processApiCall()
                     ?.apply { charactersDao.insertCharacter(this) }
             }
@@ -45,7 +45,7 @@ class CharacterRepositoryImpl @Inject constructor(
 
     override suspend fun getCharacterEpisodes(ids: List<Int>): List<EpisodeDTO> {
         return withContext(ioDispatcher) {
-            if (isNetworkAvaliable) {
+            if (isNetworkAvailable) {
                 apiService.getCharacterEpisodes(ids.toRequestString()).processApiCall()
                     ?.apply { episodesDao.insertEpisodes(this) }
 
@@ -57,7 +57,7 @@ class CharacterRepositoryImpl @Inject constructor(
     override fun getCharacters(
         name: String?, status: String?, species: String?, type: String?, gender: String?
     ): Flow<PagingData<CharacterDTO>> {
-        return when (isNetworkAvaliable) {
+        return when (isNetworkAvailable) {
             false -> {
                 Pager(config = PagingConfig(pageSize = 20))
                 {
