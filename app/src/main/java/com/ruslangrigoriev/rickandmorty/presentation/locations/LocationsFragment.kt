@@ -2,7 +2,10 @@ package com.ruslangrigoriev.rickandmorty.presentation.locations
 
 import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
@@ -19,11 +22,13 @@ import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.common.appComponent
 import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentLocationsBinding
-import com.ruslangrigoriev.rickandmorty.presentation.FragmentNavigator
-import com.ruslangrigoriev.rickandmorty.presentation.adapters.LoaderStateAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
+import com.ruslangrigoriev.rickandmorty.presentation.common.LoaderStateAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.locationDetails.LocationDetailsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.locations.adapters.LocationsPagingAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.cancellable
 import java.util.*
 import javax.inject.Inject
 
@@ -36,6 +41,7 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
     private val binding: FragmentLocationsBinding by viewBinding()
     private var searchQuery: String? = null
     private lateinit var pagingAdapter: LocationsPagingAdapter
+    private var collectingJob: Job? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -54,8 +60,9 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
     }
 
     private fun subscribeUI() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.locationsFlow?.collect { pagingData ->
+        collectingJob?.cancel()
+        collectingJob = lifecycleScope.launchWhenStarted {
+            viewModel.locationsFlow?.cancellable()?.collect { pagingData ->
                 if (searchQuery.isNullOrEmpty()) {
                     pagingAdapter.submitData(pagingData)
                 } else {
@@ -130,6 +137,21 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
         })
     }
 
+    private fun showFilter() {
+        val dialog = LocationsFilterDialog.newInstance(viewModel.locationsFilter)
+        dialog.show(childFragmentManager, null)
+
+        childFragmentManager.setFragmentResultListener(
+            LocationsFilterDialog.LOCATIONS_DIALOG_REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val filter =
+                bundle.getSerializable(LocationsFilterDialog.LOCATIONS_DIALOG_FILTER_ARG) as LocationsFilter
+            viewModel.getLocations(filter)
+            subscribeUI()
+        }
+    }
+
     private fun onListItemClick(id: Int) {
         navigator.navigate(
             requireActivity() as AppCompatActivity,
@@ -155,21 +177,6 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.STARTED)
-    }
-
-    private fun showFilter() {
-        val dialog = LocationsFilterDialog.newInstance(viewModel.locationsFilter)
-        dialog.show(childFragmentManager, null)
-
-        childFragmentManager.setFragmentResultListener(
-            LocationsFilterDialog.LOCATIONS_DIALOG_REQUEST_KEY,
-            viewLifecycleOwner
-        ) { _, bundle ->
-            val filter =
-                bundle.getSerializable(LocationsFilterDialog.LOCATIONS_DIALOG_FILTER_ARG) as LocationsFilter
-            viewModel.getLocations(filter)
-            subscribeUI()
-        }
     }
 
 }

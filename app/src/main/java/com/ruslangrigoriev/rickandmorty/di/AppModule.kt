@@ -11,7 +11,7 @@ import com.ruslangrigoriev.rickandmorty.data.repository.LocationsRepositoryImpl
 import com.ruslangrigoriev.rickandmorty.domain.repository.CharactersRepository
 import com.ruslangrigoriev.rickandmorty.domain.repository.EpisodesRepository
 import com.ruslangrigoriev.rickandmorty.domain.repository.LocationsRepository
-import com.ruslangrigoriev.rickandmorty.presentation.FragmentNavigator
+import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
 import com.ruslangrigoriev.rickandmorty.presentation.network.NetworkStatusTracker
 import dagger.Module
 import dagger.Provides

@@ -1,4 +1,4 @@
-package com.ruslangrigoriev.rickandmorty.presentation
+package com.ruslangrigoriev.rickandmorty.presentation.common
 
 sealed class RequestState<T>(
     val data: T? = null,

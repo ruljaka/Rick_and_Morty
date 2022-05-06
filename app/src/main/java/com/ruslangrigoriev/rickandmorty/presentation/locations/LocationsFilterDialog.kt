@@ -8,7 +8,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.ruslangrigoriev.rickandmorty.R
-import com.ruslangrigoriev.rickandmorty.databinding.DialogFilterEpisodesBinding
 import com.ruslangrigoriev.rickandmorty.databinding.DialogFilterLocationsBinding
 
 class LocationsFilterDialog : BottomSheetDialogFragment() {
@@ -29,9 +28,7 @@ class LocationsFilterDialog : BottomSheetDialogFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         binding = DialogFilterLocationsBinding.bind(
             inflater.inflate(

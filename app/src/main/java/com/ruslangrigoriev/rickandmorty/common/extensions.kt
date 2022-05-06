@@ -18,7 +18,6 @@ fun String.showToast(context: Context) {
     Toast.makeText(context, this, Toast.LENGTH_SHORT).show()
 }
 
-
 fun <T> Response<T>.processApiCall(): T? {
     if (this.isSuccessful) {
         return this.body()
@@ -35,27 +34,19 @@ fun <T> Response<T>.processApiCall(): T? {
     }
 }
 
-fun List<String>.collectIds(): String {
-    return this.joinToString(prefix = "[", postfix = "]") {
-        (it.replace("\"", "").substring(it.lastIndexOf('/') + 1))
-    }
-}
-
 fun List<String>.toListIds(): List<Int> {
-    return this.map { (it.replace("\"", "").substring(it.lastIndexOf('/') + 1)).toInt() }
+    return this.map { (it.replace("\"", "").substringAfterLast('/')).toInt() }
 }
 
 fun List<Int>.toRequestString(): String {
     return this.joinToString(prefix = "[", postfix = "]")
-
 }
 
-
-fun String.getId(): Int {
+fun String.getId(): Int? {
     return if (this.isNotEmpty()) {
         this.replace("\"", "")
-            .substring(this.lastIndexOf('/') + 1).toInt()
-    } else 0
+            .substringAfterLast('/').toInt()
+    } else null
 }
 
 

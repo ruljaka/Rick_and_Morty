@@ -9,7 +9,7 @@ import com.ruslangrigoriev.rickandmorty.domain.mappers.LocationMapper
 import com.ruslangrigoriev.rickandmorty.domain.model.LocationModel
 import com.ruslangrigoriev.rickandmorty.domain.useCases.locations.GetLocationByIdUseCase
 import com.ruslangrigoriev.rickandmorty.domain.useCases.locations.GetLocationResidentsUseCase
-import com.ruslangrigoriev.rickandmorty.presentation.RequestState
+import com.ruslangrigoriev.rickandmorty.presentation.common.RequestState
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject

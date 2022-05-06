@@ -1,4 +1,4 @@
-package com.ruslangrigoriev.rickandmorty.presentation
+package com.ruslangrigoriev.rickandmorty.presentation.common
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -15,5 +15,4 @@ class FragmentNavigator {
         if (addToBackStack) transaction.addToBackStack(null)
         transaction.commit()
     }
-
 }

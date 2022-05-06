@@ -1,6 +1,5 @@
 package com.ruslangrigoriev.rickandmorty.di
 
-import com.ruslangrigoriev.rickandmorty.common.BASE_URL
 import com.ruslangrigoriev.rickandmorty.data.remote.ApiService
 import dagger.Module
 import dagger.Provides
@@ -10,6 +9,10 @@ import javax.inject.Singleton
 
 @Module
 class NetworkModule {
+
+    companion object {
+        private const val BASE_URL = "https://rickandmortyapi.com/api/"
+    }
 
     @Singleton
     @Provides
