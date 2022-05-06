@@ -33,7 +33,7 @@ interface CharactersDao {
     ): PagingSource<Int, CharacterDTO>
 
     @Query("SELECT * FROM CharacterDTO WHERE id = :characterID")
-    suspend fun getCharacterById(characterID: Int): CharacterDTO
+    suspend fun getCharacterById(characterID: Int): CharacterDTO?
 
     @Query("SELECT * FROM CharacterDTO WHERE id IN (:characterIds)")
     suspend fun getListCharactersByIds(characterIds: List<Int>): List<CharacterDTO>

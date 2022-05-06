@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface LocationsRepository {
 
     fun setNetworkStatus(status: Boolean)
-    suspend fun getLocationById(locationID: Int): LocationDTO
+    suspend fun getLocationById(locationID: Int): LocationDTO?
     suspend fun getLocationResidents(ids: List<Int>): List<CharacterDTO>?
     fun getLocations(
         name: String? = null,

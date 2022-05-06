@@ -51,8 +51,9 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         (activity as MainActivity).supportActionBar?.title = "Episode Details"
-        fetchData()
         initRecycler()
+        initSwipeToRefresh()
+        fetchData()
     }
 
     private fun fetchData() {
@@ -60,15 +61,18 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
         viewModel.requestState.observe(this) { state ->
             when (state) {
                 is RequestState.Success -> {
-                    binding.episodeProgressBar.isVisible = false
+                    binding.swipeEpDet.isRefreshing = false
+                    binding.layoutEpDet.isVisible = true
                     state.data?.let { bindUi(it) }
                 }
                 is RequestState.Error -> {
-                    binding.episodeProgressBar.isVisible = false
+                    binding.swipeEpDet.isRefreshing = false
+                    binding.layoutEpDet.isVisible = false
                     state.message?.showToast(requireContext())
                 }
                 is RequestState.Loading -> {
-                    binding.episodeProgressBar.isVisible = true
+                    binding.swipeEpDet.isRefreshing = true
+                    binding.layoutEpDet.isVisible = false
                 }
             }
         }
@@ -85,6 +89,20 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
             dateEpDetTv.text = episode.airDate
             episodeEpDetTv.text = episode.episode
             charactersAdapter.setData(episode.characters)
+        }
+    }
+
+    private fun initSwipeToRefresh() {
+        with(binding) {
+            swipeEpDet.setColorSchemeColors(
+                resources.getColor(
+                    R.color.atlantis,
+                    null
+                )
+            )
+            swipeEpDet.setOnRefreshListener {
+                fetchData()
+            }
         }
     }
 

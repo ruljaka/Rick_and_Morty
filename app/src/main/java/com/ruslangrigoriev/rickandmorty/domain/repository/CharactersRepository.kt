@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface CharactersRepository {
 
     fun setNetworkStatus(status: Boolean)
-    suspend fun getCharacterById(characterID: Int): CharacterDTO
+    suspend fun getCharacterById(characterID: Int): CharacterDTO?
     suspend fun getCharacterEpisodes(ids: List<Int>): List<EpisodeDTO>?
     fun getCharacters(
         name: String? = null,

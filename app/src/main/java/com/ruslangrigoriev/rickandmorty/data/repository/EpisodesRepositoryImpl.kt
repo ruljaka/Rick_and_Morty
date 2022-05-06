@@ -33,7 +33,7 @@ class EpisodesRepositoryImpl @Inject constructor(
         isNetworkAvailable = status
     }
 
-    override suspend fun getEpisodeById(episodeID: Int): EpisodeDTO {
+    override suspend fun getEpisodeById(episodeID: Int): EpisodeDTO? {
         return withContext(ioDispatcher) {
             if (isNetworkAvailable) {
                 apiService.getEpisodeById(episodeID).processApiCall()

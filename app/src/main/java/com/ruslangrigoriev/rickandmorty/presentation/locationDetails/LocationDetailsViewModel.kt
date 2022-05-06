@@ -28,13 +28,18 @@ class LocationDetailsViewModel @Inject constructor(
 
     fun fetchLocation(locationID: Int) {
         _requestState.value = RequestState.Loading()
-        viewModelScope.launch() {
+        viewModelScope.launch(exceptionHandler) {
             val locationDTO = getLocationByIdUseCase(locationID)
-            val residentsIds = locationDTO.residents.toListIds()
-            val residents =
-                if (residentsIds.isNotEmpty()) getLocationResidentsUseCase(residentsIds) else null
-            val locationModel = LocationMapper.map(locationDTO, residents ?: emptyList())
-            _requestState.postValue(RequestState.Success(data = locationModel))
+            if (locationDTO != null) {
+                val residentsIds = locationDTO.residents.toListIds()
+                val residents = getLocationResidentsUseCase(residentsIds)
+                val locationModel = LocationMapper.map(locationDTO, residents ?: emptyList())
+                _requestState.postValue(RequestState.Success(data = locationModel))
+            } else {
+                _requestState.postValue(
+                    RequestState.Error(message = "Not found \nCheck internet connection and try refresh")
+                )
+            }
         }
     }
 }

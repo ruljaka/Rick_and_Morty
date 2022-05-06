@@ -30,10 +30,16 @@ class CharacterDetailsViewModel @Inject constructor(
         _requestState.value = RequestState.Loading()
         viewModelScope.launch(exceptionHandler) {
             val characterDTO = getCharacterByIdUseCase(characterID)
-            val episodesIds = characterDTO.episode.toListIds()
-            val episodes = getCharacterEpisodesUseCase(episodesIds)
-            val characterModel = CharacterMapper.map(characterDTO, episodes ?: emptyList())
-            _requestState.postValue(RequestState.Success(data = characterModel))
+            if (characterDTO != null) {
+                val episodesIds = characterDTO.episode.toListIds()
+                val episodes = getCharacterEpisodesUseCase(episodesIds)
+                val characterModel = CharacterMapper.map(characterDTO, episodes ?: emptyList())
+                _requestState.postValue(RequestState.Success(data = characterModel))
+            } else {
+                _requestState.postValue(
+                    RequestState.Error(message = "Not found \nCheck internet connection and try refresh")
+                )
+            }
         }
     }
 }

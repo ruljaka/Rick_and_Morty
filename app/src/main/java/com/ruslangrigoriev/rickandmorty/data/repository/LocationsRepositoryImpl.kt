@@ -33,7 +33,7 @@ class LocationsRepositoryImpl @Inject constructor(
         isNetworkAvailable = status
     }
 
-    override suspend fun getLocationById(locationID: Int): LocationDTO {
+    override suspend fun getLocationById(locationID: Int): LocationDTO? {
         return withContext(ioDispatcher) {
             if (isNetworkAvailable) {
                 apiService.getLocationById(locationID).processApiCall()

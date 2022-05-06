@@ -53,8 +53,9 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         (activity as MainActivity).supportActionBar?.title = "Character Details"
-        fetchData()
         initRecycler()
+        initSwipeToRefresh()
+        fetchData()
     }
 
     private fun fetchData() {
@@ -62,15 +63,18 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
         viewModel.requestState.observe(this) { state ->
             when (state) {
                 is RequestState.Success -> {
-                    binding.characterProgressBar.isVisible = false
+                    binding.swipeChDet.isRefreshing = false
+                    binding.layoutChDet.isVisible = true
                     state.data?.let { bindUi(it) }
                 }
                 is RequestState.Error -> {
-                    binding.characterProgressBar.isVisible = false
+                    binding.swipeChDet.isRefreshing = false
+                    binding.layoutChDet.isVisible = false
                     state.message?.showToast(requireContext())
                 }
                 is RequestState.Loading -> {
-                    binding.characterProgressBar.isVisible = true
+                    binding.swipeChDet.isRefreshing = true
+                    binding.layoutChDet.isVisible = false
                 }
             }
         }
@@ -123,6 +127,20 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
                 }
             }
             episodesAdapter.setData(character.episodes)
+        }
+    }
+
+    private fun initSwipeToRefresh() {
+        with(binding) {
+            swipeChDet.setColorSchemeColors(
+                resources.getColor(
+                    R.color.atlantis,
+                    null
+                )
+            )
+            swipeChDet.setOnRefreshListener {
+                fetchData()
+            }
         }
     }
 

@@ -27,7 +27,7 @@ interface EpisodesDao {
     ): PagingSource<Int, EpisodeDTO>
 
     @Query("SELECT * FROM EpisodeDTO WHERE id = :episodeID")
-    suspend fun getEpisodeById(episodeID: Int): EpisodeDTO
+    suspend fun getEpisodeById(episodeID: Int): EpisodeDTO?
 
     @Query("SELECT * FROM EpisodeDTO WHERE id IN (:episodeIds)")
     suspend fun getListEpisodesByIds(episodeIds: List<Int>): List<EpisodeDTO>

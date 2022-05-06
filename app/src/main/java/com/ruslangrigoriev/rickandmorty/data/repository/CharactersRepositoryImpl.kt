@@ -33,7 +33,7 @@ class CharactersRepositoryImpl @Inject constructor(
         isNetworkAvailable = status
     }
 
-    override suspend fun getCharacterById(characterID: Int): CharacterDTO {
+    override suspend fun getCharacterById(characterID: Int): CharacterDTO? {
         return withContext(ioDispatcher) {
             if (isNetworkAvailable) {
                 apiService.getCharacterById(characterID).processApiCall()

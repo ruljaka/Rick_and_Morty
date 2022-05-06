@@ -1,152 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_ch_det"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.characterDetails.CharacterDetailsFragment">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/image_ch_det_cardView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_ch_det"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/image_ch_det_imv"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/placeholder" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/image_ch_det_cardView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/status_ch_det_imv"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            tools:srcCompat="@drawable/icon_status_alive" />
-    </androidx.cardview.widget.CardView>
+            <ImageView
+                android:id="@+id/image_ch_det_imv"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/placeholder" />
 
+            <ImageView
+                android:id="@+id/status_ch_det_imv"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                tools:srcCompat="@drawable/icon_status_alive" />
+        </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:id="@+id/name_ch_det_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/species_ch_det_tv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/image_ch_det_cardView"
-        app:layout_constraintTop_toTopOf="@+id/image_ch_det_cardView"
-        app:layout_constraintVertical_chainStyle="spread_inside"
-        tools:text="Name:" />
+        <TextView
+            android:id="@+id/name_ch_det_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/species_ch_det_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/image_ch_det_cardView"
+            app:layout_constraintTop_toTopOf="@+id/image_ch_det_cardView"
+            app:layout_constraintVertical_chainStyle="spread_inside"
+            tools:text="Name:" />
 
-    <TextView
-        android:id="@+id/species_ch_det_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/type_ch_det_tv"
-        app:layout_constraintEnd_toEndOf="@+id/name_ch_det_tv"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/name_ch_det_tv"
-        app:layout_constraintTop_toBottomOf="@+id/name_ch_det_tv"
-        tools:text="Species:" />
+        <TextView
+            android:id="@+id/species_ch_det_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/type_ch_det_tv"
+            app:layout_constraintEnd_toEndOf="@+id/name_ch_det_tv"
+            app:layout_constraintStart_toStartOf="@+id/name_ch_det_tv"
+            app:layout_constraintTop_toBottomOf="@+id/name_ch_det_tv"
+            tools:text="Species:" />
 
-    <TextView
-        android:id="@+id/type_ch_det_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/gender_ch_det_tv"
-        app:layout_constraintEnd_toEndOf="@+id/species_ch_det_tv"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/species_ch_det_tv"
-        app:layout_constraintTop_toBottomOf="@+id/species_ch_det_tv"
-        tools:text="Type:" />
+        <TextView
+            android:id="@+id/type_ch_det_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/gender_ch_det_tv"
+            app:layout_constraintEnd_toEndOf="@+id/species_ch_det_tv"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/species_ch_det_tv"
+            app:layout_constraintTop_toBottomOf="@+id/species_ch_det_tv"
+            tools:text="Type:" />
 
-    <TextView
-        android:id="@+id/gender_ch_det_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/origin_ch_det_tv"
-        app:layout_constraintEnd_toEndOf="@+id/type_ch_det_tv"
-        app:layout_constraintStart_toStartOf="@+id/type_ch_det_tv"
-        app:layout_constraintTop_toBottomOf="@+id/type_ch_det_tv"
-        tools:text="Gender:" />
+        <TextView
+            android:id="@+id/gender_ch_det_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/origin_ch_det_tv"
+            app:layout_constraintEnd_toEndOf="@+id/type_ch_det_tv"
+            app:layout_constraintStart_toStartOf="@+id/type_ch_det_tv"
+            app:layout_constraintTop_toBottomOf="@+id/type_ch_det_tv"
+            tools:text="Gender:" />
 
-    <TextView
-        android:id="@+id/origin_ch_det_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/location_ch_det_tv"
-        app:layout_constraintEnd_toEndOf="@+id/gender_ch_det_tv"
-        app:layout_constraintStart_toStartOf="@+id/gender_ch_det_tv"
-        app:layout_constraintTop_toBottomOf="@+id/gender_ch_det_tv"
-        tools:text="Origin:" />
+        <TextView
+            android:id="@+id/origin_ch_det_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/location_ch_det_tv"
+            app:layout_constraintEnd_toEndOf="@+id/gender_ch_det_tv"
+            app:layout_constraintStart_toStartOf="@+id/gender_ch_det_tv"
+            app:layout_constraintTop_toBottomOf="@+id/gender_ch_det_tv"
+            tools:text="Origin:" />
 
-    <TextView
-        android:id="@+id/location_ch_det_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/image_ch_det_cardView"
-        app:layout_constraintEnd_toEndOf="@+id/origin_ch_det_tv"
-        app:layout_constraintStart_toStartOf="@+id/origin_ch_det_tv"
-        app:layout_constraintTop_toBottomOf="@+id/origin_ch_det_tv"
-        tools:text="Location:" />
+        <TextView
+            android:id="@+id/location_ch_det_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/image_ch_det_cardView"
+            app:layout_constraintEnd_toEndOf="@+id/origin_ch_det_tv"
+            app:layout_constraintStart_toStartOf="@+id/origin_ch_det_tv"
+            app:layout_constraintTop_toBottomOf="@+id/origin_ch_det_tv"
+            tools:text="Location:" />
 
-    <TextView
-        android:id="@+id/episodes_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Episodes"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_ch_det_cardView" />
+        <TextView
+            android:id="@+id/episodes_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Episodes"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image_ch_det_cardView" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_ch_det"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/episodes_label"
-        tools:listitem="@layout/item_episode" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_ch_det"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/episodes_label"
+            tools:listitem="@layout/item_episode" />
 
-    <ProgressBar
-        android:id="@+id/character_progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

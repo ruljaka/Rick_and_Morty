@@ -29,7 +29,7 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_location_details) {
     private val binding: FragmentLocationDetailsBinding by viewBinding()
     private lateinit var residentsAdapter: CharactersAdapter
     private val locationId: Int
-        get() = requireArguments().getInt(LocationDetailsFragment.LOCATION_ID)
+        get() = requireArguments().getInt(LOCATION_ID)
 
     companion object {
         private const val LOCATION_ID = "LOCATION_ID"
@@ -50,8 +50,9 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_location_details) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         (activity as MainActivity).supportActionBar?.title = "Location Details"
-        fetchData()
         initRecycler()
+        initSwipeToRefresh()
+        fetchData()
     }
 
     private fun fetchData() {
@@ -59,15 +60,18 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_location_details) {
         viewModel.requestState.observe(this) { state ->
             when (state) {
                 is RequestState.Success -> {
-                    binding.locationProgressBar.isVisible = false
+                    binding.swipeLocDet.isRefreshing = false
+                    binding.layoutLocDet.isVisible = true
                     state.data?.let { bindUi(it) }
                 }
                 is RequestState.Error -> {
-                    binding.locationProgressBar.isVisible = false
+                    binding.swipeLocDet.isRefreshing = false
+                    binding.layoutLocDet.isVisible = false
                     state.message?.showToast(requireContext())
                 }
                 is RequestState.Loading -> {
-                    binding.locationProgressBar.isVisible = true
+                    binding.swipeLocDet.isRefreshing = true
+                    binding.layoutLocDet.isVisible = false
                 }
             }
         }
@@ -84,6 +88,20 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_location_details) {
             typeLocDetTv.text = location.type
             dimensionLocDetTv.text = location.dimension
             residentsAdapter.setData(location.residents)
+        }
+    }
+
+    private fun initSwipeToRefresh() {
+        with(binding) {
+            swipeLocDet.setColorSchemeColors(
+                resources.getColor(
+                    R.color.atlantis,
+                    null
+                )
+            )
+            swipeLocDet.setOnRefreshListener {
+                fetchData()
+            }
         }
     }
 

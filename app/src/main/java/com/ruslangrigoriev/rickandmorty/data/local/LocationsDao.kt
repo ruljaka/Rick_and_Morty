@@ -29,6 +29,6 @@ interface LocationsDao {
     ): PagingSource<Int, LocationDTO>
 
     @Query("SELECT * FROM LocationDTO WHERE id = :locationID")
-    suspend fun getLocationById(locationID: Int): LocationDTO
+    suspend fun getLocationById(locationID: Int): LocationDTO?
 
 }
