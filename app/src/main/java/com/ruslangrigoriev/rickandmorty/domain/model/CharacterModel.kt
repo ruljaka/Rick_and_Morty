@@ -12,7 +12,7 @@ data class CharacterModel(
     val image: String,
     val episodes: List<EpisodeDTO>,
     val locationName: String,
-    val locationID: Int,
+    val locationID: Int?,
     val originName: String,
-    val originID: Int,
+    val originID: Int?,
 )

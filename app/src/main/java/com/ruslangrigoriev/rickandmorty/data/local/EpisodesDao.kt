@@ -9,6 +9,7 @@ import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
 
 @Dao
 interface EpisodesDao {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEpisodes(episodes: List<EpisodeDTO>)
 
@@ -25,15 +26,10 @@ interface EpisodesDao {
         episode: String? = null
     ): PagingSource<Int, EpisodeDTO>
 
-
     @Query("SELECT * FROM EpisodeDTO WHERE id = :episodeID")
     suspend fun getEpisodeById(episodeID: Int): EpisodeDTO
 
     @Query("SELECT * FROM EpisodeDTO WHERE id IN (:episodeIds)")
     suspend fun getListEpisodesByIds(episodeIds: List<Int>): List<EpisodeDTO>
-
-    @Query("DELETE FROM EpisodeDTO")
-    fun deleteAll(): Int
-
 
 }

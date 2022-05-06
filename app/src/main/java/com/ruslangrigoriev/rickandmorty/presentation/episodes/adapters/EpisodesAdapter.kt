@@ -1,11 +1,10 @@
-package com.ruslangrigoriev.rickandmorty.presentation.characters.adapters
+package com.ruslangrigoriev.rickandmorty.presentation.episodes.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
-import com.ruslangrigoriev.rickandmorty.presentation.episodes.adapters.EpisodeViewHolder
 
 class EpisodesAdapter(
     private val onItemClicked: (id: Int) -> Unit

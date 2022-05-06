@@ -10,21 +10,23 @@ import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import coil.load
 import com.ruslangrigoriev.rickandmorty.R
-import com.ruslangrigoriev.rickandmorty.presentation.RequestState
 import com.ruslangrigoriev.rickandmorty.common.appComponent
 import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentCharacterDetailsBinding
 import com.ruslangrigoriev.rickandmorty.domain.model.CharacterModel
-import com.ruslangrigoriev.rickandmorty.presentation.FragmentNavigator
-import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
-import com.ruslangrigoriev.rickandmorty.presentation.characters.adapters.EpisodesAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
+import com.ruslangrigoriev.rickandmorty.presentation.common.RequestState
 import com.ruslangrigoriev.rickandmorty.presentation.episodeDetails.EpisodeDetailsFragment
+import com.ruslangrigoriev.rickandmorty.presentation.episodes.adapters.EpisodesAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.locationDetails.LocationDetailsFragment
+import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
 import javax.inject.Inject
 
 class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
 
     @Inject
     lateinit var navigator: FragmentNavigator
+
     @Inject
     lateinit var viewModel: CharacterDetailsViewModel
     private val binding: FragmentCharacterDetailsBinding by viewBinding()
@@ -81,37 +83,62 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
 
     private fun bindUi(character: CharacterModel) {
         with(binding) {
-            with(character) {
-                nameChDetTv.text = getString(R.string.character_name, name)
-                speciesChDetTv.text = getString(R.string.character_species, species)
-                typeChDetTv.text = getString(R.string.character_type, type)
-                genderChDetTv.text = getString(R.string.character_gender, gender)
-                originChDetTv.text = getString(R.string.character_origin, originName)
-                locationChDetTv.text = getString(R.string.character_location, locationName)
-                imageChDetImv.load(image){
-                    placeholder(R.drawable.placeholder)
-                    error(R.drawable.placeholder)
-                }
-                when (status) {
-                    "Alive" -> {
-                        statusChDetImv.setImageResource(R.drawable.icon_status_alive)
-                    }
-                    "Dead" -> {
-                        statusChDetImv.setImageResource(R.drawable.icon_status_dead)
-                    }
-                    else -> {
-                        statusChDetImv.setImageResource(R.drawable.icon_status_unknown)
+            nameChDetTv.text = getString(R.string.character_name, character.name)
+            speciesChDetTv.text = getString(R.string.character_species, character.species)
+            typeChDetTv.text =
+                if (character.type.isNotEmpty()) getString(R.string.character_type, character.type)
+                else getString(R.string.character_type, "-")
+            genderChDetTv.text = getString(R.string.character_gender, character.gender)
+            originChDetTv.text = getString(R.string.character_origin, character.originName)
+            character.originID?.let {
+                originChDetTv.apply {
+                    setTextColor(resources.getColor(R.color.atlantis, null))
+                    setOnClickListener {
+                        onLocationClick(character.originID)
                     }
                 }
-                episodesAdapter.setData(character.episodes)
             }
+            locationChDetTv.text = getString(R.string.character_location, character.locationName)
+            character.locationID?.let {
+                locationChDetTv.apply {
+                    setTextColor(resources.getColor(R.color.atlantis, null))
+                    setOnClickListener {
+                        onLocationClick(character.locationID)
+                    }
+                }
+            }
+            imageChDetImv.load(character.image) {
+                placeholder(R.drawable.placeholder)
+                error(R.drawable.placeholder)
+            }
+            when (character.status) {
+                "Alive" -> {
+                    statusChDetImv.setImageResource(R.drawable.icon_status_alive)
+                }
+                "Dead" -> {
+                    statusChDetImv.setImageResource(R.drawable.icon_status_dead)
+                }
+                else -> {
+                    statusChDetImv.setImageResource(R.drawable.icon_status_unknown)
+                }
+            }
+            episodesAdapter.setData(character.episodes)
         }
     }
+
 
     private fun onListItemClick(id: Int) {
         navigator.navigate(
             requireActivity() as AppCompatActivity,
             EpisodeDetailsFragment.newInstance(id),
+            true
+        )
+    }
+
+    private fun onLocationClick(id: Int) {
+        navigator.navigate(
+            requireActivity() as AppCompatActivity,
+            LocationDetailsFragment.newInstance(id),
             true
         )
     }

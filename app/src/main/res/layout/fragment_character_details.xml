@@ -41,65 +41,75 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        tools:text="Name:"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/species_ch_det_tv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/image_ch_det_cardView"
         app:layout_constraintTop_toTopOf="@+id/image_ch_det_cardView"
-        app:layout_constraintVertical_chainStyle="spread_inside" />
+        app:layout_constraintVertical_chainStyle="spread_inside"
+        tools:text="Name:" />
 
     <TextView
         android:id="@+id/species_ch_det_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        tools:text="Species:"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/type_ch_det_tv"
         app:layout_constraintEnd_toEndOf="@+id/name_ch_det_tv"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/name_ch_det_tv"
-        app:layout_constraintTop_toBottomOf="@+id/name_ch_det_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/name_ch_det_tv"
+        tools:text="Species:" />
 
     <TextView
         android:id="@+id/type_ch_det_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        tools:text="Type:"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/gender_ch_det_tv"
         app:layout_constraintEnd_toEndOf="@+id/species_ch_det_tv"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/species_ch_det_tv"
-        app:layout_constraintTop_toBottomOf="@+id/species_ch_det_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/species_ch_det_tv"
+        tools:text="Type:" />
 
     <TextView
         android:id="@+id/gender_ch_det_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        tools:text="Gender:"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/origin_ch_det_tv"
         app:layout_constraintEnd_toEndOf="@+id/type_ch_det_tv"
         app:layout_constraintStart_toStartOf="@+id/type_ch_det_tv"
-        app:layout_constraintTop_toBottomOf="@+id/type_ch_det_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/type_ch_det_tv"
+        tools:text="Gender:" />
 
     <TextView
         android:id="@+id/origin_ch_det_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        tools:text="Origin:"
+        android:clickable="true"
+        android:focusable="true"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/location_ch_det_tv"
         app:layout_constraintEnd_toEndOf="@+id/gender_ch_det_tv"
         app:layout_constraintStart_toStartOf="@+id/gender_ch_det_tv"
-        app:layout_constraintTop_toBottomOf="@+id/gender_ch_det_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/gender_ch_det_tv"
+        tools:text="Origin:" />
 
     <TextView
         android:id="@+id/location_ch_det_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        tools:text="Location:"
+        android:clickable="true"
+        android:focusable="true"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/image_ch_det_cardView"
         app:layout_constraintEnd_toEndOf="@+id/origin_ch_det_tv"
         app:layout_constraintStart_toStartOf="@+id/origin_ch_det_tv"
-        app:layout_constraintTop_toBottomOf="@+id/origin_ch_det_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/origin_ch_det_tv"
+        tools:text="Location:" />
 
     <TextView
         android:id="@+id/episodes_label"
@@ -109,6 +119,7 @@
         android:layout_marginTop="8dp"
         android:text="Episodes"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image_ch_det_cardView" />
 

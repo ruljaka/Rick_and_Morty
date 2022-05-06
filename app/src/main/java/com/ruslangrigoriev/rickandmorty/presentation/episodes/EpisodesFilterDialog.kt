@@ -44,7 +44,6 @@ class EpisodesFilterDialog : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
-
             savedFilter?.let {
                 nameEpDgEditText.setText(it.name)
                 episodeEpDgEditText.setText(it.episode)

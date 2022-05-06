@@ -11,7 +11,7 @@ import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.common.appComponent
 import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.ActivityMainBinding
-import com.ruslangrigoriev.rickandmorty.presentation.FragmentNavigator
+import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
 import com.ruslangrigoriev.rickandmorty.presentation.characters.CharactersFragment
 import com.ruslangrigoriev.rickandmorty.presentation.episodes.EpisodesFragment
 import com.ruslangrigoriev.rickandmorty.presentation.locations.LocationsFragment

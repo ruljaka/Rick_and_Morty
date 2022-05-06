@@ -9,7 +9,7 @@ import com.ruslangrigoriev.rickandmorty.domain.mappers.EpisodeMapper
 import com.ruslangrigoriev.rickandmorty.domain.model.EpisodeModel
 import com.ruslangrigoriev.rickandmorty.domain.useCases.episodes.GetEpisodeByIdUseCase
 import com.ruslangrigoriev.rickandmorty.domain.useCases.episodes.GetEpisodeCharactersUseCase
-import com.ruslangrigoriev.rickandmorty.presentation.RequestState
+import com.ruslangrigoriev.rickandmorty.presentation.common.RequestState
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,7 +31,8 @@ class EpisodeDetailsViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             val episodeDTO = getEpisodeByIdUseCase(episodeID)
             val charactersIds = episodeDTO.characters.toListIds()
-            val characters = getEpisodeCharactersUseCase(charactersIds)
+            val characters =
+                if (charactersIds.isNotEmpty()) getEpisodeCharactersUseCase(charactersIds) else null
             val episodeModel = EpisodeMapper.map(episodeDTO, characters ?: emptyList())
             _requestState.postValue(RequestState.Success(data = episodeModel))
         }

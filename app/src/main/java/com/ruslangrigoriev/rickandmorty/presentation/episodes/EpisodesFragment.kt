@@ -22,11 +22,13 @@ import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.common.appComponent
 import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentEpisodesBinding
-import com.ruslangrigoriev.rickandmorty.presentation.FragmentNavigator
-import com.ruslangrigoriev.rickandmorty.presentation.adapters.LoaderStateAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
+import com.ruslangrigoriev.rickandmorty.presentation.common.LoaderStateAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.episodeDetails.EpisodeDetailsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.episodes.adapters.EpisodesPagingAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.cancellable
 import java.util.*
 import javax.inject.Inject
 
@@ -39,6 +41,7 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
     private val binding: FragmentEpisodesBinding by viewBinding()
     private var searchQuery: String? = null
     private lateinit var pagingAdapter: EpisodesPagingAdapter
+    private var collectingJob: Job? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -57,8 +60,9 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
     }
 
     private fun subscribeUI() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.episodesFlow?.collect { pagingData ->
+        collectingJob?.cancel()
+        collectingJob = lifecycleScope.launchWhenStarted {
+            viewModel.episodesFlow?.cancellable()?.collect { pagingData ->
                 if (searchQuery.isNullOrEmpty()) {
                     pagingAdapter.submitData(pagingData)
                 } else {
@@ -95,7 +99,8 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
             binding.episodesSwipeContainer.isRefreshing = loadState.refresh is LoadState.Loading
             if (loadState.refresh is LoadState.Error)
                 (loadState.refresh as LoadState.Error).error.message?.showToast(requireContext())
-            binding.nothingEpisodesTextView.isVisible =loadState.append.endOfPaginationReached && pagingAdapter.itemCount < 1
+            binding.nothingEpisodesTextView.isVisible =
+                loadState.append.endOfPaginationReached && pagingAdapter.itemCount < 1
         }
     }
 
@@ -115,20 +120,20 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
     }
 
     private fun initSearch() {
-        binding.episodesSearchView.setOnQueryTextListener(object :
-            SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                searchQuery = query
-                pagingAdapter.refresh()
-                return false
-            }
+        binding.episodesSearchView.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    searchQuery = query
+                    pagingAdapter.refresh()
+                    return false
+                }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                searchQuery = newText
-                pagingAdapter.refresh()
-                return false
-            }
-        })
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    searchQuery = newText
+                    pagingAdapter.refresh()
+                    return false
+                }
+            })
     }
 
     private fun onListItemClick(id: Int) {
@@ -137,6 +142,21 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
             EpisodeDetailsFragment.newInstance(id),
             true
         )
+    }
+
+    private fun showFilter() {
+        val dialog = EpisodesFilterDialog.newInstance(viewModel.episodesFilter)
+        dialog.show(childFragmentManager, null)
+
+        childFragmentManager.setFragmentResultListener(
+            EpisodesFilterDialog.EPISODES_DIALOG_REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val filter =
+                bundle.getSerializable(EpisodesFilterDialog.EPISODES_DIALOG_FILTER_ARG) as EpisodesFilter
+            viewModel.getEpisodes(filter)
+            subscribeUI()
+        }
     }
 
     private fun createMenu() {
@@ -158,18 +178,5 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
         }, viewLifecycleOwner, Lifecycle.State.STARTED)
     }
 
-    private fun showFilter() {
-        val dialog = EpisodesFilterDialog.newInstance(viewModel.episodesFilter)
-        dialog.show(childFragmentManager, null)
 
-        childFragmentManager.setFragmentResultListener(
-            EpisodesFilterDialog.EPISODES_DIALOG_REQUEST_KEY,
-            viewLifecycleOwner
-        ) { _, bundle ->
-            val filter =
-                bundle.getSerializable(EpisodesFilterDialog.EPISODES_DIALOG_FILTER_ARG) as EpisodesFilter
-            viewModel.getEpisodes(filter)
-            subscribeUI()
-        }
-    }
 }

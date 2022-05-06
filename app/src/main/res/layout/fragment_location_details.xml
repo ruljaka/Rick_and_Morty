@@ -11,7 +11,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="center"
         android:textSize="24sp"
@@ -29,10 +28,10 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:gravity="center"
-        android:text="Planet"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_loc_det_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/name_loc_det_tv"
+        tools:text="Planet" />
 
     <TextView
         android:id="@+id/dimension_loc_det_tv"
@@ -42,10 +41,10 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:gravity="center"
-        android:text="Dimension C-137"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/type_loc_det_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/type_loc_det_tv"
+        tools:text="Dimension C-137" />
 
     <TextView
         android:id="@+id/residents_label"
@@ -55,6 +54,7 @@
         android:layout_marginTop="8dp"
         android:text="Residents"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dimension_loc_det_tv" />
 
@@ -72,5 +72,16 @@
         app:layout_constraintTop_toBottomOf="@+id/residents_label"
         app:spanCount="2"
         tools:listitem="@layout/item_character" />
+
+    <ProgressBar
+        android:id="@+id/location_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -34,6 +34,7 @@ class CharactersPagingAdapter(
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
         getItem(position)?.let { holder.bind(it) }
+
     }
 
 }

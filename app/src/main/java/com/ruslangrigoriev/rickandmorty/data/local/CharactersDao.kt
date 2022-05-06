@@ -9,6 +9,7 @@ import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
 
 @Dao
 interface CharactersDao {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCharacters(characters: List<CharacterDTO>)
 
@@ -36,8 +37,5 @@ interface CharactersDao {
 
     @Query("SELECT * FROM CharacterDTO WHERE id IN (:characterIds)")
     suspend fun getListCharactersByIds(characterIds: List<Int>): List<CharacterDTO>
-
-    @Query("DELETE FROM CharacterDTO")
-    fun deleteAll(): Int
 
 }
