@@ -36,6 +36,6 @@ interface CharactersDao {
     suspend fun getCharacterById(characterID: Int): CharacterDTO?
 
     @Query("SELECT * FROM CharacterDTO WHERE id IN (:characterIds)")
-    suspend fun getListCharactersByIds(characterIds: List<Int>): List<CharacterDTO>
+    suspend fun getListCharactersByIds(characterIds: List<Int>): List<CharacterDTO>?
 
 }

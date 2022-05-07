@@ -23,7 +23,6 @@ class LocationsRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val charactersDao: CharactersDao,
     private val locationsDao: LocationsDao
-
 ) : LocationsRepository {
 
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -33,25 +32,25 @@ class LocationsRepositoryImpl @Inject constructor(
         isNetworkAvailable = status
     }
 
-    override suspend fun getLocationById(locationID: Int): LocationDTO? {
-        return withContext(ioDispatcher) {
+    override suspend fun getLocationById(locationID: Int): LocationDTO? =
+        withContext(ioDispatcher) {
             if (isNetworkAvailable) {
-                safeApiCall { apiService.getLocationById(locationID).body() }
+                return@withContext safeApiCall { apiService.getLocationById(locationID).body() }
                     ?.apply { locationsDao.insertLocation(this) }
             }
             locationsDao.getLocationById(locationID)
         }
-    }
 
-    override suspend fun getLocationResidents(ids: List<Int>): List<CharacterDTO> {
-        return withContext(ioDispatcher) {
+    override suspend fun getLocationResidents(ids: List<Int>): List<CharacterDTO>? =
+        withContext(ioDispatcher) {
             if (isNetworkAvailable) {
-                safeApiCall { apiService.getListCharactersByIds(ids.toRequestString()).body() }
+                return@withContext safeApiCall {
+                    apiService.getListCharactersByIds(ids.toRequestString()).body()
+                }
                     ?.apply { charactersDao.insertCharacters(this) }
             }
             charactersDao.getListCharactersByIds(ids)
         }
-    }
 
     override fun getLocations(
         name: String?, type: String?, dimension: String?

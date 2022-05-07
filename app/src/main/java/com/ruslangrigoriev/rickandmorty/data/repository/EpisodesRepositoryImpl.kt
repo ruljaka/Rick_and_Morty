@@ -23,7 +23,6 @@ class EpisodesRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val charactersDao: CharactersDao,
     private val episodesDao: EpisodesDao
-
 ) : EpisodesRepository {
 
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -33,25 +32,25 @@ class EpisodesRepositoryImpl @Inject constructor(
         isNetworkAvailable = status
     }
 
-    override suspend fun getEpisodeById(episodeID: Int): EpisodeDTO? {
-        return withContext(ioDispatcher) {
+    override suspend fun getEpisodeById(episodeID: Int): EpisodeDTO? =
+        withContext(ioDispatcher) {
             if (isNetworkAvailable) {
-                safeApiCall { apiService.getEpisodeById(episodeID).body() }
+                return@withContext safeApiCall { apiService.getEpisodeById(episodeID).body() }
                     ?.apply { episodesDao.insertEpisode(this) }
             }
             episodesDao.getEpisodeById(episodeID)
         }
-    }
 
-    override suspend fun getEpisodeCharacters(ids: List<Int>): List<CharacterDTO> {
-        return withContext(ioDispatcher) {
+    override suspend fun getEpisodeCharacters(ids: List<Int>): List<CharacterDTO>? =
+        withContext(ioDispatcher) {
             if (isNetworkAvailable) {
-                safeApiCall { apiService.getListCharactersByIds(ids.toRequestString()).body() }
+                return@withContext safeApiCall {
+                    apiService.getListCharactersByIds(ids.toRequestString()).body()
+                }
                     ?.apply { charactersDao.insertCharacters(this) }
             }
             charactersDao.getListCharactersByIds(ids)
         }
-    }
 
     override fun getEpisodes(
         name: String?, episode: String?

@@ -30,6 +30,6 @@ interface EpisodesDao {
     suspend fun getEpisodeById(episodeID: Int): EpisodeDTO?
 
     @Query("SELECT * FROM EpisodeDTO WHERE id IN (:episodeIds)")
-    suspend fun getListEpisodesByIds(episodeIds: List<Int>): List<EpisodeDTO>
+    suspend fun getListEpisodesByIds(episodeIds: List<Int>): List<EpisodeDTO>?
 
 }
