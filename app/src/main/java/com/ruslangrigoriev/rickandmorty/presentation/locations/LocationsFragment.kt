@@ -21,6 +21,8 @@ import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentLocationsBinding
 import com.ruslangrigoriev.rickandmorty.presentation.common.*
 import com.ruslangrigoriev.rickandmorty.presentation.locationDetails.LocationDetailsFragment
+import com.ruslangrigoriev.rickandmorty.presentation.locations.LocationsFilterDialog.Companion.LOCATIONS_DIALOG_FILTER_ARG
+import com.ruslangrigoriev.rickandmorty.presentation.locations.LocationsFilterDialog.Companion.LOCATIONS_DIALOG_REQUEST_KEY
 import com.ruslangrigoriev.rickandmorty.presentation.locations.adapters.LocationsPagingAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
 import kotlinx.coroutines.Job
@@ -34,9 +36,10 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
     lateinit var viewModel: LocationsViewModel
     private val binding: FragmentLocationsBinding by viewBinding()
     private var navigator: FragmentNavigator? = null
-    private var searchQuery: String? = null
-    private lateinit var pagingAdapter: LocationsPagingAdapter
     private var collectingJob: Job? = null
+    private lateinit var pagingAdapter: LocationsPagingAdapter
+    private var searchQuery: String? = null
+    var filter: LocationsFilter? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -110,6 +113,7 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
                 )
             )
             locationsSwipeContainer.setOnRefreshListener {
+                filter = null
                 viewModel.getLocations()
                 subscribeUI()
             }
@@ -134,15 +138,15 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
     }
 
     private fun showFilter() {
-        val dialog = LocationsFilterDialog.newInstance(viewModel.locationsFilter)
+        val dialog = LocationsFilterDialog.newInstance(filter)
         dialog.show(childFragmentManager, null)
 
         childFragmentManager.setFragmentResultListener(
-            LocationsFilterDialog.LOCATIONS_DIALOG_REQUEST_KEY,
+            LOCATIONS_DIALOG_REQUEST_KEY,
             viewLifecycleOwner
         ) { _, bundle ->
-            val filter =
-                bundle.getSerializable(LocationsFilterDialog.LOCATIONS_DIALOG_FILTER_ARG) as LocationsFilter
+            filter =
+                bundle.getSerializable(LOCATIONS_DIALOG_FILTER_ARG) as LocationsFilter
             viewModel.getLocations(filter)
             subscribeUI()
         }

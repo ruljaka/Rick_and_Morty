@@ -21,6 +21,8 @@ import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentEpisodesBinding
 import com.ruslangrigoriev.rickandmorty.presentation.common.*
 import com.ruslangrigoriev.rickandmorty.presentation.episodeDetails.EpisodeDetailsFragment
+import com.ruslangrigoriev.rickandmorty.presentation.episodes.EpisodesFilterDialog.Companion.EPISODES_DIALOG_FILTER_ARG
+import com.ruslangrigoriev.rickandmorty.presentation.episodes.EpisodesFilterDialog.Companion.EPISODES_DIALOG_REQUEST_KEY
 import com.ruslangrigoriev.rickandmorty.presentation.episodes.adapters.EpisodesPagingAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
 import kotlinx.coroutines.Job
@@ -34,9 +36,10 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
     lateinit var viewModel: EpisodesViewModel
     private val binding: FragmentEpisodesBinding by viewBinding()
     private var navigator: FragmentNavigator? = null
-    private var searchQuery: String? = null
-    private lateinit var pagingAdapter: EpisodesPagingAdapter
     private var collectingJob: Job? = null
+    private lateinit var pagingAdapter: EpisodesPagingAdapter
+    private var searchQuery: String? = null
+    var filter: EpisodesFilter? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -109,6 +112,7 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
                 )
             )
             episodesSwipeContainer.setOnRefreshListener {
+                filter = null
                 viewModel.getEpisodes()
                 subscribeUI()
             }
@@ -140,15 +144,14 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
     }
 
     private fun showFilter() {
-        val dialog = EpisodesFilterDialog.newInstance(viewModel.episodesFilter)
+        val dialog = EpisodesFilterDialog.newInstance(filter)
         dialog.show(childFragmentManager, null)
 
         childFragmentManager.setFragmentResultListener(
-            EpisodesFilterDialog.EPISODES_DIALOG_REQUEST_KEY,
+            EPISODES_DIALOG_REQUEST_KEY,
             viewLifecycleOwner
         ) { _, bundle ->
-            val filter =
-                bundle.getSerializable(EpisodesFilterDialog.EPISODES_DIALOG_FILTER_ARG) as EpisodesFilter
+            filter = bundle.getSerializable(EPISODES_DIALOG_FILTER_ARG) as EpisodesFilter
             viewModel.getEpisodes(filter)
             subscribeUI()
         }

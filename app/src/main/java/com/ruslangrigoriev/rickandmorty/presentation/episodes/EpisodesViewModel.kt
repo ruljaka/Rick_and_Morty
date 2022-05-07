@@ -13,21 +13,18 @@ class EpisodesViewModel @Inject constructor(
     private val getEpisodesUseCase: GetEpisodesUseCase
 ) : ViewModel() {
 
-    var episodesFilter: EpisodesFilter? = null
-
     private var _episodesFlow: Flow<PagingData<EpisodeDTO>>? = null
     val episodesFlow: Flow<PagingData<EpisodeDTO>>?
         get() = _episodesFlow
 
     init {
-        if (episodesFlow == null) getEpisodes()
+         getEpisodes()
     }
 
     fun getEpisodes(filter: EpisodesFilter? = null) {
-        filter?.let { episodesFilter = filter }
         _episodesFlow = getEpisodesUseCase(
-            name = episodesFilter?.name,
-            episode = episodesFilter?.episode,
+            name = filter?.name,
+            episode = filter?.episode,
         ).cachedIn(viewModelScope)
     }
 }

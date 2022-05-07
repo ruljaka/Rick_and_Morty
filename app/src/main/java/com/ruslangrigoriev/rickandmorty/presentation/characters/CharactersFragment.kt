@@ -36,9 +36,10 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
     lateinit var viewModel: CharactersViewModel
     private val binding: FragmentCharactersBinding by viewBinding()
     private var navigator: FragmentNavigator? = null
-    private var searchQuery: String? = null
-    private lateinit var pagingAdapter: CharactersPagingAdapter
     private var collectingJob: Job? = null
+    private lateinit var pagingAdapter: CharactersPagingAdapter
+    private var searchQuery: String? = null
+    var filter: CharactersFilter? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -111,6 +112,7 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
                 )
             )
             charactersSwipeContainer.setOnRefreshListener {
+                filter = null
                 viewModel.getCharacters()
                 subscribeUI()
             }
@@ -135,14 +137,14 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
     }
 
     private fun showFilter() {
-        val dialog = CharactersFilterDialog.newInstance(viewModel.charactersFilter)
+        val dialog = CharactersFilterDialog.newInstance(filter)
         dialog.show(childFragmentManager, null)
 
         childFragmentManager.setFragmentResultListener(
             CHARACTERS_DIALOG_REQUEST_KEY,
             viewLifecycleOwner
         ) { _, bundle ->
-            val filter = bundle.getSerializable(CHARACTERS_DIALOG_FILTER_ARG) as CharactersFilter
+            filter = bundle.getSerializable(CHARACTERS_DIALOG_FILTER_ARG) as CharactersFilter
             viewModel.getCharacters(filter)
             subscribeUI()
         }

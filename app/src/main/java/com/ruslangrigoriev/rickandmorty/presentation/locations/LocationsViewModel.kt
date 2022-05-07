@@ -13,22 +13,19 @@ class LocationsViewModel @Inject constructor(
     private val getLocationsUseCase: GetLocationsUseCase
 ) : ViewModel() {
 
-    var locationsFilter: LocationsFilter? = null
-
     private var _locationsFlow: Flow<PagingData<LocationDTO>>? = null
     val locationsFlow: Flow<PagingData<LocationDTO>>?
         get() = _locationsFlow
 
     init {
-        if (locationsFlow == null) getLocations()
+         getLocations()
     }
 
     fun getLocations(filter: LocationsFilter? = null) {
-        filter?.let { locationsFilter = filter }
         _locationsFlow = getLocationsUseCase(
-            name = locationsFilter?.name,
-            type = locationsFilter?.type,
-            dimension = locationsFilter?.dimension,
+            name = filter?.name,
+            type = filter?.type,
+            dimension = filter?.dimension,
         ).cachedIn(viewModelScope)
     }
 }
