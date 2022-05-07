@@ -1,10 +1,9 @@
-package com.ruslangrigoriev.rickandmorty.common
+package com.ruslangrigoriev.rickandmorty.presentation.common
 
 import android.content.Context
 import android.widget.Toast
 import com.ruslangrigoriev.rickandmorty.App
 import com.ruslangrigoriev.rickandmorty.di.AppComponent
-import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
 
 val Context.appComponent: AppComponent
     get() = when (this) {
@@ -13,7 +12,7 @@ val Context.appComponent: AppComponent
     }
 
 val Context.navigator: FragmentNavigator?
-    get() = when(this){
+    get() = when (this) {
         is FragmentNavigator -> this
         else -> null
     }
@@ -36,15 +35,3 @@ fun String.getId(): Int? {
             .substringAfterLast('/').toInt()
     } else null
 }
-
-suspend inline fun <T> safeApiCall(
-    crossinline call: suspend () -> T
-): T {
-    return try {
-        call()
-    } catch (e: Exception) {
-        throw Throwable(e.localizedMessage)
-    }
-}
-
-

@@ -5,11 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ruslangrigoriev.rickandmorty.common.toListIds
 import com.ruslangrigoriev.rickandmorty.domain.mappers.EpisodeMapper
 import com.ruslangrigoriev.rickandmorty.domain.model.EpisodeModel
 import com.ruslangrigoriev.rickandmorty.domain.useCases.episodes.GetEpisodeByIdUseCase
 import com.ruslangrigoriev.rickandmorty.domain.useCases.episodes.GetEpisodeCharactersUseCase
+import com.ruslangrigoriev.rickandmorty.presentation.common.toListIds
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject

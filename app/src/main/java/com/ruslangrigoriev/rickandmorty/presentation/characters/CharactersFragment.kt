@@ -18,16 +18,12 @@ import androidx.paging.filter
 import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.ruslangrigoriev.rickandmorty.R
-import com.ruslangrigoriev.rickandmorty.common.appComponent
-import com.ruslangrigoriev.rickandmorty.common.navigator
-import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentCharactersBinding
 import com.ruslangrigoriev.rickandmorty.presentation.characterDetails.CharacterDetailsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.characters.CharactersFilterDialog.Companion.CHARACTERS_DIALOG_FILTER_ARG
 import com.ruslangrigoriev.rickandmorty.presentation.characters.CharactersFilterDialog.Companion.CHARACTERS_DIALOG_REQUEST_KEY
 import com.ruslangrigoriev.rickandmorty.presentation.characters.adapters.CharactersPagingAdapter
-import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
-import com.ruslangrigoriev.rickandmorty.presentation.common.LoaderStateAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.common.*
 import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.cancellable

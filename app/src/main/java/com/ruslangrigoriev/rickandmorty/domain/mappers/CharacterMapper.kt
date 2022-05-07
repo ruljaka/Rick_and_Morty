@@ -1,9 +1,9 @@
 package com.ruslangrigoriev.rickandmorty.domain.mappers
 
-import com.ruslangrigoriev.rickandmorty.common.getId
 import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
 import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
 import com.ruslangrigoriev.rickandmorty.domain.model.CharacterModel
+import com.ruslangrigoriev.rickandmorty.presentation.common.getId
 
 object CharacterMapper : Mapper<CharacterDTO, List<EpisodeDTO>, CharacterModel> {
     override fun map(input: CharacterDTO, list: List<EpisodeDTO>): CharacterModel {

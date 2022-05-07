@@ -3,16 +3,15 @@ package com.ruslangrigoriev.rickandmorty.data.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.ruslangrigoriev.rickandmorty.data.dto.locationDTO.LocationDTO
-import com.ruslangrigoriev.rickandmorty.data.dto.locationDTO.LocationResponse
 import com.ruslangrigoriev.rickandmorty.data.local.LocationsDao
-import com.ruslangrigoriev.rickandmorty.data.remote.ApiService
-import retrofit2.Response
+import com.ruslangrigoriev.rickandmorty.data.remote.LocationsService
+import com.ruslangrigoriev.rickandmorty.data.repository.getKey
 
 class LocationsPagingSource(
     private val name: String? = null,
     private val type: String? = null,
     private val dimension: String? = null,
-    private val apiService: ApiService,
+    private val locationsService: LocationsService,
     private val locationsDao: LocationsDao
 ) : PagingSource<Int, LocationDTO>() {
 
@@ -28,20 +27,20 @@ class LocationsPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, LocationDTO> {
         return try {
             val currentPage = params.key ?: 1
-            val response: Response<LocationResponse> = apiService.getLocations(
+            val response = locationsService.getLocations(
                 page = currentPage,
                 name = name,
                 type = type,
                 dimension = dimension,
-            )
-            responseData = response.body()?.locations ?: emptyList()
+            ).body()
+            responseData = response?.locations ?: emptyList()
             if (responseData.isNotEmpty()) {
                 locationsDao.insertLocations(responseData)
             }
             LoadResult.Page(
                 data = responseData,
-                prevKey = if (currentPage == 1) null else currentPage.minus(1),
-                nextKey = if (responseData.isEmpty()) null else currentPage.plus(1)
+                prevKey = response?.info?.prev?.getKey(),
+                nextKey = response?.info?.next?.getKey()
             )
         } catch (e: Throwable) {
             LoadResult.Error(e)

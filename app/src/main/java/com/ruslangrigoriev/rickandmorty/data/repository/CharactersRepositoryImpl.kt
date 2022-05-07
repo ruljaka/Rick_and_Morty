@@ -3,24 +3,22 @@ package com.ruslangrigoriev.rickandmorty.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.ruslangrigoriev.rickandmorty.common.safeApiCall
-import com.ruslangrigoriev.rickandmorty.common.toRequestString
 import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
 import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
 import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
 import com.ruslangrigoriev.rickandmorty.data.local.EpisodesDao
 import com.ruslangrigoriev.rickandmorty.data.paging.CharactersPagingSource
-import com.ruslangrigoriev.rickandmorty.data.remote.ApiService
+import com.ruslangrigoriev.rickandmorty.data.remote.CharactersService
 import com.ruslangrigoriev.rickandmorty.domain.repository.CharactersRepository
+import com.ruslangrigoriev.rickandmorty.presentation.common.toRequestString
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CharactersRepositoryImpl @Inject constructor(
-    private val apiService: ApiService,
+    private val charactersService: CharactersService,
     private val charactersDao: CharactersDao,
     private val episodesDao: EpisodesDao
 ) : CharactersRepository {
@@ -33,24 +31,20 @@ class CharactersRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getCharacterById(characterID: Int): CharacterDTO? =
-        withContext(ioDispatcher) {
-            if (isNetworkAvailable) {
-                return@withContext safeApiCall { apiService.getCharacterById(characterID).body() }
-                    ?.apply { charactersDao.insertCharacter(this) }
-            }
-            charactersDao.getCharacterById(characterID)
-        }
+        getRemoteOrCachedData(
+            isNetworkAvailable,
+            { charactersService.getCharacter(characterID) },
+            { charactersDao.getCharacterById(characterID) },
+            { charactersDao.insertCharacter(it) }
+        )
 
     override suspend fun getCharacterEpisodes(ids: List<Int>): List<EpisodeDTO>? =
-        withContext(ioDispatcher) {
-            if (isNetworkAvailable) {
-                return@withContext safeApiCall {
-                    apiService.getListEpisodesByIds(ids.toRequestString()).body()
-                }
-                    ?.apply { episodesDao.insertEpisodes(this) }
-            }
-            episodesDao.getListEpisodesByIds(ids)
-        }
+        getRemoteOrCachedData(
+            isNetworkAvailable,
+            { charactersService.getCharacterEpisodes(ids.toRequestString()) },
+            { episodesDao.getListEpisodesByIds(ids) },
+            { episodesDao.insertEpisodes(it) }
+        )
 
     override fun getCharacters(
         name: String?, status: String?, species: String?, type: String?, gender: String?
@@ -58,30 +52,15 @@ class CharactersRepositoryImpl @Inject constructor(
         val pagingConfig = PagingConfig(pageSize = 20, enablePlaceholders = false)
         return when (isNetworkAvailable) {
             false -> {
-                Pager(config = pagingConfig)
-                {
-                    charactersDao.getCharacters(
-                        name = name,
-                        status = status,
-                        species = species,
-                        type = type,
-                        gender = gender
-                    )
-                }.flow.flowOn(ioDispatcher)
+                Pager(pagingConfig) {
+                    charactersDao.getCharacters(name, status, species, type, gender)
+                }
+                    .flow.flowOn(ioDispatcher)
             }
             true -> {
-                Pager(config = pagingConfig, pagingSourceFactory = {
-                    CharactersPagingSource(
-                        name = name,
-                        status = status,
-                        species = species,
-                        type = type,
-                        gender = gender,
-                        apiService = apiService,
-                        charactersDao = charactersDao
-                    )
-                }
-                ).flow.flowOn(ioDispatcher)
+                Pager(pagingConfig) {
+                    CharactersPagingSource(name, status, species, type, gender, charactersService, charactersDao)
+                }.flow.flowOn(ioDispatcher)
             }
         }
     }

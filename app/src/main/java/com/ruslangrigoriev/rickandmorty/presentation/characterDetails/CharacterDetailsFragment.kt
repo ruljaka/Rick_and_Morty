@@ -9,12 +9,12 @@ import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import coil.load
 import com.ruslangrigoriev.rickandmorty.R
-import com.ruslangrigoriev.rickandmorty.common.appComponent
-import com.ruslangrigoriev.rickandmorty.common.navigator
-import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentCharacterDetailsBinding
 import com.ruslangrigoriev.rickandmorty.domain.model.CharacterModel
 import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
+import com.ruslangrigoriev.rickandmorty.presentation.common.appComponent
+import com.ruslangrigoriev.rickandmorty.presentation.common.navigator
+import com.ruslangrigoriev.rickandmorty.presentation.common.showToast
 import com.ruslangrigoriev.rickandmorty.presentation.episodeDetails.EpisodeDetailsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.episodes.adapters.EpisodesAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.locationDetails.LocationDetailsFragment

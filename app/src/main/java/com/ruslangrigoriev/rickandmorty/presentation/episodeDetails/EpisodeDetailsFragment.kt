@@ -8,14 +8,14 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.ruslangrigoriev.rickandmorty.R
-import com.ruslangrigoriev.rickandmorty.common.appComponent
-import com.ruslangrigoriev.rickandmorty.common.navigator
-import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentEpisodeDetailsBinding
 import com.ruslangrigoriev.rickandmorty.domain.model.EpisodeModel
 import com.ruslangrigoriev.rickandmorty.presentation.characterDetails.CharacterDetailsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.characters.adapters.CharactersAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
+import com.ruslangrigoriev.rickandmorty.presentation.common.appComponent
+import com.ruslangrigoriev.rickandmorty.presentation.common.navigator
+import com.ruslangrigoriev.rickandmorty.presentation.common.showToast
 import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
 import javax.inject.Inject
 

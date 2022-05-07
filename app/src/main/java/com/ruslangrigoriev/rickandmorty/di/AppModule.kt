@@ -4,7 +4,9 @@ import android.content.Context
 import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
 import com.ruslangrigoriev.rickandmorty.data.local.EpisodesDao
 import com.ruslangrigoriev.rickandmorty.data.local.LocationsDao
-import com.ruslangrigoriev.rickandmorty.data.remote.ApiService
+import com.ruslangrigoriev.rickandmorty.data.remote.CharactersService
+import com.ruslangrigoriev.rickandmorty.data.remote.EpisodesService
+import com.ruslangrigoriev.rickandmorty.data.remote.LocationsService
 import com.ruslangrigoriev.rickandmorty.data.repository.CharactersRepositoryImpl
 import com.ruslangrigoriev.rickandmorty.data.repository.EpisodesRepositoryImpl
 import com.ruslangrigoriev.rickandmorty.data.repository.LocationsRepositoryImpl
@@ -29,31 +31,31 @@ class AppModule(private val context: Context) {
     @Singleton
     @Provides
     fun provideCharactersRepository(
-        apiService: ApiService,
+        charactersService: CharactersService,
         charactersDao: CharactersDao,
         episodesDao: EpisodesDao
     ): CharactersRepository {
-        return CharactersRepositoryImpl(apiService, charactersDao, episodesDao)
+        return CharactersRepositoryImpl(charactersService, charactersDao, episodesDao)
     }
 
     @Singleton
     @Provides
     fun provideEpisodesRepository(
-        apiService: ApiService,
+        episodesService: EpisodesService,
         charactersDao: CharactersDao,
         episodesDao: EpisodesDao
     ): EpisodesRepository {
-        return EpisodesRepositoryImpl(apiService, charactersDao, episodesDao)
+        return EpisodesRepositoryImpl(episodesService, charactersDao, episodesDao)
     }
 
     @Singleton
     @Provides
     fun provideLocationsRepository(
-        apiService: ApiService,
+        locationsService: LocationsService,
         charactersDao: CharactersDao,
         locationsDao: LocationsDao
     ): LocationsRepository {
-        return LocationsRepositoryImpl(apiService, charactersDao, locationsDao)
+        return LocationsRepositoryImpl(locationsService, charactersDao, locationsDao)
     }
 
     @Singleton

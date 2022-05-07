@@ -6,7 +6,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -19,12 +18,8 @@ import androidx.paging.filter
 import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.ruslangrigoriev.rickandmorty.R
-import com.ruslangrigoriev.rickandmorty.common.appComponent
-import com.ruslangrigoriev.rickandmorty.common.navigator
-import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentLocationsBinding
-import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
-import com.ruslangrigoriev.rickandmorty.presentation.common.LoaderStateAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.common.*
 import com.ruslangrigoriev.rickandmorty.presentation.locationDetails.LocationDetailsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.locations.adapters.LocationsPagingAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity

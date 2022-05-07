@@ -9,11 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.ruslangrigoriev.rickandmorty.R
-import com.ruslangrigoriev.rickandmorty.common.appComponent
-import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.ActivityMainBinding
 import com.ruslangrigoriev.rickandmorty.presentation.characters.CharactersFragment
 import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
+import com.ruslangrigoriev.rickandmorty.presentation.common.appComponent
+import com.ruslangrigoriev.rickandmorty.presentation.common.showToast
 import com.ruslangrigoriev.rickandmorty.presentation.episodes.EpisodesFragment
 import com.ruslangrigoriev.rickandmorty.presentation.locations.LocationsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.network.NetworkStatus

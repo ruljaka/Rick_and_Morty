@@ -3,10 +3,9 @@ package com.ruslangrigoriev.rickandmorty.data.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
-import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterResponse
 import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
-import com.ruslangrigoriev.rickandmorty.data.remote.ApiService
-import retrofit2.Response
+import com.ruslangrigoriev.rickandmorty.data.remote.CharactersService
+import com.ruslangrigoriev.rickandmorty.data.repository.getKey
 
 class CharactersPagingSource(
     private val name: String? = null,
@@ -14,7 +13,7 @@ class CharactersPagingSource(
     private val species: String? = null,
     private val type: String? = null,
     private val gender: String? = null,
-    private val apiService: ApiService,
+    private val charactersService: CharactersService,
     private val charactersDao: CharactersDao
 ) : PagingSource<Int, CharacterDTO>() {
 
@@ -30,22 +29,22 @@ class CharactersPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CharacterDTO> {
         return try {
             val currentPage = params.key ?: 1
-            val response: Response<CharacterResponse> = apiService.getCharacters(
+            val response = charactersService.getCharacters(
                 page = currentPage,
                 name = name,
                 status = status,
                 species = species,
                 type = type,
                 gender = gender
-            )
-            responseData = response.body()?.characters ?: emptyList()
+            ).body()
+            responseData = response?.characters ?: emptyList()
             if (responseData.isNotEmpty()) {
                 charactersDao.insertCharacters(responseData)
             }
             LoadResult.Page(
                 data = responseData,
-                prevKey = if (currentPage == 1) null else currentPage.minus(1),
-                nextKey = if (responseData.isEmpty()) null else currentPage.plus(1)
+                prevKey = response?.info?.prev?.getKey(),
+                nextKey = response?.info?.next?.getKey()
             )
         } catch (e: Throwable) {
             LoadResult.Error(e)
