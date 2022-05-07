@@ -3,7 +3,7 @@ package com.ruslangrigoriev.rickandmorty.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.ruslangrigoriev.rickandmorty.common.processApiCall
+import com.ruslangrigoriev.rickandmorty.common.safeApiCall
 import com.ruslangrigoriev.rickandmorty.common.toRequestString
 import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
 import com.ruslangrigoriev.rickandmorty.data.dto.locationDTO.LocationDTO
@@ -36,7 +36,7 @@ class LocationsRepositoryImpl @Inject constructor(
     override suspend fun getLocationById(locationID: Int): LocationDTO? {
         return withContext(ioDispatcher) {
             if (isNetworkAvailable) {
-                apiService.getLocationById(locationID).processApiCall()
+                safeApiCall { apiService.getLocationById(locationID).body() }
                     ?.apply { locationsDao.insertLocation(this) }
             }
             locationsDao.getLocationById(locationID)
@@ -46,9 +46,8 @@ class LocationsRepositoryImpl @Inject constructor(
     override suspend fun getLocationResidents(ids: List<Int>): List<CharacterDTO> {
         return withContext(ioDispatcher) {
             if (isNetworkAvailable) {
-                apiService.getListCharactersByIds(ids.toRequestString()).processApiCall()
+                safeApiCall { apiService.getListCharactersByIds(ids.toRequestString()).body() }
                     ?.apply { charactersDao.insertCharacters(this) }
-
             }
             charactersDao.getListCharactersByIds(ids)
         }

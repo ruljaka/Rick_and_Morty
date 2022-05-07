@@ -1,5 +1,6 @@
 package com.ruslangrigoriev.rickandmorty.presentation.episodeDetails
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +10,6 @@ import com.ruslangrigoriev.rickandmorty.domain.mappers.EpisodeMapper
 import com.ruslangrigoriev.rickandmorty.domain.model.EpisodeModel
 import com.ruslangrigoriev.rickandmorty.domain.useCases.episodes.GetEpisodeByIdUseCase
 import com.ruslangrigoriev.rickandmorty.domain.useCases.episodes.GetEpisodeCharactersUseCase
-import com.ruslangrigoriev.rickandmorty.presentation.common.RequestState
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,26 +19,35 @@ class EpisodeDetailsViewModel @Inject constructor(
     private val getEpisodeCharactersUseCase: GetEpisodeCharactersUseCase
 ) : ViewModel() {
 
-    private val _requestState: MutableLiveData<RequestState<EpisodeModel>> = MutableLiveData()
-    val requestState: LiveData<RequestState<EpisodeModel>> = _requestState
+    private val _loading: MutableLiveData<Boolean> = MutableLiveData()
+    val loading: LiveData<Boolean> = _loading
+
+    private val _data: MutableLiveData<EpisodeModel> = MutableLiveData()
+    val data: LiveData<EpisodeModel> = _data
+
+    private val _error: MutableLiveData<String?> = MutableLiveData()
+    val error: LiveData<String?> = _error
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        _requestState.postValue(RequestState.Error(throwable.message ?: "Unknown Error"))
+        Log.e(EpisodeDetailsViewModel::class.simpleName, throwable.message ?: "Unknown error")
+        _error.postValue("Something went wrong \nTry refresh")
+        _loading.postValue(false)
     }
 
-    fun fetchCharacter(episodeID: Int) {
-        _requestState.value = RequestState.Loading()
+    fun fetchEpisode(episodeID: Int) {
+        _error.value = null
+        _loading.value = true
         viewModelScope.launch(exceptionHandler) {
             val episodeDTO = getEpisodeByIdUseCase(episodeID)
-            if (episodeDTO != null) {
+            episodeDTO?.let {
                 val charactersIds = episodeDTO.characters.toListIds()
                 val characters = getEpisodeCharactersUseCase(charactersIds)
                 val episodeModel = EpisodeMapper.map(episodeDTO, characters ?: emptyList())
-                _requestState.postValue(RequestState.Success(data = episodeModel))
-            } else {
-                _requestState.postValue(
-                    RequestState.Error(message = "Not found \nCheck internet connection and try refresh")
-                )
+                _data.postValue(episodeModel)
+                _loading.postValue(false)
+            } ?: run {
+                _error.postValue("Not found \nCheck internet connection and try refresh")
+                _loading.postValue(false)
             }
         }
     }

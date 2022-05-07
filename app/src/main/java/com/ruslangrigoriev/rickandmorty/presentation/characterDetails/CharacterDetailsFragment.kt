@@ -15,7 +15,6 @@ import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentCharacterDetailsBinding
 import com.ruslangrigoriev.rickandmorty.domain.model.CharacterModel
 import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
-import com.ruslangrigoriev.rickandmorty.presentation.common.RequestState
 import com.ruslangrigoriev.rickandmorty.presentation.episodeDetails.EpisodeDetailsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.episodes.adapters.EpisodesAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.locationDetails.LocationDetailsFragment
@@ -60,23 +59,16 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
 
     private fun fetchData() {
         viewModel.fetchCharacter(characterId)
-        viewModel.requestState.observe(this) { state ->
-            when (state) {
-                is RequestState.Success -> {
-                    binding.swipeChDet.isRefreshing = false
-                    binding.layoutChDet.isVisible = true
-                    state.data?.let { bindUi(it) }
-                }
-                is RequestState.Error -> {
-                    binding.swipeChDet.isRefreshing = false
-                    binding.layoutChDet.isVisible = false
-                    state.message?.showToast(requireContext())
-                }
-                is RequestState.Loading -> {
-                    binding.swipeChDet.isRefreshing = true
-                    binding.layoutChDet.isVisible = false
-                }
-            }
+        viewModel.loading.observe(viewLifecycleOwner) {
+            binding.swipeChDet.isRefreshing = it
+            binding.layoutChDet.isVisible = !it
+        }
+        viewModel.data.observe(viewLifecycleOwner) {
+            bindUi(it)
+        }
+        viewModel.error.observe(viewLifecycleOwner) {
+            it?.showToast(requireContext())
+            binding.layoutChDet.isVisible = false
         }
     }
 

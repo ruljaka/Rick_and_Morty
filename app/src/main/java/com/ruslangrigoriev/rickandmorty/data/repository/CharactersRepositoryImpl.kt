@@ -3,7 +3,7 @@ package com.ruslangrigoriev.rickandmorty.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.ruslangrigoriev.rickandmorty.common.processApiCall
+import com.ruslangrigoriev.rickandmorty.common.safeApiCall
 import com.ruslangrigoriev.rickandmorty.common.toRequestString
 import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
 import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
@@ -36,7 +36,7 @@ class CharactersRepositoryImpl @Inject constructor(
     override suspend fun getCharacterById(characterID: Int): CharacterDTO? {
         return withContext(ioDispatcher) {
             if (isNetworkAvailable) {
-                apiService.getCharacterById(characterID).processApiCall()
+                safeApiCall { apiService.getCharacterById(characterID).body() }
                     ?.apply { charactersDao.insertCharacter(this) }
             }
             charactersDao.getCharacterById(characterID)
@@ -46,9 +46,8 @@ class CharactersRepositoryImpl @Inject constructor(
     override suspend fun getCharacterEpisodes(ids: List<Int>): List<EpisodeDTO> {
         return withContext(ioDispatcher) {
             if (isNetworkAvailable) {
-                apiService.getListEpisodesByIds(ids.toRequestString()).processApiCall()
+                safeApiCall { apiService.getListEpisodesByIds(ids.toRequestString()).body() }
                     ?.apply { episodesDao.insertEpisodes(this) }
-
             }
             episodesDao.getListEpisodesByIds(ids)
         }

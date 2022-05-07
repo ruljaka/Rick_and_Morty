@@ -1,5 +1,6 @@
 package com.ruslangrigoriev.rickandmorty.presentation.characterDetails
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +10,6 @@ import com.ruslangrigoriev.rickandmorty.domain.mappers.CharacterMapper
 import com.ruslangrigoriev.rickandmorty.domain.model.CharacterModel
 import com.ruslangrigoriev.rickandmorty.domain.useCases.characters.GetCharacterByIdUseCase
 import com.ruslangrigoriev.rickandmorty.domain.useCases.characters.GetCharacterEpisodesUseCase
-import com.ruslangrigoriev.rickandmorty.presentation.common.RequestState
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,27 +19,37 @@ class CharacterDetailsViewModel @Inject constructor(
     private val getCharacterEpisodesUseCase: GetCharacterEpisodesUseCase
 ) : ViewModel() {
 
-    private val _requestState: MutableLiveData<RequestState<CharacterModel>> = MutableLiveData()
-    val requestState: LiveData<RequestState<CharacterModel>> = _requestState
+    private val _loading: MutableLiveData<Boolean> = MutableLiveData()
+    val loading: LiveData<Boolean> = _loading
+
+    private val _data: MutableLiveData<CharacterModel> = MutableLiveData()
+    val data: LiveData<CharacterModel> = _data
+
+    private val _error: MutableLiveData<String?> = MutableLiveData()
+    val error: LiveData<String?> = _error
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        _requestState.postValue(RequestState.Error(throwable.message ?: "Unknown Error"))
+        Log.e(CharacterDetailsViewModel::class.simpleName, throwable.message ?: "Unknown error")
+        _error.postValue("Something went wrong \nTry refresh")
+        _loading.postValue(false)
     }
 
     fun fetchCharacter(characterID: Int) {
-        _requestState.value = RequestState.Loading()
+        _error.value = null
+        _loading.value = true
         viewModelScope.launch(exceptionHandler) {
             val characterDTO = getCharacterByIdUseCase(characterID)
-            if (characterDTO != null) {
+            characterDTO?.let {
                 val episodesIds = characterDTO.episode.toListIds()
                 val episodes = getCharacterEpisodesUseCase(episodesIds)
                 val characterModel = CharacterMapper.map(characterDTO, episodes ?: emptyList())
-                _requestState.postValue(RequestState.Success(data = characterModel))
-            } else {
-                _requestState.postValue(
-                    RequestState.Error(message = "Not found \nCheck internet connection and try refresh")
-                )
+                _data.postValue(characterModel)
+                _loading.postValue(false)
+            } ?: run {
+                _error.postValue("Not found \nCheck internet connection and try refresh")
+                _loading.postValue(false)
             }
         }
     }
+
 }

@@ -2,11 +2,8 @@ package com.ruslangrigoriev.rickandmorty.common
 
 import android.content.Context
 import android.widget.Toast
-import com.google.gson.Gson
 import com.ruslangrigoriev.rickandmorty.App
-import com.ruslangrigoriev.rickandmorty.data.remote.ErrorResponse
 import com.ruslangrigoriev.rickandmorty.di.AppComponent
-import retrofit2.Response
 
 val Context.appComponent: AppComponent
     get() = when (this) {
@@ -16,22 +13,6 @@ val Context.appComponent: AppComponent
 
 fun String.showToast(context: Context) {
     Toast.makeText(context, this, Toast.LENGTH_SHORT).show()
-}
-
-fun <T> Response<T>.processApiCall(): T? {
-    if (this.isSuccessful) {
-        return this.body()
-    } else {
-        try {
-            val responseError = Gson().fromJson(
-                this.errorBody()?.string(),
-                ErrorResponse::class.java
-            )
-            throw Throwable(responseError.statusMessage)
-        } catch (e: Exception) {
-            throw Throwable("Api call failed ${e.message ?: e.toString()}")
-        }
-    }
 }
 
 fun List<String>.toListIds(): List<Int> {
@@ -47,6 +28,16 @@ fun String.getId(): Int? {
         this.replace("\"", "")
             .substringAfterLast('/').toInt()
     } else null
+}
+
+suspend inline fun <T> safeApiCall(
+    crossinline call: suspend () -> T
+): T {
+    return try {
+        call()
+    } catch (e: Exception) {
+        throw Throwable(e.localizedMessage)
+    }
 }
 
 

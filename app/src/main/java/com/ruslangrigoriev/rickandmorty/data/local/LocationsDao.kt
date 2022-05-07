@@ -11,10 +11,10 @@ import com.ruslangrigoriev.rickandmorty.data.dto.locationDTO.LocationDTO
 interface LocationsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertLocations(episodes: List<LocationDTO>)
+    suspend fun insertLocations(locations: List<LocationDTO>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertLocation(episode: LocationDTO)
+    suspend fun insertLocation(location: LocationDTO)
 
     @Query(
         """SELECT * FROM LocationDTO

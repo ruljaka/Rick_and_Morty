@@ -27,7 +27,7 @@ class EpisodesPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, EpisodeDTO> {
         return try {
             val currentPage = params.key ?: 1
-            val response: Response<EpisodeResponse> = apiService.getEpisodes(
+            val response = apiService.getEpisodes(
                 page = currentPage,
                 name = name,
                 episode = episode,

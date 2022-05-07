@@ -39,10 +39,6 @@ class LoaderStateAdapter(private val retry: () -> Unit) :
                 footerRetryBtn.isVisible = loadState is LoadState.Error
                 footerRetryBtn.setOnClickListener { retry.invoke() }
                 footerErrorTextView.isVisible = loadState is LoadState.Error
-                if (loadState is LoadState.Error) {
-                    footerErrorTextView.text =
-                        "Сheck internet connection and RETRY or refresh list to go offline"
-                }
             }
         }
     }

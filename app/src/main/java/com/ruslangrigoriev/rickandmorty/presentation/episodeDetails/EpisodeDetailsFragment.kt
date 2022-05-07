@@ -13,10 +13,9 @@ import com.ruslangrigoriev.rickandmorty.common.appComponent
 import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentEpisodeDetailsBinding
 import com.ruslangrigoriev.rickandmorty.domain.model.EpisodeModel
-import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
-import com.ruslangrigoriev.rickandmorty.presentation.common.RequestState
 import com.ruslangrigoriev.rickandmorty.presentation.characterDetails.CharacterDetailsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.characters.adapters.CharactersAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
 import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
 import javax.inject.Inject
 
@@ -28,7 +27,7 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
     lateinit var viewModel: EpisodeDetailsViewModel
     private val binding: FragmentEpisodeDetailsBinding by viewBinding()
     private lateinit var charactersAdapter: CharactersAdapter
-    private val characterId: Int
+    private val episodeId: Int
         get() = requireArguments().getInt(EPISODE_ID)
 
 
@@ -57,24 +56,17 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
     }
 
     private fun fetchData() {
-        viewModel.fetchCharacter(characterId)
-        viewModel.requestState.observe(this) { state ->
-            when (state) {
-                is RequestState.Success -> {
-                    binding.swipeEpDet.isRefreshing = false
-                    binding.layoutEpDet.isVisible = true
-                    state.data?.let { bindUi(it) }
-                }
-                is RequestState.Error -> {
-                    binding.swipeEpDet.isRefreshing = false
-                    binding.layoutEpDet.isVisible = false
-                    state.message?.showToast(requireContext())
-                }
-                is RequestState.Loading -> {
-                    binding.swipeEpDet.isRefreshing = true
-                    binding.layoutEpDet.isVisible = false
-                }
-            }
+        viewModel.fetchEpisode(episodeId)
+        viewModel.loading.observe(viewLifecycleOwner) {
+            binding.swipeEpDet.isRefreshing = it
+            binding.layoutEpDet.isVisible = !it
+        }
+        viewModel.data.observe(viewLifecycleOwner) {
+            bindUi(it)
+        }
+        viewModel.error.observe(viewLifecycleOwner) {
+            it?.showToast(requireContext())
+            binding.layoutEpDet.isVisible = false
         }
     }
 
