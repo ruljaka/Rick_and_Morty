@@ -3,7 +3,6 @@ package com.ruslangrigoriev.rickandmorty.presentation.characterDetails
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -11,6 +10,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import coil.load
 import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.common.appComponent
+import com.ruslangrigoriev.rickandmorty.common.navigator
 import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentCharacterDetailsBinding
 import com.ruslangrigoriev.rickandmorty.domain.model.CharacterModel
@@ -24,14 +24,12 @@ import javax.inject.Inject
 class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
 
     @Inject
-    lateinit var navigator: FragmentNavigator
-
-    @Inject
     lateinit var viewModel: CharacterDetailsViewModel
     private val binding: FragmentCharacterDetailsBinding by viewBinding()
+    private var navigator: FragmentNavigator? = null
+    private lateinit var episodesAdapter: EpisodesAdapter
     private val characterId: Int
         get() = requireArguments().getInt(CHARACTER_ID)
-    private lateinit var episodesAdapter: EpisodesAdapter
 
     companion object {
         private const val CHARACTER_ID = "CHARACTER_ID"
@@ -46,6 +44,7 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         context.appComponent.inject(this)
+        navigator = context.navigator
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,8 +66,8 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
             bindUi(it)
         }
         viewModel.error.observe(viewLifecycleOwner) {
-            it?.showToast(requireContext())
             binding.layoutChDet.isVisible = false
+            it?.showToast(requireContext())
         }
     }
 
@@ -138,16 +137,14 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
 
 
     private fun onListItemClick(id: Int) {
-        navigator.navigate(
-            requireActivity() as AppCompatActivity,
+        navigator?.navigate(
             EpisodeDetailsFragment.newInstance(id),
             true
         )
     }
 
     private fun onLocationClick(id: Int) {
-        navigator.navigate(
-            requireActivity() as AppCompatActivity,
+        navigator?.navigate(
             LocationDetailsFragment.newInstance(id),
             true
         )

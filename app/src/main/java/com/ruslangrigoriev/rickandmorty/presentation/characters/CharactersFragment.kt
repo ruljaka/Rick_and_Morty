@@ -6,7 +6,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -20,6 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.common.appComponent
+import com.ruslangrigoriev.rickandmorty.common.navigator
 import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentCharactersBinding
 import com.ruslangrigoriev.rickandmorty.presentation.characterDetails.CharacterDetailsFragment
@@ -37,11 +37,9 @@ import javax.inject.Inject
 class CharactersFragment : Fragment(R.layout.fragment_characters) {
 
     @Inject
-    lateinit var navigator: FragmentNavigator
-
-    @Inject
     lateinit var viewModel: CharactersViewModel
     private val binding: FragmentCharactersBinding by viewBinding()
+    private var navigator: FragmentNavigator? = null
     private var searchQuery: String? = null
     private lateinit var pagingAdapter: CharactersPagingAdapter
     private var collectingJob: Job? = null
@@ -49,6 +47,7 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         context.appComponent.inject(this)
+        navigator = context.navigator
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -154,8 +153,7 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
     }
 
     private fun onListItemClick(id: Int) {
-        navigator.navigate(
-            requireActivity() as AppCompatActivity,
+        navigator?.navigate(
             CharacterDetailsFragment.newInstance(id),
             true
         )

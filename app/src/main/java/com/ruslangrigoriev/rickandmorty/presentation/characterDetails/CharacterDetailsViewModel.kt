@@ -30,7 +30,7 @@ class CharacterDetailsViewModel @Inject constructor(
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         Log.e(CharacterDetailsViewModel::class.simpleName, throwable.message ?: "Unknown error")
-        _error.postValue("Something went wrong \nTry refresh")
+        _error.postValue("Failed to load data \nTry refresh")
         _loading.postValue(false)
     }
 
@@ -43,11 +43,11 @@ class CharacterDetailsViewModel @Inject constructor(
                 val episodesIds = characterDTO.episode.toListIds()
                 val episodes = getCharacterEpisodesUseCase(episodesIds)
                 val characterModel = CharacterMapper.map(characterDTO, episodes ?: emptyList())
+                _loading.postValue(false)
                 _data.postValue(characterModel)
-                _loading.postValue(false)
             } ?: run {
-                _error.postValue("Not found \nCheck internet connection and try refresh")
                 _loading.postValue(false)
+                _error.postValue("Not found \nCheck internet connection and try refresh")
             }
         }
     }

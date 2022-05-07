@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.common.appComponent
+import com.ruslangrigoriev.rickandmorty.common.navigator
 import com.ruslangrigoriev.rickandmorty.common.showToast
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentLocationsBinding
 import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
@@ -33,12 +34,11 @@ import java.util.*
 import javax.inject.Inject
 
 class LocationsFragment : Fragment(R.layout.fragment_locations) {
-    @Inject
-    lateinit var navigator: FragmentNavigator
 
     @Inject
     lateinit var viewModel: LocationsViewModel
     private val binding: FragmentLocationsBinding by viewBinding()
+    private var navigator: FragmentNavigator? = null
     private var searchQuery: String? = null
     private lateinit var pagingAdapter: LocationsPagingAdapter
     private var collectingJob: Job? = null
@@ -46,6 +46,7 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         context.appComponent.inject(this)
+        navigator = context.navigator
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -153,8 +154,7 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
     }
 
     private fun onListItemClick(id: Int) {
-        navigator.navigate(
-            requireActivity() as AppCompatActivity,
+        navigator?.navigate(
             LocationDetailsFragment.newInstance(id),
             true
         )

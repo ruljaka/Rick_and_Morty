@@ -1,12 +1,12 @@
 package com.ruslangrigoriev.rickandmorty.di
 
-import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
 import com.ruslangrigoriev.rickandmorty.presentation.characterDetails.CharacterDetailsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.characters.CharactersFragment
 import com.ruslangrigoriev.rickandmorty.presentation.episodeDetails.EpisodeDetailsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.episodes.EpisodesFragment
 import com.ruslangrigoriev.rickandmorty.presentation.locationDetails.LocationDetailsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.locations.LocationsFragment
+import com.ruslangrigoriev.rickandmorty.presentation.main.MainActivity
 import dagger.Component
 import javax.inject.Singleton
 
