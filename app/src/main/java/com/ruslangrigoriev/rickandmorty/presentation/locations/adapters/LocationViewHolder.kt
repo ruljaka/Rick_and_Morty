@@ -2,9 +2,7 @@ package com.ruslangrigoriev.rickandmorty.presentation.locations.adapters
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
 import com.ruslangrigoriev.rickandmorty.data.dto.locationDTO.LocationDTO
-import com.ruslangrigoriev.rickandmorty.databinding.ItemEpisodeBinding
 import com.ruslangrigoriev.rickandmorty.databinding.ItemLocationBinding
 
 class LocationViewHolder(

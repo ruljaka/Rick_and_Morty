@@ -8,5 +8,4 @@ data class CharactersFilter(
     val species: String? = null,
     val type: String? = null,
     val gender: String? = null
-) : Serializable{
-}
+) : Serializable

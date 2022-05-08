@@ -5,6 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
 import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
+import com.ruslangrigoriev.rickandmorty.data.getRemoteOrCachedData
 import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
 import com.ruslangrigoriev.rickandmorty.data.local.EpisodesDao
 import com.ruslangrigoriev.rickandmorty.data.paging.EpisodesPagingSource

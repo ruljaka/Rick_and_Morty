@@ -5,6 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
 import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
+import com.ruslangrigoriev.rickandmorty.data.getRemoteOrCachedData
 import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
 import com.ruslangrigoriev.rickandmorty.data.local.EpisodesDao
 import com.ruslangrigoriev.rickandmorty.data.paging.CharactersPagingSource
@@ -59,7 +60,15 @@ class CharactersRepositoryImpl @Inject constructor(
             }
             true -> {
                 Pager(pagingConfig) {
-                    CharactersPagingSource(name, status, species, type, gender, charactersService, charactersDao)
+                    CharactersPagingSource(
+                        name,
+                        status,
+                        species,
+                        type,
+                        gender,
+                        charactersService,
+                        charactersDao
+                    )
                 }.flow.flowOn(ioDispatcher)
             }
         }

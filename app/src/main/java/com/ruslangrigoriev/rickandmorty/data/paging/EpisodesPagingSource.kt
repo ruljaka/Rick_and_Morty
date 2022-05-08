@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
 import com.ruslangrigoriev.rickandmorty.data.local.EpisodesDao
 import com.ruslangrigoriev.rickandmorty.data.remote.EpisodesService
-import com.ruslangrigoriev.rickandmorty.data.repository.getKey
+import com.ruslangrigoriev.rickandmorty.data.getKey
 
 class EpisodesPagingSource(
     private val name: String? = null,

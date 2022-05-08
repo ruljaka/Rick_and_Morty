@@ -11,6 +11,9 @@ import com.ruslangrigoriev.rickandmorty.domain.useCases.characters.GetCharacterB
 import com.ruslangrigoriev.rickandmorty.domain.useCases.characters.GetCharacterEpisodesUseCase
 import com.ruslangrigoriev.rickandmorty.presentation.common.toListIds
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,8 +33,8 @@ class CharacterDetailsViewModel @Inject constructor(
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         Log.e(CharacterDetailsViewModel::class.simpleName, throwable.message ?: "Unknown error")
-        _error.postValue("Failed to load data \nTry refresh")
         _loading.postValue(false)
+        _error.postValue("Failed to load data \nTry refresh")
     }
 
     fun fetchCharacter(characterID: Int) {
@@ -43,8 +46,8 @@ class CharacterDetailsViewModel @Inject constructor(
                 val episodesIds = characterDTO.episode.toListIds()
                 val episodes = getCharacterEpisodesUseCase(episodesIds)
                 val characterModel = CharacterMapper.map(characterDTO, episodes ?: emptyList())
-                _loading.postValue(false)
                 _data.postValue(characterModel)
+                _loading.postValue(false)
             } ?: run {
                 _loading.postValue(false)
                 _error.postValue("Not found \nCheck internet connection and try refresh")

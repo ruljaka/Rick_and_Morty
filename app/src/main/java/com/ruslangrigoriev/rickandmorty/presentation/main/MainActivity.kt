@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), FragmentNavigato
     }
 
     private fun observeConnection() {
-        lifecycleScope.launchWhenCreated() {
+        lifecycleScope.launchWhenCreated {
             viewModel.state.collect {
                 when (it) {
                     NetworkStatus.Available -> {

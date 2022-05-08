@@ -3,6 +3,7 @@ package com.ruslangrigoriev.rickandmorty.presentation.characterDetails
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.ActionBar
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -28,6 +29,9 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
     private val binding: FragmentCharacterDetailsBinding by viewBinding()
     private var navigator: FragmentNavigator? = null
     private lateinit var episodesAdapter: EpisodesAdapter
+    private var isLoaded: Boolean = false
+    private val toolbar: ActionBar?
+        get() = (activity as MainActivity).supportActionBar
     private val characterId: Int
         get() = requireArguments().getInt(CHARACTER_ID)
 
@@ -49,24 +53,30 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as MainActivity).supportActionBar?.title = "Character Details"
+        toolbar?.setDisplayHomeAsUpEnabled(true)
+        toolbar?.title = "Character"
         initRecycler()
         initSwipeToRefresh()
         fetchData()
     }
 
     private fun fetchData() {
-        viewModel.fetchCharacter(characterId)
+        if (!isLoaded) {
+            viewModel.fetchCharacter(characterId)
+            isLoaded = true
+        }
         viewModel.loading.observe(viewLifecycleOwner) {
-            binding.swipeChDet.isRefreshing = it
-            binding.layoutChDet.isVisible = !it
+            with(binding) {
+                progressBarChDet.isVisible = it && !refresherChDet.isRefreshing
+                layoutChDet.isVisible = !it
+                //placeholderChDet.placeholderLayout.isVisible = it
+                if (it == false) refresherChDet.isRefreshing = it
+            }
         }
         viewModel.data.observe(viewLifecycleOwner) {
             bindUi(it)
         }
         viewModel.error.observe(viewLifecycleOwner) {
-            binding.layoutChDet.isVisible = false
             it?.showToast(requireContext())
         }
     }
@@ -78,6 +88,7 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
 
     private fun bindUi(character: CharacterModel) {
         with(binding) {
+            //toolbar?.title = character.name
             nameChDetTv.text = getString(R.string.character_name, character.name)
             speciesChDetTv.text = getString(R.string.character_species, character.species)
             typeChDetTv.text =
@@ -123,13 +134,17 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
 
     private fun initSwipeToRefresh() {
         with(binding) {
-            swipeChDet.setColorSchemeColors(
+            refresherChDet.setColorSchemeColors(
                 resources.getColor(
                     R.color.atlantis,
                     null
                 )
             )
-            swipeChDet.setOnRefreshListener {
+            refresherChDet.setOnRefreshListener {
+                isLoaded = false
+                viewModel.loading.removeObservers(viewLifecycleOwner)
+                viewModel.data.removeObservers(viewLifecycleOwner)
+                viewModel.error.removeObservers(viewLifecycleOwner)
                 fetchData()
             }
         }

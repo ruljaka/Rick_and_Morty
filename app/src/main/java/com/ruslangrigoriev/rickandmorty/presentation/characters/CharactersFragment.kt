@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -40,6 +41,8 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
     private lateinit var pagingAdapter: CharactersPagingAdapter
     private var searchQuery: String? = null
     var filter: CharactersFilter? = null
+    private val toolbar: ActionBar?
+        get() = (activity as MainActivity).supportActionBar
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -49,8 +52,8 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        (activity as MainActivity).supportActionBar?.title = "Characters"
+        toolbar?.setDisplayHomeAsUpEnabled(false)
+        toolbar?.title = "Characters"
         createMenu()
         initRecyclerView()
         initSwipeToRefresh()
@@ -74,6 +77,7 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
                 }
             }
         }
+        binding.charactersRefresher.isRefreshing = false
     }
 
     private fun initRecyclerView() {
@@ -94,27 +98,29 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
             adapter = pagingAdapter.withLoadStateFooter(loaderStateAdapter)
         }
 
-        pagingAdapter.addLoadStateListener { loadState ->
-            binding.charactersSwipeContainer.isRefreshing = loadState.refresh is LoadState.Loading
-            if (loadState.refresh is LoadState.Error)
-                (loadState.refresh as LoadState.Error).error.message?.showToast(requireContext())
-            binding.nothingCharactersTextView.isVisible =
-                loadState.append.endOfPaginationReached && pagingAdapter.itemCount < 1
+        pagingAdapter.addLoadStateListener {
+            binding.charactersProgressBar.isVisible = it.refresh is LoadState.Loading
+                    && !binding.charactersRefresher.isRefreshing
+            if (it.refresh is LoadState.Error)
+                "Failed to load data \nTry refresh".showToast(requireContext())
+            binding.charactersNothingTextView.isVisible =
+                it.append.endOfPaginationReached && pagingAdapter.itemCount < 1
         }
     }
 
     private fun initSwipeToRefresh() {
         with(binding) {
-            charactersSwipeContainer.setColorSchemeColors(
-                resources.getColor(
-                    R.color.atlantis,
-                    null
-                )
-            )
-            charactersSwipeContainer.setOnRefreshListener {
+            charactersRefresher.setColorSchemeColors(resources.getColor(R.color.atlantis, null))
+            charactersRefresher.setOnRefreshListener {
+                searchQuery = null
                 filter = null
                 viewModel.getCharacters()
                 subscribeUI()
+                binding.charactersSearchView.apply {
+                    setQuery(null, false)
+                    clearFocus()
+                    onActionViewCollapsed()
+                }
             }
         }
     }

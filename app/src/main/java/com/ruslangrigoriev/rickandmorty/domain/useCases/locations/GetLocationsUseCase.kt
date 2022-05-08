@@ -1,6 +1,5 @@
 package com.ruslangrigoriev.rickandmorty.domain.useCases.locations
 
-import com.ruslangrigoriev.rickandmorty.domain.repository.EpisodesRepository
 import com.ruslangrigoriev.rickandmorty.domain.repository.LocationsRepository
 import javax.inject.Inject
 

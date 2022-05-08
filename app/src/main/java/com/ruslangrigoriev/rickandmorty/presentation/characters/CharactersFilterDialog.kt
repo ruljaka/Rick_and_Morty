@@ -32,7 +32,7 @@ class CharactersFilterDialog : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DialogFilterCharactersBinding.bind(
             inflater.inflate(
                 R.layout.dialog_filter_characters,

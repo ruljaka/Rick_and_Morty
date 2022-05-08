@@ -22,7 +22,7 @@ class RoomModule {
             "app_db"
         )
             .fallbackToDestructiveMigration()
-            .build();
+            .build()
     }
 
     @Singleton

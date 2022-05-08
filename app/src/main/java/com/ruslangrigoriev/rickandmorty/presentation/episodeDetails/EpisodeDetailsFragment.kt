@@ -3,6 +3,7 @@ package com.ruslangrigoriev.rickandmorty.presentation.episodeDetails
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.ActionBar
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -26,9 +27,11 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
     private val binding: FragmentEpisodeDetailsBinding by viewBinding()
     private var navigator: FragmentNavigator? = null
     private lateinit var charactersAdapter: CharactersAdapter
+    private var isLoaded: Boolean = false
+    private val toolbar: ActionBar?
+        get() = (activity as MainActivity).supportActionBar
     private val episodeId: Int
         get() = requireArguments().getInt(EPISODE_ID)
-
 
     companion object {
         private const val EPISODE_ID = "EPISODE_ID"
@@ -48,25 +51,30 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as MainActivity).supportActionBar?.title = "Episode Details"
+        toolbar?.setDisplayHomeAsUpEnabled(true)
+        toolbar?.title = "Episode"
         initRecycler()
         initSwipeToRefresh()
         fetchData()
     }
 
     private fun fetchData() {
-        viewModel.fetchEpisode(episodeId)
+        if (!isLoaded) {
+            viewModel.fetchEpisode(episodeId)
+            isLoaded = true
+        }
         viewModel.loading.observe(viewLifecycleOwner) {
-            binding.swipeEpDet.isRefreshing = it
-            binding.layoutEpDet.isVisible = !it
+            with(binding) {
+                progressBarEpDet.isVisible = it && !refresherEpDet.isRefreshing
+                layoutEpDet.isVisible = !it
+                if (it == false) refresherEpDet.isRefreshing = it
+            }
         }
         viewModel.data.observe(viewLifecycleOwner) {
             bindUi(it)
         }
         viewModel.error.observe(viewLifecycleOwner) {
             it?.showToast(requireContext())
-            binding.layoutEpDet.isVisible = false
         }
     }
 
@@ -86,13 +94,17 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
 
     private fun initSwipeToRefresh() {
         with(binding) {
-            swipeEpDet.setColorSchemeColors(
+            refresherEpDet.setColorSchemeColors(
                 resources.getColor(
                     R.color.atlantis,
                     null
                 )
             )
-            swipeEpDet.setOnRefreshListener {
+            refresherEpDet.setOnRefreshListener {
+                isLoaded = false
+                viewModel.loading.removeObservers(viewLifecycleOwner)
+                viewModel.data.removeObservers(viewLifecycleOwner)
+                viewModel.error.removeObservers(viewLifecycleOwner)
                 fetchData()
             }
         }

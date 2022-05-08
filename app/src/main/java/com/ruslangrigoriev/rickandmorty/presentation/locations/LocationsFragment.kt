@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -40,6 +41,8 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
     private lateinit var pagingAdapter: LocationsPagingAdapter
     private var searchQuery: String? = null
     var filter: LocationsFilter? = null
+    private val toolbar: ActionBar?
+        get() = (activity as MainActivity).supportActionBar
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -49,8 +52,8 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        (activity as MainActivity).supportActionBar?.title = "Locations"
+        toolbar?.setDisplayHomeAsUpEnabled(false)
+        toolbar?.title = "Locations"
         createMenu()
         initRecyclerView()
         initSwipeToRefresh()
@@ -75,6 +78,7 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
                 }
             }
         }
+        binding.locationsRefresher.isRefreshing = false
     }
 
     private fun initRecyclerView() {
@@ -95,27 +99,29 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
             adapter = pagingAdapter.withLoadStateFooter(loaderStateAdapter)
         }
 
-        pagingAdapter.addLoadStateListener { loadState ->
-            binding.locationsSwipeContainer.isRefreshing = loadState.refresh is LoadState.Loading
-            if (loadState.refresh is LoadState.Error)
-                (loadState.refresh as LoadState.Error).error.message?.showToast(requireContext())
+        pagingAdapter.addLoadStateListener {
+            binding.locationsProgressBar.isVisible = it.refresh is LoadState.Loading
+                    && !binding.locationsRefresher.isRefreshing
+            if (it.refresh is LoadState.Error)
+                "Failed to load data \nTry refresh".showToast(requireContext())
             binding.locationsNothingTextView.isVisible =
-                loadState.append.endOfPaginationReached && pagingAdapter.itemCount < 1
+                it.append.endOfPaginationReached && pagingAdapter.itemCount < 1
         }
     }
 
     private fun initSwipeToRefresh() {
         with(binding) {
-            locationsSwipeContainer.setColorSchemeColors(
-                resources.getColor(
-                    R.color.atlantis,
-                    null
-                )
-            )
-            locationsSwipeContainer.setOnRefreshListener {
+            locationsRefresher.setColorSchemeColors(resources.getColor(R.color.atlantis, null))
+            locationsRefresher.setOnRefreshListener {
+                searchQuery = null
                 filter = null
                 viewModel.getLocations()
                 subscribeUI()
+                binding.locationsSearchView.apply {
+                    setQuery(null, false)
+                    clearFocus()
+                    onActionViewCollapsed()
+                }
             }
         }
     }
@@ -144,9 +150,9 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
         childFragmentManager.setFragmentResultListener(
             LOCATIONS_DIALOG_REQUEST_KEY,
             viewLifecycleOwner
-        ) { _, bundle ->
-            filter =
-                bundle.getSerializable(LOCATIONS_DIALOG_FILTER_ARG) as LocationsFilter
+        )
+        { _, bundle ->
+            filter = bundle.getSerializable(LOCATIONS_DIALOG_FILTER_ARG) as LocationsFilter
             viewModel.getLocations(filter)
             subscribeUI()
         }

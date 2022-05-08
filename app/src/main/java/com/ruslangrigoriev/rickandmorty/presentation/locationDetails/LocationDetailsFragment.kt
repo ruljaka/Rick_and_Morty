@@ -3,6 +3,7 @@ package com.ruslangrigoriev.rickandmorty.presentation.locationDetails
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.ActionBar
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -26,6 +27,9 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_location_details) {
     private val binding: FragmentLocationDetailsBinding by viewBinding()
     private var navigator: FragmentNavigator? = null
     private lateinit var residentsAdapter: CharactersAdapter
+    private var isLoaded: Boolean = false
+    private val toolbar: ActionBar?
+        get() = (activity as MainActivity).supportActionBar
     private val locationId: Int
         get() = requireArguments().getInt(LOCATION_ID)
 
@@ -47,25 +51,30 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_location_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as MainActivity).supportActionBar?.title = "Location Details"
+        toolbar?.setDisplayHomeAsUpEnabled(true)
+        toolbar?.title = "Location"
         initRecycler()
         initSwipeToRefresh()
         fetchData()
     }
 
     private fun fetchData() {
-        viewModel.fetchLocation(locationId)
+        if (!isLoaded) {
+            viewModel.fetchLocation(locationId)
+            isLoaded = true
+        }
         viewModel.loading.observe(viewLifecycleOwner) {
-            binding.swipeLocDet.isRefreshing = it
-            binding.layoutLocDet.isVisible = !it
+            with(binding) {
+                progressBarLocDet.isVisible = it && !refresherLocDet.isRefreshing
+                layoutLocDet.isVisible = !it
+                if (it == false) refresherLocDet.isRefreshing = it
+            }
         }
         viewModel.data.observe(viewLifecycleOwner) {
             bindUi(it)
         }
         viewModel.error.observe(viewLifecycleOwner) {
             it?.showToast(requireContext())
-            binding.layoutLocDet.isVisible = false
         }
     }
 
@@ -85,13 +94,17 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_location_details) {
 
     private fun initSwipeToRefresh() {
         with(binding) {
-            swipeLocDet.setColorSchemeColors(
+            refresherLocDet.setColorSchemeColors(
                 resources.getColor(
                     R.color.atlantis,
                     null
                 )
             )
-            swipeLocDet.setOnRefreshListener {
+            refresherLocDet.setOnRefreshListener {
+                isLoaded = false
+                viewModel.loading.removeObservers(viewLifecycleOwner)
+                viewModel.data.removeObservers(viewLifecycleOwner)
+                viewModel.error.removeObservers(viewLifecycleOwner)
                 fetchData()
             }
         }

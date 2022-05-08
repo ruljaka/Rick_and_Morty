@@ -1,4 +1,4 @@
-package com.ruslangrigoriev.rickandmorty.data.repository
+package com.ruslangrigoriev.rickandmorty.data
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -11,19 +11,18 @@ suspend inline fun <T> getRemoteOrCachedData(
     crossinline saveCallResult: suspend (T) -> Unit
 ): T? = withContext(Dispatchers.IO) {
     if (isNetworkAvailable) {
-        return@withContext  networkCall().body()
+        return@withContext networkCall().body()
             ?.apply { saveCallResult(this) }
     } else databaseQuery.invoke()
 }
 
-fun String.getKey(): Int? {
-    return if (this.isNotEmpty()) {
-        this.replace("\"", "")
-            .substringAfter('=')
-            .substringBefore('&')
-            .toInt()
-    } else null
+fun String?.getKey(): Int? = this?.let {
+    replace("\"", "")
+        .substringAfter('=')
+        .substringBefore('&')
+        .toInt()
 }
+
 
 
 

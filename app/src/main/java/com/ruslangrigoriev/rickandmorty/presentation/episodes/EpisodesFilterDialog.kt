@@ -31,7 +31,7 @@ class EpisodesFilterDialog : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DialogFilterEpisodesBinding.bind(
             inflater.inflate(
                 R.layout.dialog_filter_episodes,

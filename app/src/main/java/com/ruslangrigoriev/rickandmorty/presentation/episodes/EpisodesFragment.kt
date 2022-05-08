@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -40,6 +41,8 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
     private lateinit var pagingAdapter: EpisodesPagingAdapter
     private var searchQuery: String? = null
     var filter: EpisodesFilter? = null
+    private val toolbar: ActionBar?
+        get() = (activity as MainActivity).supportActionBar
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -49,8 +52,8 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        (activity as MainActivity).supportActionBar?.title = "Episodes"
+        toolbar?.setDisplayHomeAsUpEnabled(false)
+        toolbar?.title = "Episodes"
         createMenu()
         initRecyclerView()
         initSwipeToRefresh()
@@ -74,10 +77,11 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
                 }
             }
         }
+        binding.episodesRefresher.isRefreshing = false
     }
 
     private fun initRecyclerView() {
-        pagingAdapter = EpisodesPagingAdapter { id -> onListItemClick(id) }
+        pagingAdapter = EpisodesPagingAdapter { id -> onEpisodeClick(id) }
         val gridLM = GridLayoutManager(activity, 2)
         val loaderStateAdapter = LoaderStateAdapter { pagingAdapter.retry() }
         gridLM.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -94,27 +98,29 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
             adapter = pagingAdapter.withLoadStateFooter(loaderStateAdapter)
         }
 
-        pagingAdapter.addLoadStateListener { loadState ->
-            binding.episodesSwipeContainer.isRefreshing = loadState.refresh is LoadState.Loading
-            if (loadState.refresh is LoadState.Error)
-                (loadState.refresh as LoadState.Error).error.message?.showToast(requireContext())
-            binding.nothingEpisodesTextView.isVisible =
-                loadState.append.endOfPaginationReached && pagingAdapter.itemCount < 1
+        pagingAdapter.addLoadStateListener {
+            binding.episodesProgressBar.isVisible = it.refresh is LoadState.Loading
+                    && !binding.episodesRefresher.isRefreshing
+            if (it.refresh is LoadState.Error)
+                "Failed to load data \nTry refresh".showToast(requireContext())
+            binding.episodesNothingTextView.isVisible =
+                it.append.endOfPaginationReached && pagingAdapter.itemCount < 1
         }
     }
 
     private fun initSwipeToRefresh() {
         with(binding) {
-            episodesSwipeContainer.setColorSchemeColors(
-                resources.getColor(
-                    R.color.atlantis,
-                    null
-                )
-            )
-            episodesSwipeContainer.setOnRefreshListener {
+            episodesRefresher.setColorSchemeColors(resources.getColor(R.color.atlantis, null))
+            episodesRefresher.setOnRefreshListener {
+                searchQuery = null
                 filter = null
                 viewModel.getEpisodes()
                 subscribeUI()
+                binding.episodesSearchView.apply {
+                    setQuery(null, false)
+                    clearFocus()
+                    onActionViewCollapsed()
+                }
             }
         }
     }
@@ -136,7 +142,7 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
             })
     }
 
-    private fun onListItemClick(id: Int) {
+    private fun onEpisodeClick(id: Int) {
         navigator?.navigate(
             EpisodeDetailsFragment.newInstance(id),
             true
@@ -175,6 +181,5 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
             }
         }, viewLifecycleOwner, Lifecycle.State.STARTED)
     }
-
 
 }

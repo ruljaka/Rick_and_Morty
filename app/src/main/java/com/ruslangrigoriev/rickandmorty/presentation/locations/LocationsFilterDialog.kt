@@ -29,7 +29,7 @@ class LocationsFilterDialog : BottomSheetDialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DialogFilterLocationsBinding.bind(
             inflater.inflate(
                 R.layout.dialog_filter_locations,

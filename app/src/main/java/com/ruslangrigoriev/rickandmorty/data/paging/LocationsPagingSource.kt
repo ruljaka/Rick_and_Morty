@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 import com.ruslangrigoriev.rickandmorty.data.dto.locationDTO.LocationDTO
 import com.ruslangrigoriev.rickandmorty.data.local.LocationsDao
 import com.ruslangrigoriev.rickandmorty.data.remote.LocationsService
-import com.ruslangrigoriev.rickandmorty.data.repository.getKey
+import com.ruslangrigoriev.rickandmorty.data.getKey
 
 class LocationsPagingSource(
     private val name: String? = null,
