@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/placeholder_layout"
+    android:layout_width="match_parent"
+    app:shimmer_highlight_color="@color/atlantis"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/placeholder_image_ch_det_cardView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/placeholder_image_ch_det_imv"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:background="@color/grey"
+                android:scaleType="centerCrop" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/placeholder_name_ch_det_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/holder_text_bg"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/placeholder_species_ch_det_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/placeholder_image_ch_det_cardView"
+            app:layout_constraintTop_toTopOf="@+id/placeholder_image_ch_det_cardView"
+            app:layout_constraintVertical_chainStyle="spread_inside" />
+
+        <TextView
+            android:id="@+id/placeholder_species_ch_det_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/holder_text_bg"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/placeholder_type_ch_det_tv"
+            app:layout_constraintEnd_toEndOf="@+id/placeholder_name_ch_det_tv"
+            app:layout_constraintStart_toStartOf="@+id/placeholder_name_ch_det_tv"
+            app:layout_constraintTop_toBottomOf="@+id/placeholder_name_ch_det_tv" />
+
+        <TextView
+            android:id="@+id/placeholder_type_ch_det_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/holder_text_bg"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/placeholder_gender_ch_det_tv"
+            app:layout_constraintEnd_toEndOf="@+id/placeholder_species_ch_det_tv"
+            app:layout_constraintStart_toStartOf="@+id/placeholder_species_ch_det_tv"
+            app:layout_constraintTop_toBottomOf="@+id/placeholder_species_ch_det_tv" />
+
+        <TextView
+            android:id="@+id/placeholder_gender_ch_det_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/holder_text_bg"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/placeholder_origin_ch_det_tv"
+            app:layout_constraintEnd_toEndOf="@+id/placeholder_type_ch_det_tv"
+            app:layout_constraintStart_toStartOf="@+id/placeholder_type_ch_det_tv"
+            app:layout_constraintTop_toBottomOf="@+id/placeholder_type_ch_det_tv" />
+
+        <TextView
+            android:id="@+id/placeholder_origin_ch_det_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/holder_text_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/placeholder_location_ch_det_tv"
+            app:layout_constraintEnd_toEndOf="@+id/placeholder_gender_ch_det_tv"
+            app:layout_constraintStart_toStartOf="@+id/placeholder_gender_ch_det_tv"
+            app:layout_constraintTop_toBottomOf="@+id/placeholder_gender_ch_det_tv" />
+
+        <TextView
+            android:id="@+id/placeholder_location_ch_det_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/holder_text_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/placeholder_image_ch_det_cardView"
+            app:layout_constraintEnd_toEndOf="@+id/placeholder_origin_ch_det_tv"
+            app:layout_constraintStart_toStartOf="@+id/placeholder_origin_ch_det_tv"
+            app:layout_constraintTop_toBottomOf="@+id/placeholder_origin_ch_det_tv" />
+
+        <TextView
+            android:id="@+id/placeholder_episodes_label_ch_det_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Episodes"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/placeholder_image_ch_det_cardView" />
+
+        <View
+            android:id="@+id/holder_view1"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/holder_episode_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/placeholder_episodes_label_ch_det_textview" />
+
+        <View
+            android:id="@+id/holder_view2"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/holder_episode_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/holder_view1" />
+
+        <View
+            android:id="@+id/holder_view3"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/holder_episode_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/holder_view2" />
+
+        <View
+            android:id="@+id/holder_view4"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/holder_episode_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/holder_view3" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.facebook.shimmer.ShimmerFrameLayout>

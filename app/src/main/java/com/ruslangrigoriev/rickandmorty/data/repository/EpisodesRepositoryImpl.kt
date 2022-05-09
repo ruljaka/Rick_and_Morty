@@ -10,8 +10,8 @@ import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
 import com.ruslangrigoriev.rickandmorty.data.local.EpisodesDao
 import com.ruslangrigoriev.rickandmorty.data.paging.EpisodesPagingSource
 import com.ruslangrigoriev.rickandmorty.data.remote.EpisodesService
+import com.ruslangrigoriev.rickandmorty.data.toRequestString
 import com.ruslangrigoriev.rickandmorty.domain.repository.EpisodesRepository
-import com.ruslangrigoriev.rickandmorty.presentation.common.toRequestString
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -57,7 +57,14 @@ class EpisodesRepositoryImpl @Inject constructor(
                     .flow.flowOn(ioDispatcher)
             }
             true -> {
-                Pager(pagingConfig) { EpisodesPagingSource(name, episode, episodesService, episodesDao) }
+                Pager(pagingConfig) {
+                    EpisodesPagingSource(
+                        name,
+                        episode,
+                        episodesService,
+                        episodesDao
+                    )
+                }
                     .flow.flowOn(ioDispatcher)
             }
         }

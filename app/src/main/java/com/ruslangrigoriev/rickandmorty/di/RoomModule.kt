@@ -6,6 +6,9 @@ import com.ruslangrigoriev.rickandmorty.data.local.AppDataBase
 import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
 import com.ruslangrigoriev.rickandmorty.data.local.EpisodesDao
 import com.ruslangrigoriev.rickandmorty.data.local.LocationsDao
+import com.ruslangrigoriev.rickandmorty.data.local.coverters.ListConverter
+import com.ruslangrigoriev.rickandmorty.data.local.coverters.LocationConverter
+import com.ruslangrigoriev.rickandmorty.data.local.coverters.OriginConverter
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -22,6 +25,9 @@ class RoomModule {
             "app_db"
         )
             .fallbackToDestructiveMigration()
+            .addTypeConverter(ListConverter())
+            .addTypeConverter(LocationConverter())
+            .addTypeConverter(OriginConverter())
             .build()
     }
 

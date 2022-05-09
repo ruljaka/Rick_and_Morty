@@ -16,6 +16,10 @@ suspend inline fun <T> getRemoteOrCachedData(
     } else databaseQuery.invoke()
 }
 
+fun List<Int>.toRequestString(): String {
+    return this.joinToString(prefix = "[", postfix = "]")
+}
+
 fun String?.getKey(): Int? = this?.let {
     replace("\"", "")
         .substringAfter('=')

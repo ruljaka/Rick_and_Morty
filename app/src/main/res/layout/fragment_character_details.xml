@@ -5,7 +5,7 @@
     android:id="@+id/refresher_ch_det"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.characterDetails.CharacterDetailsFragment">
+    tools:context=".presentation.ui.characterDetails.CharacterDetailsFragment">
 
     <FrameLayout
         android:layout_width="match_parent"

@@ -25,10 +25,6 @@ fun List<String>.toListIds(): List<Int> {
     return this.map { (it.replace("\"", "").substringAfterLast('/')).toInt() }
 }
 
-fun List<Int>.toRequestString(): String {
-    return this.joinToString(prefix = "[", postfix = "]")
-}
-
 fun String.getId(): Int? {
     return if (this.isNotEmpty()) {
         this.replace("\"", "")

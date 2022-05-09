@@ -10,8 +10,8 @@ import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
 import com.ruslangrigoriev.rickandmorty.data.local.LocationsDao
 import com.ruslangrigoriev.rickandmorty.data.paging.LocationsPagingSource
 import com.ruslangrigoriev.rickandmorty.data.remote.LocationsService
+import com.ruslangrigoriev.rickandmorty.data.toRequestString
 import com.ruslangrigoriev.rickandmorty.domain.repository.LocationsRepository
-import com.ruslangrigoriev.rickandmorty.presentation.common.toRequestString
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

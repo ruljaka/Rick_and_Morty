@@ -5,7 +5,7 @@
     android:id="@+id/characters_refresher"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.characters.CharactersFragment">
+    tools:context=".presentation.ui.characters.CharactersFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"

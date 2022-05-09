@@ -5,7 +5,7 @@
     android:id="@+id/refresher_ep_det"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.episodeDetails.EpisodeDetailsFragment">
+    tools:context=".presentation.ui.episodeDetails.EpisodeDetailsFragment">
 
     <FrameLayout
         android:layout_width="match_parent"
