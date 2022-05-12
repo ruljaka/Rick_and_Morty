@@ -32,6 +32,7 @@ class LocationDetailsViewModel @Inject constructor(
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         Log.e(LocationDetailsViewModel::class.simpleName, throwable.message ?: "Unknown error")
         _error.postValue("Something went wrong \nTry refresh")
+        throwable.cause
         _loading.postValue(false)
     }
 

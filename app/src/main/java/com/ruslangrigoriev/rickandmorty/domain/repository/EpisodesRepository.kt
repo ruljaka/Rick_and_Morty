@@ -1,8 +1,8 @@
 package com.ruslangrigoriev.rickandmorty.domain.repository
 
 import androidx.paging.PagingData
-import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
-import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodeDTO.EpisodeDTO
 import kotlinx.coroutines.flow.Flow
 
 interface EpisodesRepository {

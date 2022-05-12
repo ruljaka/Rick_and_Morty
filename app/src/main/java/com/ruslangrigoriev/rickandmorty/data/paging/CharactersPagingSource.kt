@@ -2,10 +2,9 @@ package com.ruslangrigoriev.rickandmorty.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
 import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
 import com.ruslangrigoriev.rickandmorty.data.remote.CharactersService
-import com.ruslangrigoriev.rickandmorty.data.getKey
 
 class CharactersPagingSource(
     private val name: String? = null,
@@ -43,8 +42,8 @@ class CharactersPagingSource(
             }
             LoadResult.Page(
                 data = responseData,
-                prevKey = response?.info?.prev?.getKey(),
-                nextKey = response?.info?.next?.getKey()
+                prevKey = if (currentPage == 1) null else currentPage.minus(1),
+                nextKey = if (responseData.isEmpty()) null else currentPage.plus(1)
             )
         } catch (e: Throwable) {
             LoadResult.Error(e)

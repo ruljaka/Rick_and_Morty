@@ -1,7 +1,7 @@
 package com.ruslangrigoriev.rickandmorty.presentation.mappers
 
-import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
-import com.ruslangrigoriev.rickandmorty.data.dto.locationDTO.LocationDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locationDTO.LocationDTO
 import com.ruslangrigoriev.rickandmorty.presentation.model.LocationModel
 
 class LocationMapper : Mapper<LocationDTO, List<CharacterDTO>, LocationModel> {

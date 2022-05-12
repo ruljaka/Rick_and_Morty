@@ -1,4 +1,4 @@
-package com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO
+package com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodeDTO
 
 
 import androidx.room.Entity

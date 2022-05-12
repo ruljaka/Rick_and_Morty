@@ -55,7 +55,6 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
         super.onViewCreated(view, savedInstanceState)
         toolbar?.setDisplayHomeAsUpEnabled(true)
         toolbar?.title = "Character"
-        initRecycler()
         initSwipeToRefresh()
         fetchData()
     }
@@ -65,30 +64,23 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
             viewModel.fetchCharacter(characterId)
             isLoaded = true
         }
-        viewModel.loading.observe(viewLifecycleOwner) {
+        viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
             with(binding) {
-                progressBarChDet.isVisible = it && !refresherChDet.isRefreshing
-                layoutChDet.isVisible = !it
-                //placeholderChDet.placeholderLayout.isVisible = it
-                if (it == false) refresherChDet.isRefreshing = it
+                progressBarChDet.isVisible = isLoading && !refresherChDet.isRefreshing
+                layoutChDet.isVisible = !isLoading
+                if (isLoading == false) refresherChDet.isRefreshing = isLoading
             }
         }
-        viewModel.data.observe(viewLifecycleOwner) {
-            bindUi(it)
+        viewModel.data.observe(viewLifecycleOwner) { character ->
+            bindUi(character)
         }
-        viewModel.error.observe(viewLifecycleOwner) {
-            it?.showToast(requireContext())
+        viewModel.error.observe(viewLifecycleOwner) { message ->
+            message?.showToast(requireContext())
         }
-    }
-
-    private fun initRecycler() {
-        episodesAdapter = EpisodesAdapter { id -> onListItemClick(id) }
-        binding.recyclerChDet.adapter = episodesAdapter
     }
 
     private fun bindUi(character: CharacterModel) {
         with(binding) {
-            //toolbar?.title = character.name
             nameChDetTv.text = getString(R.string.character_name, character.name)
             speciesChDetTv.text = getString(R.string.character_species, character.species)
             typeChDetTv.text =
@@ -128,7 +120,8 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
                     statusChDetImv.setImageResource(R.drawable.icon_status_unknown)
                 }
             }
-            episodesAdapter.setData(character.episodes)
+            episodesAdapter = EpisodesAdapter(character.episodes) { id -> onListItemClick(id) }
+            binding.recyclerChDet.adapter = episodesAdapter
         }
     }
 

@@ -13,7 +13,8 @@ suspend inline fun <T> getRemoteOrCachedData(
     if (isNetworkAvailable) {
         return@withContext networkCall().body()
             ?.apply { saveCallResult(this) }
-    } else databaseQuery.invoke()
+    } else
+        return@withContext databaseQuery.invoke()
 }
 
 fun List<Int>.toRequestString(): String {

@@ -1,6 +1,6 @@
 package com.ruslangrigoriev.rickandmorty.presentation.model
 
-import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
 
 data class EpisodeModel(
     val id: Int,

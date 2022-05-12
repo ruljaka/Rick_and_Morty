@@ -10,13 +10,13 @@ import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentEpisodeDetailsBinding
-import com.ruslangrigoriev.rickandmorty.presentation.model.EpisodeModel
-import com.ruslangrigoriev.rickandmorty.presentation.ui.characterDetails.CharacterDetailsFragment
-import com.ruslangrigoriev.rickandmorty.presentation.ui.characters.adapters.CharactersAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
 import com.ruslangrigoriev.rickandmorty.presentation.common.appComponent
 import com.ruslangrigoriev.rickandmorty.presentation.common.navigator
 import com.ruslangrigoriev.rickandmorty.presentation.common.showToast
+import com.ruslangrigoriev.rickandmorty.presentation.model.EpisodeModel
+import com.ruslangrigoriev.rickandmorty.presentation.ui.characterDetails.CharacterDetailsFragment
+import com.ruslangrigoriev.rickandmorty.presentation.ui.characters.adapters.CharactersAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.ui.main.MainActivity
 import javax.inject.Inject
 
@@ -53,7 +53,6 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
         super.onViewCreated(view, savedInstanceState)
         toolbar?.setDisplayHomeAsUpEnabled(true)
         toolbar?.title = "Episode"
-        initRecycler()
         initSwipeToRefresh()
         fetchData()
     }
@@ -63,24 +62,19 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
             viewModel.fetchEpisode(episodeId)
             isLoaded = true
         }
-        viewModel.loading.observe(viewLifecycleOwner) {
+        viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
             with(binding) {
-                progressBarEpDet.isVisible = it && !refresherEpDet.isRefreshing
-                layoutEpDet.isVisible = !it
-                if (it == false) refresherEpDet.isRefreshing = it
+                progressBarEpDet.isVisible = isLoading && !refresherEpDet.isRefreshing
+                layoutEpDet.isVisible = !isLoading
+                if (isLoading == false) refresherEpDet.isRefreshing = isLoading
             }
         }
-        viewModel.data.observe(viewLifecycleOwner) {
-            bindUi(it)
+        viewModel.data.observe(viewLifecycleOwner) { episode ->
+            bindUi(episode)
         }
-        viewModel.error.observe(viewLifecycleOwner) {
-            it?.showToast(requireContext())
+        viewModel.error.observe(viewLifecycleOwner) { message ->
+            message?.showToast(requireContext())
         }
-    }
-
-    private fun initRecycler() {
-        charactersAdapter = CharactersAdapter { id -> onListItemClick(id) }
-        binding.recyclerEpDet.adapter = charactersAdapter
     }
 
     private fun bindUi(episode: EpisodeModel) {
@@ -88,7 +82,8 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
             nameEpDetTv.text = episode.name
             dateEpDetTv.text = episode.airDate
             episodeEpDetTv.text = episode.episode
-            charactersAdapter.setData(episode.characters)
+            charactersAdapter = CharactersAdapter(episode.characters) { id -> onListItemClick(id) }
+            binding.recyclerEpDet.adapter = charactersAdapter
         }
     }
 

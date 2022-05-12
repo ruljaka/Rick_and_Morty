@@ -1,8 +1,8 @@
 package com.ruslangrigoriev.rickandmorty.data.remote
 
-import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
-import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterResponse
-import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterResponse
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodeDTO.EpisodeDTO
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -10,7 +10,7 @@ import retrofit2.http.Query
 
 interface CharactersService {
 
-    @GET("character/")
+    @GET("character")
     suspend fun getCharacters(
         @Query("page") page: Int = 1,
         @Query("name") name: String? = null,

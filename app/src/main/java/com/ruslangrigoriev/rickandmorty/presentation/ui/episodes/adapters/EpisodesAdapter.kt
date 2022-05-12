@@ -4,18 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ruslangrigoriev.rickandmorty.R
-import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodeDTO.EpisodeDTO
 
 class EpisodesAdapter(
+    private val dataList: List<EpisodeDTO>,
     private val onItemClicked: (id: Int) -> Unit
 ) : RecyclerView.Adapter<EpisodeViewHolder>() {
-
-    private var dataList: List<EpisodeDTO>? = null
-
-    fun setData(list: List<EpisodeDTO>) {
-        dataList = list
-        notifyDataSetChanged()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EpisodeViewHolder {
         val view =
@@ -24,9 +18,8 @@ class EpisodesAdapter(
     }
 
     override fun onBindViewHolder(holder: EpisodeViewHolder, position: Int) {
-        dataList?.get(position)?.let { holder.bind(it) }
+        holder.bind(dataList[position])
     }
 
-    override fun getItemCount(): Int = dataList?.size ?: 0
-
+    override fun getItemCount(): Int = dataList.size
 }

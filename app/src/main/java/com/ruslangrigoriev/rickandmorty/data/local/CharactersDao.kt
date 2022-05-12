@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
 
 @Dao
 interface CharactersDao {
@@ -37,5 +37,8 @@ interface CharactersDao {
 
     @Query("SELECT * FROM CharacterDTO WHERE id IN (:characterIds)")
     suspend fun getListCharactersByIds(characterIds: List<Int>): List<CharacterDTO>?
+
+    @Query("DELETE FROM CharacterDTO")
+    suspend fun deleteAll(): Int
 
 }

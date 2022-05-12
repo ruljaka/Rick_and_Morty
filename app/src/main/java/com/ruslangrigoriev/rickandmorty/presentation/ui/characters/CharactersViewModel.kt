@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
 import com.ruslangrigoriev.rickandmorty.domain.useCases.characters.GetCharactersUseCase
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -18,7 +18,7 @@ class CharactersViewModel @Inject constructor(
         get() = _charactersFlow
 
     init {
-         getCharacters()
+        getCharacters()
     }
 
     fun getCharacters(filter: CharactersFilter? = null) {
@@ -30,5 +30,4 @@ class CharactersViewModel @Inject constructor(
             gender = filter?.gender
         ).cachedIn(viewModelScope)
     }
-
 }

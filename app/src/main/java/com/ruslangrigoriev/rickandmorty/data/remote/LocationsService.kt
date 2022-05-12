@@ -1,8 +1,8 @@
 package com.ruslangrigoriev.rickandmorty.data.remote
 
-import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
-import com.ruslangrigoriev.rickandmorty.data.dto.locationDTO.LocationDTO
-import com.ruslangrigoriev.rickandmorty.data.dto.locationDTO.LocationResponse
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locationDTO.LocationDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locationDTO.LocationResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -10,7 +10,7 @@ import retrofit2.http.Query
 
 interface LocationsService {
 
-    @GET("location/")
+    @GET("location")
     suspend fun getLocations(
         @Query("page") page: Int = 1,
         @Query("name") name: String? = null,

@@ -78,7 +78,6 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
                 }
             }
         }
-        binding.locationsRefresher.isRefreshing = false
     }
 
     private fun initRecyclerView() {
@@ -99,13 +98,16 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
             adapter = pagingAdapter.withLoadStateFooter(loaderStateAdapter)
         }
 
-        pagingAdapter.addLoadStateListener {
-            binding.locationsProgressBar.isVisible = it.refresh is LoadState.Loading
+        pagingAdapter.addLoadStateListener {loadState ->
+            val isLoading = loadState.refresh is LoadState.Loading
+            val isError = loadState.refresh is LoadState.Error
+            val isPagingEnded = loadState.append.endOfPaginationReached
+            binding.locationsProgressBar.isVisible = isLoading
                     && !binding.locationsRefresher.isRefreshing
-            if (it.refresh is LoadState.Error)
-                "Failed to load data \nTry refresh".showToast(requireContext())
+            if (isError) "Failed to load data \nTry refresh".showToast(requireContext())
             binding.locationsNothingTextView.isVisible =
-                it.append.endOfPaginationReached && pagingAdapter.itemCount < 1
+                isPagingEnded && pagingAdapter.itemCount < 1
+            if (!isLoading || isError) binding.locationsRefresher.isRefreshing = false
         }
     }
 

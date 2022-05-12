@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodeDTO.EpisodeDTO
 import com.ruslangrigoriev.rickandmorty.domain.useCases.episodes.GetEpisodesUseCase
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

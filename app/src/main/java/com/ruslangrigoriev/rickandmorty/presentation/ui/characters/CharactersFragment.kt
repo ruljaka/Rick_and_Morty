@@ -20,11 +20,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentCharactersBinding
+import com.ruslangrigoriev.rickandmorty.presentation.common.*
 import com.ruslangrigoriev.rickandmorty.presentation.ui.characterDetails.CharacterDetailsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.ui.characters.CharactersFilterDialog.Companion.CHARACTERS_DIALOG_FILTER_ARG
 import com.ruslangrigoriev.rickandmorty.presentation.ui.characters.CharactersFilterDialog.Companion.CHARACTERS_DIALOG_REQUEST_KEY
 import com.ruslangrigoriev.rickandmorty.presentation.ui.characters.adapters.CharactersPagingAdapter
-import com.ruslangrigoriev.rickandmorty.presentation.common.*
 import com.ruslangrigoriev.rickandmorty.presentation.ui.main.MainActivity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.cancellable
@@ -74,10 +74,10 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
                                 || it.species.lowercase(Locale.getDefault()).contains(query)
                     }
                     pagingAdapter.submitData(data)
+                    binding.charactersRecView.layoutManager?.scrollToPosition(0)
                 }
             }
         }
-        binding.charactersRefresher.isRefreshing = false
     }
 
     private fun initRecyclerView() {
@@ -98,13 +98,16 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
             adapter = pagingAdapter.withLoadStateFooter(loaderStateAdapter)
         }
 
-        pagingAdapter.addLoadStateListener {
-            binding.charactersProgressBar.isVisible = it.refresh is LoadState.Loading
+        pagingAdapter.addLoadStateListener { loadState ->
+            val isLoading = loadState.refresh is LoadState.Loading
+            val isError = loadState.refresh is LoadState.Error
+            val isPagingEnded = loadState.append.endOfPaginationReached
+            binding.charactersProgressBar.isVisible = isLoading
                     && !binding.charactersRefresher.isRefreshing
-            if (it.refresh is LoadState.Error)
-                "Failed to load data \nTry refresh".showToast(requireContext())
+            if (isError) "Failed to load data \nTry refresh".showToast(requireContext())
             binding.charactersNothingTextView.isVisible =
-                it.append.endOfPaginationReached && pagingAdapter.itemCount < 1
+                isPagingEnded && pagingAdapter.itemCount < 1
+            if (!isLoading || isError) binding.charactersRefresher.isRefreshing = false
         }
     }
 

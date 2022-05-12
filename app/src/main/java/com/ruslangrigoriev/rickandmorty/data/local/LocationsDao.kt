@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.ruslangrigoriev.rickandmorty.data.dto.locationDTO.LocationDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locationDTO.LocationDTO
 
 @Dao
 interface LocationsDao {
@@ -30,5 +30,8 @@ interface LocationsDao {
 
     @Query("SELECT * FROM LocationDTO WHERE id = :locationID")
     suspend fun getLocationById(locationID: Int): LocationDTO?
+
+    @Query("DELETE FROM LocationDTO")
+    fun deleteAll(): Int
 
 }

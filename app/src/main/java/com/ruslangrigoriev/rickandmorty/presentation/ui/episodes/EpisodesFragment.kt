@@ -77,7 +77,6 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
                 }
             }
         }
-        binding.episodesRefresher.isRefreshing = false
     }
 
     private fun initRecyclerView() {
@@ -99,12 +98,15 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
         }
 
         pagingAdapter.addLoadStateListener {
-            binding.episodesProgressBar.isVisible = it.refresh is LoadState.Loading
+            val isLoading = it.refresh is LoadState.Loading
+            val isError = it.refresh is LoadState.Error
+            val isPagingEnded = it.append.endOfPaginationReached
+            binding.episodesProgressBar.isVisible = isLoading
                     && !binding.episodesRefresher.isRefreshing
-            if (it.refresh is LoadState.Error)
-                "Failed to load data \nTry refresh".showToast(requireContext())
-            binding.episodesNothingTextView.isVisible =
-                it.append.endOfPaginationReached && pagingAdapter.itemCount < 1
+            if (isError) "Failed to load data \nTry refresh".showToast(requireContext())
+            binding.episodesNothingTextView.isVisible = isPagingEnded
+                    && pagingAdapter.itemCount < 1
+            if (!isLoading || isError) binding.episodesRefresher.isRefreshing = false
         }
     }
 
@@ -112,15 +114,15 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
         with(binding) {
             episodesRefresher.setColorSchemeColors(resources.getColor(R.color.atlantis, null))
             episodesRefresher.setOnRefreshListener {
-                searchQuery = null
-                filter = null
-                viewModel.getEpisodes()
-                subscribeUI()
                 binding.episodesSearchView.apply {
                     setQuery(null, false)
                     clearFocus()
                     onActionViewCollapsed()
                 }
+                searchQuery = null
+                filter = null
+                viewModel.getEpisodes()
+                subscribeUI()
             }
         }
     }

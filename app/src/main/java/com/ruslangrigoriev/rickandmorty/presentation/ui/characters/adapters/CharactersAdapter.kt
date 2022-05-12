@@ -4,18 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ruslangrigoriev.rickandmorty.R
-import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
 
 class CharactersAdapter(
+    private val dataList: List<CharacterDTO>,
     private val onItemClicked: (id: Int) -> Unit
 ) : RecyclerView.Adapter<CharacterViewHolder>() {
-
-    private var dataList: List<CharacterDTO>? = null
-
-    fun setData(list: List<CharacterDTO>) {
-        dataList = list
-        notifyDataSetChanged()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         val view =
@@ -24,9 +18,8 @@ class CharactersAdapter(
     }
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
-        dataList?.get(position)?.let { holder.bind(it) }
+        holder.bind(dataList[position])
     }
 
-    override fun getItemCount(): Int = dataList?.size ?: 0
-
+    override fun getItemCount(): Int = dataList.size
 }

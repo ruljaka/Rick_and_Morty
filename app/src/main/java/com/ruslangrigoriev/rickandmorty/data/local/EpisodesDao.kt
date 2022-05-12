@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodeDTO.EpisodeDTO
 
 @Dao
 interface EpisodesDao {
@@ -31,5 +31,8 @@ interface EpisodesDao {
 
     @Query("SELECT * FROM EpisodeDTO WHERE id IN (:episodeIds)")
     suspend fun getListEpisodesByIds(episodeIds: List<Int>): List<EpisodeDTO>?
+
+    @Query("DELETE FROM EpisodeDTO")
+    fun deleteAll(): Int
 
 }

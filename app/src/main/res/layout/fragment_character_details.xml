@@ -22,10 +22,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <include android:id="@+id/placeholder_ch_det"
-            android:visibility="gone"
-            layout="@layout/placeholder_character_details"/>
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_ch_det"
             android:layout_width="match_parent"

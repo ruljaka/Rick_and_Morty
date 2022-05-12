@@ -10,13 +10,13 @@ import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentLocationDetailsBinding
-import com.ruslangrigoriev.rickandmorty.presentation.model.LocationModel
-import com.ruslangrigoriev.rickandmorty.presentation.ui.characterDetails.CharacterDetailsFragment
-import com.ruslangrigoriev.rickandmorty.presentation.ui.characters.adapters.CharactersAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
 import com.ruslangrigoriev.rickandmorty.presentation.common.appComponent
 import com.ruslangrigoriev.rickandmorty.presentation.common.navigator
 import com.ruslangrigoriev.rickandmorty.presentation.common.showToast
+import com.ruslangrigoriev.rickandmorty.presentation.model.LocationModel
+import com.ruslangrigoriev.rickandmorty.presentation.ui.characterDetails.CharacterDetailsFragment
+import com.ruslangrigoriev.rickandmorty.presentation.ui.characters.adapters.CharactersAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.ui.main.MainActivity
 import javax.inject.Inject
 
@@ -53,7 +53,6 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_location_details) {
         super.onViewCreated(view, savedInstanceState)
         toolbar?.setDisplayHomeAsUpEnabled(true)
         toolbar?.title = "Location"
-        initRecycler()
         initSwipeToRefresh()
         fetchData()
     }
@@ -63,24 +62,19 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_location_details) {
             viewModel.fetchLocation(locationId)
             isLoaded = true
         }
-        viewModel.loading.observe(viewLifecycleOwner) {
+        viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
             with(binding) {
-                progressBarLocDet.isVisible = it && !refresherLocDet.isRefreshing
-                layoutLocDet.isVisible = !it
-                if (it == false) refresherLocDet.isRefreshing = it
+                progressBarLocDet.isVisible = isLoading && !refresherLocDet.isRefreshing
+                layoutLocDet.isVisible = !isLoading
+                if (isLoading == false) refresherLocDet.isRefreshing = isLoading
             }
         }
-        viewModel.data.observe(viewLifecycleOwner) {
-            bindUi(it)
+        viewModel.data.observe(viewLifecycleOwner) { location ->
+            bindUi(location)
         }
-        viewModel.error.observe(viewLifecycleOwner) {
-            it?.showToast(requireContext())
+        viewModel.error.observe(viewLifecycleOwner) { message ->
+            message?.showToast(requireContext())
         }
-    }
-
-    private fun initRecycler() {
-        residentsAdapter = CharactersAdapter { id -> onListItemClick(id) }
-        binding.recyclerLocDet.adapter = residentsAdapter
     }
 
     private fun bindUi(location: LocationModel) {
@@ -88,7 +82,8 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_location_details) {
             nameLocDetTv.text = location.name
             typeLocDetTv.text = location.type
             dimensionLocDetTv.text = location.dimension
-            residentsAdapter.setData(location.residents)
+            residentsAdapter = CharactersAdapter(location.residents) { id -> onListItemClick(id) }
+            binding.recyclerLocDet.adapter = residentsAdapter
         }
     }
 

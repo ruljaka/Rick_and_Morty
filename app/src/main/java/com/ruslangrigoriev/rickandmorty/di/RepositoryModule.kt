@@ -14,6 +14,9 @@ import com.ruslangrigoriev.rickandmorty.domain.repository.EpisodesRepository
 import com.ruslangrigoriev.rickandmorty.domain.repository.LocationsRepository
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 
 @Module
@@ -21,31 +24,50 @@ class RepositoryModule {
 
     @Singleton
     @Provides
+    fun providesCoroutineScope(): CoroutineScope {
+        return CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    }
+
+    @Singleton
+    @Provides
     fun provideCharactersRepository(
+        coroutineScope: CoroutineScope,
         charactersService: CharactersService,
         charactersDao: CharactersDao,
         episodesDao: EpisodesDao
     ): CharactersRepository {
-        return CharactersRepositoryImpl(charactersService, charactersDao, episodesDao)
+        return CharactersRepositoryImpl(
+            coroutineScope,
+            charactersService,
+            charactersDao,
+            episodesDao
+        )
     }
 
     @Singleton
     @Provides
     fun provideEpisodesRepository(
+        coroutineScope: CoroutineScope,
         episodesService: EpisodesService,
         charactersDao: CharactersDao,
         episodesDao: EpisodesDao
     ): EpisodesRepository {
-        return EpisodesRepositoryImpl(episodesService, charactersDao, episodesDao)
+        return EpisodesRepositoryImpl(coroutineScope, episodesService, charactersDao, episodesDao)
     }
 
     @Singleton
     @Provides
     fun provideLocationsRepository(
+        coroutineScope: CoroutineScope,
         locationsService: LocationsService,
         charactersDao: CharactersDao,
         locationsDao: LocationsDao
     ): LocationsRepository {
-        return LocationsRepositoryImpl(locationsService, charactersDao, locationsDao)
+        return LocationsRepositoryImpl(
+            coroutineScope,
+            locationsService,
+            charactersDao,
+            locationsDao
+        )
     }
 }

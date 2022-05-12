@@ -6,7 +6,7 @@ import javax.inject.Inject
 class GetCharactersUseCase @Inject constructor(
     private val charactersRepository: CharactersRepository
 ) {
-    operator fun invoke(
+     operator fun invoke(
         name: String? = null,
         status: String? = null,
         species: String? = null,

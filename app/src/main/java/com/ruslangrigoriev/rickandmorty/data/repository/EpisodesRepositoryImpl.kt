@@ -3,8 +3,8 @@ package com.ruslangrigoriev.rickandmorty.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.ruslangrigoriev.rickandmorty.data.dto.characterDTO.CharacterDTO
-import com.ruslangrigoriev.rickandmorty.data.dto.episodeDTO.EpisodeDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodeDTO.EpisodeDTO
 import com.ruslangrigoriev.rickandmorty.data.getRemoteOrCachedData
 import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
 import com.ruslangrigoriev.rickandmorty.data.local.EpisodesDao
@@ -13,12 +13,15 @@ import com.ruslangrigoriev.rickandmorty.data.remote.EpisodesService
 import com.ruslangrigoriev.rickandmorty.data.toRequestString
 import com.ruslangrigoriev.rickandmorty.domain.repository.EpisodesRepository
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class EpisodesRepositoryImpl @Inject constructor(
+    private val coroutineScope: CoroutineScope,
     private val episodesService: EpisodesService,
     private val charactersDao: CharactersDao,
     private val episodesDao: EpisodesDao
@@ -26,9 +29,20 @@ class EpisodesRepositoryImpl @Inject constructor(
 
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private var isNetworkAvailable: Boolean = false
+    private var isCacheCleared: Boolean = false
 
     override fun setNetworkStatus(status: Boolean) {
         isNetworkAvailable = status
+        isCacheCleared = !status
+    }
+
+    private fun clearCache() {
+        coroutineScope.launch {
+            if (isNetworkAvailable) {
+                charactersDao.deleteAll()
+                isCacheCleared = true
+            }
+        }
     }
 
     override suspend fun getEpisodeById(episodeID: Int): EpisodeDTO? =
@@ -50,6 +64,7 @@ class EpisodesRepositoryImpl @Inject constructor(
     override fun getEpisodes(
         name: String?, episode: String?
     ): Flow<PagingData<EpisodeDTO>> {
+        if (!isCacheCleared) clearCache()
         val pagingConfig = PagingConfig(pageSize = 20, enablePlaceholders = false)
         return when (isNetworkAvailable) {
             false -> {
@@ -58,12 +73,7 @@ class EpisodesRepositoryImpl @Inject constructor(
             }
             true -> {
                 Pager(pagingConfig) {
-                    EpisodesPagingSource(
-                        name,
-                        episode,
-                        episodesService,
-                        episodesDao
-                    )
+                    EpisodesPagingSource(name, episode, episodesService, episodesDao)
                 }
                     .flow.flowOn(ioDispatcher)
             }
