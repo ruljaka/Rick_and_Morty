@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
 import com.ruslangrigoriev.rickandmorty.domain.useCases.characters.GetCharactersUseCase
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -13,8 +13,8 @@ class CharactersViewModel @Inject constructor(
     private val getCharactersUseCase: GetCharactersUseCase
 ) : ViewModel() {
 
-    private var _charactersFlow: Flow<PagingData<CharacterDTO>>? = null
-    val charactersFlow: Flow<PagingData<CharacterDTO>>?
+    private var _charactersFlow: Flow<PagingData<Character>>? = null
+    val charactersFlow: Flow<PagingData<Character>>?
         get() = _charactersFlow
 
     init {

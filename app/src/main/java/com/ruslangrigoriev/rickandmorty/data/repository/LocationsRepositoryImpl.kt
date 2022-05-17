@@ -1,11 +1,10 @@
 package com.ruslangrigoriev.rickandmorty.data.repository
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locationDTO.LocationDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locations.Location
 import com.ruslangrigoriev.rickandmorty.data.getRemoteOrCachedData
 import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
 import com.ruslangrigoriev.rickandmorty.data.local.LocationsDao
@@ -39,23 +38,20 @@ class LocationsRepositoryImpl @Inject constructor(
 
     private fun clearCache() {
         coroutineScope.launch {
-            if (isNetworkAvailable) {
-                Log.i("TAG", "clearCache")
-                charactersDao.deleteAll()
-                isCacheCleared = true
-            }
+            charactersDao.deleteAll()
+            isCacheCleared = true
         }
     }
 
-    override suspend fun getLocationById(locationID: Int): LocationDTO? =
+    override suspend fun getLocationById(locationID: Int): Location? =
         getRemoteOrCachedData(
             isNetworkAvailable,
-            { locationsService.getLocation(locationID) },
+            { locationsService.getLocationById(locationID) },
             { locationsDao.getLocationById(locationID) },
             { locationsDao.insertLocation(it) }
         )
 
-    override suspend fun getLocationResidents(ids: List<Int>): List<CharacterDTO>? =
+    override suspend fun getLocationResidents(ids: List<Int>): List<Character>? =
         getRemoteOrCachedData(
             isNetworkAvailable,
             { locationsService.getLocationCharacters(ids.toRequestString()) },
@@ -65,7 +61,7 @@ class LocationsRepositoryImpl @Inject constructor(
 
     override fun getLocations(
         name: String?, type: String?, dimension: String?
-    ): Flow<PagingData<LocationDTO>> {
+    ): Flow<PagingData<Location>> {
         if (!isCacheCleared) clearCache()
         val pagingConfig = PagingConfig(pageSize = 20, enablePlaceholders = false)
         return when (isNetworkAvailable) {

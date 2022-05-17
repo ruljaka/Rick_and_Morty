@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="8dp"
-        app:cardCornerRadius="8dp"
         android:backgroundTint="@color/atlantis"
+        app:cardCornerRadius="8dp"
         app:cardElevation="4dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,34 +25,42 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/location_type_textView"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="spread_inside"
-                tools:text="name" />
+                tools:text="Earth (Giant Telepathic Spiders Dimension)" />
 
             <TextView
                 android:id="@+id/location_type_textView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:layout_marginTop="4dp"
+                android:textColor="#E6E6E6"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toTopOf="@+id/location_dimension_textView"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/location_name_textView"
-                tools:text="type" />
+                tools:text="Planet" />
 
             <TextView
                 android:id="@+id/location_dimension_textView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:layout_marginTop="4dp"
+                android:textColor="#E6E6E6"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/location_type_textView"
-                tools:text="dimension" />
+                tools:text="Giant Telepathic Spiders Dimension" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

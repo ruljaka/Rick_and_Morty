@@ -1,4 +1,4 @@
-package com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodeDTO
+package com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locations
 
 
 import com.google.gson.annotations.SerializedName

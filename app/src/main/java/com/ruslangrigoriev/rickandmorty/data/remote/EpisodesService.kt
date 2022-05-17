@@ -1,8 +1,8 @@
 package com.ruslangrigoriev.rickandmorty.data.remote
 
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodeDTO.EpisodeDTO
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodeDTO.EpisodeResponse
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodes.Episode
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodes.EpisodeResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -18,12 +18,12 @@ interface EpisodesService {
     ): Response<EpisodeResponse>
 
     @GET("episode/{id}")
-    suspend fun getEpisode(
+    suspend fun getEpisodeById(
         @Path("id") episodeID: Int
-    ): Response<EpisodeDTO>
+    ): Response<Episode>
 
     @GET("character/{ids}")
     suspend fun getEpisodeCharacters(
         @Path("ids") ids: String
-    ): Response<List<CharacterDTO>>
+    ): Response<List<Character>>
 }

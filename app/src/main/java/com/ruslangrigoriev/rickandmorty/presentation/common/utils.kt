@@ -1,6 +1,7 @@
 package com.ruslangrigoriev.rickandmorty.presentation.common
 
 import android.content.Context
+import android.net.Uri
 import android.widget.Toast
 import com.ruslangrigoriev.rickandmorty.App
 import com.ruslangrigoriev.rickandmorty.di.AppComponent
@@ -17,17 +18,12 @@ val Context.navigator: FragmentNavigator?
         else -> null
     }
 
-fun String.showToast(context: Context) {
-    Toast.makeText(context, this, Toast.LENGTH_SHORT).show()
+fun showToast(context: Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
 fun List<String>.toListIds(): List<Int> {
-    return this.map { (it.replace("\"", "").substringAfterLast('/')).toInt() }
+    return this.map { it.getId()!! }
 }
 
-fun String.getId(): Int? {
-    return if (this.isNotEmpty()) {
-        this.replace("\"", "")
-            .substringAfterLast('/').toInt()
-    } else null
-}
+fun String.getId(): Int? = Uri.parse(this).lastPathSegment?.toInt()

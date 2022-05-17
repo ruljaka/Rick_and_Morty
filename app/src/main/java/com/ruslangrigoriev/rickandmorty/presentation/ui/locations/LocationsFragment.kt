@@ -58,10 +58,10 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
         initRecyclerView()
         initSwipeToRefresh()
         initSearch()
-        subscribeUI()
+        collectData()
     }
 
-    private fun subscribeUI() {
+    private fun collectData() {
         collectingJob?.cancel()
         collectingJob = lifecycleScope.launchWhenStarted {
             viewModel.locationsFlow?.cancellable()?.collect { pagingData ->
@@ -86,28 +86,21 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
         val loaderStateAdapter = LoaderStateAdapter { pagingAdapter.retry() }
         gridLM.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (position == pagingAdapter.itemCount && loaderStateAdapter.itemCount > 0) {
-                    2
-                } else {
-                    1
-                }
+                return if (position == pagingAdapter.itemCount && loaderStateAdapter.itemCount > 0) { 2 } else { 1 }
             }
         }
         binding.locationsRecyclerView.apply {
             layoutManager = gridLM
             adapter = pagingAdapter.withLoadStateFooter(loaderStateAdapter)
         }
-
-        pagingAdapter.addLoadStateListener {loadState ->
+        pagingAdapter.addLoadStateListener { loadState ->
             val isLoading = loadState.refresh is LoadState.Loading
             val isError = loadState.refresh is LoadState.Error
             val isPagingEnded = loadState.append.endOfPaginationReached
-            binding.locationsProgressBar.isVisible = isLoading
-                    && !binding.locationsRefresher.isRefreshing
-            if (isError) "Failed to load data \nTry refresh".showToast(requireContext())
+            binding.locationsRefresher.isRefreshing = isLoading
             binding.locationsNothingTextView.isVisible =
-                isPagingEnded && pagingAdapter.itemCount < 1
-            if (!isLoading || isError) binding.locationsRefresher.isRefreshing = false
+                isPagingEnded && pagingAdapter.itemCount == 0
+            if (isError) showToast(requireContext(), getString(R.string.error_message))
         }
     }
 
@@ -115,34 +108,38 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
         with(binding) {
             locationsRefresher.setColorSchemeColors(resources.getColor(R.color.atlantis, null))
             locationsRefresher.setOnRefreshListener {
-                searchQuery = null
                 filter = null
-                viewModel.getLocations()
-                subscribeUI()
-                binding.locationsSearchView.apply {
-                    setQuery(null, false)
-                    clearFocus()
-                    onActionViewCollapsed()
-                }
+                resetSearch()
+                refreshData(filter)
             }
         }
     }
 
     private fun initSearch() {
-        binding.locationsSearchView.setOnQueryTextListener(object :
-            SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                searchQuery = query
-                pagingAdapter.refresh()
-                return false
+        binding.locationsSearchView.apply {
+            setOnCloseListener {
+                binding.locationsRecyclerView.layoutManager?.scrollToPosition(0)
+                false
             }
+            setOnQueryTextFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    setOnQueryTextListener(
+                        object : SearchView.OnQueryTextListener {
+                            override fun onQueryTextSubmit(query: String?): Boolean {
+                                searchQuery = query
+                                refreshData(filter)
+                                return false
+                            }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                searchQuery = newText
-                pagingAdapter.refresh()
-                return false
+                            override fun onQueryTextChange(newText: String?): Boolean {
+                                searchQuery = newText
+                                refreshData(filter)
+                                return false
+                            }
+                        })
+                }
             }
-        })
+        }
     }
 
     private fun showFilter() {
@@ -155,8 +152,21 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
         )
         { _, bundle ->
             filter = bundle.getSerializable(LOCATIONS_DIALOG_FILTER_ARG) as LocationsFilter
-            viewModel.getLocations(filter)
-            subscribeUI()
+            resetSearch()
+            refreshData(filter)
+        }
+    }
+
+    private fun refreshData(filter: LocationsFilter?) {
+        viewModel.getLocations(filter)
+        collectData()
+    }
+
+    private fun resetSearch() {
+        binding.locationsSearchView.apply {
+            setQuery(null, false)
+            clearFocus()
+            onActionViewCollapsed()
         }
     }
 

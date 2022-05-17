@@ -10,13 +10,13 @@ import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.databinding.ActivityMainBinding
-import com.ruslangrigoriev.rickandmorty.presentation.ui.characters.CharactersFragment
 import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
 import com.ruslangrigoriev.rickandmorty.presentation.common.appComponent
 import com.ruslangrigoriev.rickandmorty.presentation.common.showToast
+import com.ruslangrigoriev.rickandmorty.presentation.networkTracker.NetworkStatus
+import com.ruslangrigoriev.rickandmorty.presentation.ui.characters.CharactersFragment
 import com.ruslangrigoriev.rickandmorty.presentation.ui.episodes.EpisodesFragment
 import com.ruslangrigoriev.rickandmorty.presentation.ui.locations.LocationsFragment
-import com.ruslangrigoriev.rickandmorty.presentation.networkTracker.NetworkStatus
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(R.layout.activity_main), FragmentNavigator {
@@ -26,9 +26,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), FragmentNavigato
     private var keep = true
     private val delay = 1000L
     private val binding by viewBinding(ActivityMainBinding::bind)
+    private var currentFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        startSplashScreen(savedInstanceState)
+        startSplashScreen()
         super.onCreate(savedInstanceState)
         this.appComponent.inject(this)
         observeConnection()
@@ -37,15 +38,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), FragmentNavigato
         setupBottomNavigation()
     }
 
-    private fun startSplashScreen(savedInstanceState: Bundle?) {
+    private fun startSplashScreen() {
         val splashScreen = installSplashScreen()
         splashScreen.setKeepOnScreenCondition { keep }
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
             keep = false
-            if (savedInstanceState == null) {
-                binding.bttmNav.selectedItemId = R.id.characters
-            }
+            binding.bttmNav.selectedItemId = R.id.characters
         }, delay)
     }
 
@@ -70,14 +69,14 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), FragmentNavigato
 
     private fun observeConnection() {
         lifecycleScope.launchWhenCreated {
-            viewModel.state.collect {
+            viewModel.networkState.collect {
                 when (it) {
                     NetworkStatus.Available -> {
-                        "Network Available".showToast(this@MainActivity)
+                        showToast(this@MainActivity, "Network Available")
                         viewModel.setNetworkStatus(true)
                     }
                     NetworkStatus.Unavailable -> {
-                        "Network Unavailable".showToast(this@MainActivity)
+                        showToast(this@MainActivity, "Network Unavailable")
                         viewModel.setNetworkStatus(false)
                     }
                 }
@@ -89,9 +88,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), FragmentNavigato
         onBackPressed()
         return true
     }
-
-    override var currentFragment: Fragment? = null
-        get() = supportFragmentManager.findFragmentByTag("CURRENT_FRAGMENT")
 
     override fun navigate(
         fragment: Fragment,

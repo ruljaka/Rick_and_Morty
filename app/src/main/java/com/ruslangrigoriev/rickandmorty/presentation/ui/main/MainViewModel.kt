@@ -10,14 +10,14 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    private val networkStatusTracker: NetworkStatusTracker,
+    networkStatusTracker: NetworkStatusTracker,
     private val setNetworkAvailabilityUseCase: SetNetworkAvailabilityUseCase
 
 ) : ViewModel() {
 
-    private val _state = networkStatusTracker.networkStatus.flowOn(Dispatchers.IO)
-    val state: Flow<NetworkStatus>
-        get() = _state
+    private val _networkState = networkStatusTracker.networkStatus.flowOn(Dispatchers.IO)
+    val networkState: Flow<NetworkStatus>
+        get() = _networkState
 
     fun setNetworkStatus(status: Boolean) {
         setNetworkAvailabilityUseCase(status)

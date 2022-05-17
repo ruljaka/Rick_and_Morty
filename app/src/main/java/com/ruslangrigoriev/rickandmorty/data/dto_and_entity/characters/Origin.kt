@@ -1,4 +1,4 @@
-package com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO
+package com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters
 
 
 import com.google.gson.annotations.SerializedName

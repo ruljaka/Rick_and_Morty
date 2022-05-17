@@ -21,12 +21,6 @@ fun List<Int>.toRequestString(): String {
     return this.joinToString(prefix = "[", postfix = "]")
 }
 
-fun String?.getKey(): Int? = this?.let {
-    replace("\"", "")
-        .substringAfter('=')
-        .substringBefore('&')
-        .toInt()
-}
 
 
 

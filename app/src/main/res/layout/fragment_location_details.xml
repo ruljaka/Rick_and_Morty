@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:text="Residents"
+                android:text="@string/residents"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"

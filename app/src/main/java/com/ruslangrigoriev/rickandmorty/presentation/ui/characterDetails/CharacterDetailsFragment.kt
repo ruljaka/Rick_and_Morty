@@ -11,11 +11,11 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import coil.load
 import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentCharacterDetailsBinding
-import com.ruslangrigoriev.rickandmorty.presentation.model.CharacterModel
 import com.ruslangrigoriev.rickandmorty.presentation.common.FragmentNavigator
 import com.ruslangrigoriev.rickandmorty.presentation.common.appComponent
 import com.ruslangrigoriev.rickandmorty.presentation.common.navigator
 import com.ruslangrigoriev.rickandmorty.presentation.common.showToast
+import com.ruslangrigoriev.rickandmorty.presentation.model.CharacterModel
 import com.ruslangrigoriev.rickandmorty.presentation.ui.episodeDetails.EpisodeDetailsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.ui.episodes.adapters.EpisodesAdapter
 import com.ruslangrigoriev.rickandmorty.presentation.ui.locationDetails.LocationDetailsFragment
@@ -29,7 +29,6 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
     private val binding: FragmentCharacterDetailsBinding by viewBinding()
     private var navigator: FragmentNavigator? = null
     private lateinit var episodesAdapter: EpisodesAdapter
-    private var isLoaded: Boolean = false
     private val toolbar: ActionBar?
         get() = (activity as MainActivity).supportActionBar
     private val characterId: Int
@@ -60,9 +59,8 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
     }
 
     private fun fetchData() {
-        if (!isLoaded) {
+        if (viewModel.data.value == null) {
             viewModel.fetchCharacter(characterId)
-            isLoaded = true
         }
         viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
             with(binding) {
@@ -75,19 +73,19 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
             bindUi(character)
         }
         viewModel.error.observe(viewLifecycleOwner) { message ->
-            message?.showToast(requireContext())
+            message?.let{showToast(requireContext(),it)}
         }
     }
 
     private fun bindUi(character: CharacterModel) {
-        with(binding) {
-            nameChDetTv.text = getString(R.string.character_name, character.name)
-            speciesChDetTv.text = getString(R.string.character_species, character.species)
+        binding.apply {
+            nameChDetTv.text = getString(R.string.name, character.name)
+            speciesChDetTv.text = getString(R.string.species, character.species)
             typeChDetTv.text =
-                if (character.type.isNotEmpty()) getString(R.string.character_type, character.type)
-                else getString(R.string.character_type, "-")
-            genderChDetTv.text = getString(R.string.character_gender, character.gender)
-            originChDetTv.text = getString(R.string.character_origin, character.originName)
+                if (character.type.isNotEmpty()) getString(R.string.type, character.type)
+                else getString(R.string.type, "-")
+            genderChDetTv.text = getString(R.string.gender, character.gender)
+            originChDetTv.text = getString(R.string.origin, character.originName)
             character.originID?.let {
                 originChDetTv.apply {
                     setTextColor(resources.getColor(R.color.atlantis, null))
@@ -96,7 +94,7 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
                     }
                 }
             }
-            locationChDetTv.text = getString(R.string.character_location, character.locationName)
+            locationChDetTv.text = getString(R.string.location, character.locationName)
             character.locationID?.let {
                 locationChDetTv.apply {
                     setTextColor(resources.getColor(R.color.atlantis, null))
@@ -134,11 +132,7 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
                 )
             )
             refresherChDet.setOnRefreshListener {
-                isLoaded = false
-                viewModel.loading.removeObservers(viewLifecycleOwner)
-                viewModel.data.removeObservers(viewLifecycleOwner)
-                viewModel.error.removeObservers(viewLifecycleOwner)
-                fetchData()
+                viewModel.fetchCharacter(characterId)
             }
         }
     }

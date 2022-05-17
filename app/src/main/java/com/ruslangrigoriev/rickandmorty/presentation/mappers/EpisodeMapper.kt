@@ -1,11 +1,12 @@
 package com.ruslangrigoriev.rickandmorty.presentation.mappers
 
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodeDTO.EpisodeDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodes.Episode
 import com.ruslangrigoriev.rickandmorty.presentation.model.EpisodeModel
+import javax.inject.Inject
 
-class EpisodeMapper : Mapper<EpisodeDTO, List<CharacterDTO>, EpisodeModel> {
-    override fun map(input: EpisodeDTO, list: List<CharacterDTO>): EpisodeModel {
+class EpisodeMapper @Inject constructor() : Mapper<Episode, List<Character>, EpisodeModel> {
+    override fun map(input: Episode, list: List<Character>): EpisodeModel {
         return EpisodeModel(
             id = input.id,
             name = input.name,

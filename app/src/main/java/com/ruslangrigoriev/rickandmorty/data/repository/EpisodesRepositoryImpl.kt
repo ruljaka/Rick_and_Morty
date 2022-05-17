@@ -3,8 +3,8 @@ package com.ruslangrigoriev.rickandmorty.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodeDTO.EpisodeDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodes.Episode
 import com.ruslangrigoriev.rickandmorty.data.getRemoteOrCachedData
 import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
 import com.ruslangrigoriev.rickandmorty.data.local.EpisodesDao
@@ -38,22 +38,20 @@ class EpisodesRepositoryImpl @Inject constructor(
 
     private fun clearCache() {
         coroutineScope.launch {
-            if (isNetworkAvailable) {
-                charactersDao.deleteAll()
-                isCacheCleared = true
-            }
+            charactersDao.deleteAll()
+            isCacheCleared = true
         }
     }
 
-    override suspend fun getEpisodeById(episodeID: Int): EpisodeDTO? =
+    override suspend fun getEpisodeById(episodeID: Int): Episode? =
         getRemoteOrCachedData(
             isNetworkAvailable,
-            { episodesService.getEpisode(episodeID) },
+            { episodesService.getEpisodeById(episodeID) },
             { episodesDao.getEpisodeById(episodeID) },
             { episodesDao.insertEpisode(it) }
         )
 
-    override suspend fun getEpisodeCharacters(ids: List<Int>): List<CharacterDTO>? =
+    override suspend fun getEpisodeCharacters(ids: List<Int>): List<Character>? =
         getRemoteOrCachedData(
             isNetworkAvailable,
             { episodesService.getEpisodeCharacters(ids.toRequestString()) },
@@ -63,7 +61,7 @@ class EpisodesRepositoryImpl @Inject constructor(
 
     override fun getEpisodes(
         name: String?, episode: String?
-    ): Flow<PagingData<EpisodeDTO>> {
+    ): Flow<PagingData<Episode>> {
         if (!isCacheCleared) clearCache()
         val pagingConfig = PagingConfig(pageSize = 20, enablePlaceholders = false)
         return when (isNetworkAvailable) {

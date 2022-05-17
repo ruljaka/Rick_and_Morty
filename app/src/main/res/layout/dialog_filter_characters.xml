@@ -12,7 +12,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
-        android:hint="Name"
+        android:hint="@string/filter_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -34,7 +34,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
-        android:hint="Species"
+        android:hint="@string/filter_species"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/status_ch_dg_til">
@@ -56,7 +56,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
-        android:hint="Type"
+        android:hint="@string/filter_type"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/species_ch_dg_til">
@@ -78,7 +78,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
-        android:hint="Status"
+        android:hint="@string/filter_status"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name_ch_dg_til">
@@ -88,7 +88,8 @@
             style="@style/TextInputStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none" />
+            android:inputType="none"
+            android:labelFor="@+id/status_ch_dg_til" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -100,7 +101,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
-        android:hint="Gender"
+        android:hint="@string/filter_gender"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/type_ch_dg_til">
@@ -121,7 +122,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/atlantis"
-        android:text="Filter"
+        android:text="@string/filter_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -135,7 +136,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/atlantis"
-        android:text="Reset"
+        android:text="@string/reset_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/filter_char_btn"
         app:layout_constraintHorizontal_bias="0.5"

@@ -2,7 +2,7 @@ package com.ruslangrigoriev.rickandmorty.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
 import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
 import com.ruslangrigoriev.rickandmorty.data.remote.CharactersService
 
@@ -14,18 +14,18 @@ class CharactersPagingSource(
     private val gender: String? = null,
     private val charactersService: CharactersService,
     private val charactersDao: CharactersDao
-) : PagingSource<Int, CharacterDTO>() {
+) : PagingSource<Int, Character>() {
 
-    private lateinit var responseData: List<CharacterDTO>
+    private lateinit var responseData: List<Character>
 
-    override fun getRefreshKey(state: PagingState<Int, CharacterDTO>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, Character>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CharacterDTO> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Character> {
         return try {
             val currentPage = params.key ?: 1
             val response = charactersService.getCharacters(

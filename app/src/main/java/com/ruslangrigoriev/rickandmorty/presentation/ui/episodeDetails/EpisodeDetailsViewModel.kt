@@ -39,11 +39,11 @@ class EpisodeDetailsViewModel @Inject constructor(
         _error.value = null
         _loading.value = true
         viewModelScope.launch(exceptionHandler) {
-            val episodeDTO = getEpisodeByIdUseCase(episodeID)
-            episodeDTO?.let {
-                val charactersIds = episodeDTO.characters.toListIds()
+            val episode = getEpisodeByIdUseCase(episodeID)
+            episode?.let {
+                val charactersIds = episode.characters.toListIds()
                 val characters = getEpisodeCharactersUseCase(charactersIds)
-                val episodeModel = episodeMapper.map(episodeDTO, characters ?: emptyList())
+                val episodeModel = episodeMapper.map(episode, characters ?: emptyList())
                 _data.postValue(episodeModel)
                 _loading.postValue(false)
             } ?: run {

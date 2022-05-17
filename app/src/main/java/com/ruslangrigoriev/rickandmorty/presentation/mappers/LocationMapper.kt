@@ -1,11 +1,13 @@
 package com.ruslangrigoriev.rickandmorty.presentation.mappers
 
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locationDTO.LocationDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locations.Location
 import com.ruslangrigoriev.rickandmorty.presentation.model.LocationModel
+import javax.inject.Inject
 
-class LocationMapper : Mapper<LocationDTO, List<CharacterDTO>, LocationModel> {
-    override fun map(input: LocationDTO, list: List<CharacterDTO>): LocationModel {
+class LocationMapper @Inject constructor() :
+    Mapper<Location, List<Character>, LocationModel> {
+    override fun map(input: Location, list: List<Character>): LocationModel {
         return LocationModel(
             id = input.id,
             name = input.name,

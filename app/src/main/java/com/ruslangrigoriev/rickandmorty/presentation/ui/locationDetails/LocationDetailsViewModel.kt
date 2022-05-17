@@ -40,11 +40,11 @@ class LocationDetailsViewModel @Inject constructor(
         _error.value = null
         _loading.value = true
         viewModelScope.launch(exceptionHandler) {
-            val locationDTO = getLocationByIdUseCase(locationID)
-            locationDTO?.let {
-                val residentsIds = locationDTO.residents.toListIds()
+            val location = getLocationByIdUseCase(locationID)
+            location?.let {
+                val residentsIds = location.residents.toListIds()
                 val residents = getLocationResidentsUseCase(residentsIds)
-                val locationModel = locationMapper.map(locationDTO, residents ?: emptyList())
+                val locationModel = locationMapper.map(location, residents ?: emptyList())
                 _data.postValue(locationModel)
                 _loading.postValue(false)
             } ?: run {

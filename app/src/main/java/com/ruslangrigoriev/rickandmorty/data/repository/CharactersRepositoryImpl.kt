@@ -1,11 +1,10 @@
 package com.ruslangrigoriev.rickandmorty.data.repository
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodeDTO.EpisodeDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodes.Episode
 import com.ruslangrigoriev.rickandmorty.data.getRemoteOrCachedData
 import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
 import com.ruslangrigoriev.rickandmorty.data.local.EpisodesDao
@@ -39,23 +38,20 @@ class CharactersRepositoryImpl @Inject constructor(
 
     private fun clearCache() {
         coroutineScope.launch {
-            if (isNetworkAvailable) {
-                Log.i("TAG", "clearCache")
-                charactersDao.deleteAll()
-                isCacheCleared = true
-            }
+            charactersDao.deleteAll()
+            isCacheCleared = true
         }
     }
 
-    override suspend fun getCharacterById(characterID: Int): CharacterDTO? =
+    override suspend fun getCharacterById(characterID: Int): Character? =
         getRemoteOrCachedData(
             isNetworkAvailable,
-            { charactersService.getCharacter(characterID) },
+            { charactersService.getCharacterById(characterID) },
             { charactersDao.getCharacterById(characterID) },
             { charactersDao.insertCharacter(it) }
         )
 
-    override suspend fun getCharacterEpisodes(ids: List<Int>): List<EpisodeDTO>? =
+    override suspend fun getCharacterEpisodes(ids: List<Int>): List<Episode>? =
         getRemoteOrCachedData(
             isNetworkAvailable,
             { charactersService.getCharacterEpisodes(ids.toRequestString()) },
@@ -65,7 +61,7 @@ class CharactersRepositoryImpl @Inject constructor(
 
     override fun getCharacters(
         name: String?, status: String?, species: String?, type: String?, gender: String?
-    ): Flow<PagingData<CharacterDTO>> {
+    ): Flow<PagingData<Character>> {
         if (!isCacheCleared) clearCache()
         val pagingConfig = PagingConfig(pageSize = 20, enablePlaceholders = false)
         return when (isNetworkAvailable) {
@@ -84,27 +80,5 @@ class CharactersRepositoryImpl @Inject constructor(
             }
         }
     }
-
-//    @OptIn(ExperimentalPagingApi::class)
-//    override fun getCharacters(
-//        name: String?, status: String?, species: String?, type: String?, gender: String?
-//    ): Flow<PagingData<CharacterDTO>> {
-//        val pagingSourceFactory =
-//            { database.getCharactersDao().getCharacters(name = name,status= status, species = species, type = type,gender= gender) }
-//        val pagingConfig = PagingConfig(pageSize = 20, enablePlaceholders = false)
-//        return Pager(
-//            pagingConfig,
-//            remoteMediator = СharacterRemoteMediator(
-//                name = name,
-//                status = status,
-//                species = species,
-//                type = type,
-//                gender = gender,
-//                charactersService,
-//                database
-//            ),
-//            pagingSourceFactory = pagingSourceFactory
-//        ).flow.flowOn(ioDispatcher)
-//    }
 
 }

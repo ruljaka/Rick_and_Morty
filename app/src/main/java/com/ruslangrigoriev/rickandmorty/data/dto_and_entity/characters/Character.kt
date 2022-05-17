@@ -1,4 +1,4 @@
-package com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO
+package com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters
 
 
 import androidx.room.Entity
@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity
-data class CharacterDTO(
+data class Character(
     @PrimaryKey
     @SerializedName("id")
     val id: Int,

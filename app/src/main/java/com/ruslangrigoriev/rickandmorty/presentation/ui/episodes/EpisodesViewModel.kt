@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodeDTO.EpisodeDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodes.Episode
 import com.ruslangrigoriev.rickandmorty.domain.useCases.episodes.GetEpisodesUseCase
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -13,8 +13,8 @@ class EpisodesViewModel @Inject constructor(
     private val getEpisodesUseCase: GetEpisodesUseCase
 ) : ViewModel() {
 
-    private var _episodesFlow: Flow<PagingData<EpisodeDTO>>? = null
-    val episodesFlow: Flow<PagingData<EpisodeDTO>>?
+    private var _episodesFlow: Flow<PagingData<Episode>>? = null
+    val episodesFlow: Flow<PagingData<Episode>>?
         get() = _episodesFlow
 
     init {

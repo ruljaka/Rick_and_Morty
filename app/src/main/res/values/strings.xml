@@ -1,13 +1,37 @@
 <resources>
     <string name="app_name">Rick and Morty</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="character_name">Name: %1$s</string>
-    <string name="character_species">Species: %1$s</string>
-    <string name="character_type">Type: %1$s</string>
-    <string name="character_gender">Gender: %1$s</string>
-    <string name="character_origin">Origin: %1$s</string>
-    <string name="character_location">Location: %1$s</string>
+    <string name="name">Name: %1$s</string>
+    <string name="species">Species: %1$s</string>
+    <string name="type">Type: %1$s</string>
+    <string name="gender">Gender: %1$s</string>
+    <string name="origin">Origin: %1$s</string>
+    <string name="location">Location: %1$s</string>
+    <string name="dimension">Dimension: %1$s</string>
+    <string name="episode">Episode: %1$s</string>
+    <string name="air_date">Air date: %1$s</string>
+    <string name="error_message">Failed to load data \nTry refresh</string>
+    <string name="character_image">Character image</string>
+    <string name="character_status">character status</string>
+    <string name="shadow">shadow</string>
+    <string name="status">Status</string>
+    <string name="filter_type">Type</string>
+    <string name="filter_name">Name</string>
+    <string name="filter_species">Species</string>
+    <string name="filter_status">Status</string>
+    <string name="filter_gender">Gender</string>
+    <string name="filter_btn">Filter</string>
+    <string name="reset_btn">Reset</string>
+    <string name="characters">Characters</string>
+    <string name="locations">Locations</string>
+    <string name="episodes">Episodes</string>
+    <string name="filter_episode">Episode</string>
+    <string name="filter_dimension">Dimension</string>
+    <string name="nothing_found">Nothing found</string>
+    <string name="residents">Residents</string>
+    <string name="retry">retry</string>
+    <string name="heck_internet_connection_and_retry_nor_refresh_list_to_go_offline">Check internet connection and RETRY \nor refresh list to go offline</string>
+    <string name="filter">Filter</string>
 
     <string-array name="status">
         <item>Alive</item>

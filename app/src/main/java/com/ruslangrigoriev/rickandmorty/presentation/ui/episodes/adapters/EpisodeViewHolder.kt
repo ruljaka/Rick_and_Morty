@@ -2,7 +2,7 @@ package com.ruslangrigoriev.rickandmorty.presentation.ui.episodes.adapters
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodeDTO.EpisodeDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodes.Episode
 import com.ruslangrigoriev.rickandmorty.databinding.ItemEpisodeBinding
 
 class EpisodeViewHolder(
@@ -10,7 +10,7 @@ class EpisodeViewHolder(
     private val onItemClicked: (id: Int) -> Unit,
 ) : RecyclerView.ViewHolder(view) {
 
-    fun bind(episode: EpisodeDTO) {
+    fun bind(episode: Episode) {
         val binding = ItemEpisodeBinding.bind(view)
 
         with(binding) {

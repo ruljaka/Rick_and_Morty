@@ -4,10 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ruslangrigoriev.rickandmorty.R
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
 
 class CharactersAdapter(
-    private val dataList: List<CharacterDTO>,
+    private val dataList: List<Character>,
     private val onItemClicked: (id: Int) -> Unit
 ) : RecyclerView.Adapter<CharacterViewHolder>() {
 

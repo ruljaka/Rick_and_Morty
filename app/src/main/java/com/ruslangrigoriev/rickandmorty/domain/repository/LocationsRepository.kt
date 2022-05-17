@@ -1,19 +1,19 @@
 package com.ruslangrigoriev.rickandmorty.domain.repository
 
 import androidx.paging.PagingData
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locationDTO.LocationDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locations.Location
 import kotlinx.coroutines.flow.Flow
 
 interface LocationsRepository {
 
     fun setNetworkStatus(status: Boolean)
-    suspend fun getLocationById(locationID: Int): LocationDTO?
-    suspend fun getLocationResidents(ids: List<Int>): List<CharacterDTO>?
+    suspend fun getLocationById(locationID: Int): Location?
+    suspend fun getLocationResidents(ids: List<Int>): List<Character>?
     fun getLocations(
         name: String? = null,
         type: String? = null,
         dimension: String? = null
-    ): Flow<PagingData<LocationDTO>>
+    ): Flow<PagingData<Location>>
 
 }

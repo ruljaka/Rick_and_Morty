@@ -5,19 +5,19 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.ruslangrigoriev.rickandmorty.R
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locationDTO.LocationDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locations.Location
 
 class LocationsPagingAdapter(
     private val onItemClicked: (id: Int) -> Unit,
-) : PagingDataAdapter<LocationDTO, LocationViewHolder>(diffCallback) {
+) : PagingDataAdapter<Location, LocationViewHolder>(diffCallback) {
 
     companion object {
-        val diffCallback = object : DiffUtil.ItemCallback<LocationDTO>() {
-            override fun areItemsTheSame(oldItem: LocationDTO, newItem: LocationDTO): Boolean {
+        val diffCallback = object : DiffUtil.ItemCallback<Location>() {
+            override fun areItemsTheSame(oldItem: Location, newItem: Location): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: LocationDTO, newItem: LocationDTO): Boolean {
+            override fun areContentsTheSame(oldItem: Location, newItem: Location): Boolean {
                 return oldItem == newItem
             }
         }

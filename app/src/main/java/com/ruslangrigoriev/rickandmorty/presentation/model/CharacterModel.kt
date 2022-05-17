@@ -1,6 +1,6 @@
 package com.ruslangrigoriev.rickandmorty.presentation.model
 
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodeDTO.EpisodeDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodes.Episode
 
 data class CharacterModel(
     val id: Int,
@@ -10,7 +10,7 @@ data class CharacterModel(
     val gender: String,
     val type: String,
     val image: String,
-    val episodes: List<EpisodeDTO>,
+    val episodes: List<Episode>,
     val locationName: String,
     val locationID: Int?,
     val originName: String,

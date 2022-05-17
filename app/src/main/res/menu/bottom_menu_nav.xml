@@ -5,16 +5,16 @@
         android:id="@+id/characters"
         android:icon="@drawable/selector_characters"
         android:orderInCategory="1"
-        android:title="Characters" />
+        android:title="@string/characters" />
     <item
         android:id="@+id/locations"
         android:icon="@drawable/selector_locations"
         android:orderInCategory="2"
-        android:title="Locations" />
+        android:title="@string/locations" />
     <item
         android:id="@+id/episodes"
         android:icon="@drawable/selector_episodes"
         android:orderInCategory="3"
-        android:title="Episodes" />
+        android:title="@string/episodes" />
 
 </menu>

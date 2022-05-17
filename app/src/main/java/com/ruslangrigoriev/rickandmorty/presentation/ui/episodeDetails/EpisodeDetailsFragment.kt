@@ -27,7 +27,6 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
     private val binding: FragmentEpisodeDetailsBinding by viewBinding()
     private var navigator: FragmentNavigator? = null
     private lateinit var charactersAdapter: CharactersAdapter
-    private var isLoaded: Boolean = false
     private val toolbar: ActionBar?
         get() = (activity as MainActivity).supportActionBar
     private val episodeId: Int
@@ -58,9 +57,8 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
     }
 
     private fun fetchData() {
-        if (!isLoaded) {
+        if (viewModel.data.value == null) {
             viewModel.fetchEpisode(episodeId)
-            isLoaded = true
         }
         viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
             with(binding) {
@@ -73,7 +71,7 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
             bindUi(episode)
         }
         viewModel.error.observe(viewLifecycleOwner) { message ->
-            message?.showToast(requireContext())
+            message?.let { showToast(requireContext(), it) }
         }
     }
 
@@ -96,11 +94,7 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
                 )
             )
             refresherEpDet.setOnRefreshListener {
-                isLoaded = false
-                viewModel.loading.removeObservers(viewLifecycleOwner)
-                viewModel.data.removeObservers(viewLifecycleOwner)
-                viewModel.error.removeObservers(viewLifecycleOwner)
-                fetchData()
+                viewModel.fetchEpisode(episodeId)
             }
         }
     }

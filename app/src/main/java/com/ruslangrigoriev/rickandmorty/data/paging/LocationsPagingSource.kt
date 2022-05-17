@@ -2,7 +2,7 @@ package com.ruslangrigoriev.rickandmorty.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locationDTO.LocationDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locations.Location
 import com.ruslangrigoriev.rickandmorty.data.local.LocationsDao
 import com.ruslangrigoriev.rickandmorty.data.remote.LocationsService
 
@@ -12,18 +12,18 @@ class LocationsPagingSource(
     private val dimension: String? = null,
     private val locationsService: LocationsService,
     private val locationsDao: LocationsDao
-) : PagingSource<Int, LocationDTO>() {
+) : PagingSource<Int, Location>() {
 
-    private lateinit var responseData: List<LocationDTO>
+    private lateinit var responseData: List<Location>
 
-    override fun getRefreshKey(state: PagingState<Int, LocationDTO>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, Location>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, LocationDTO> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Location> {
         return try {
             val currentPage = params.key ?: 1
             val response = locationsService.getLocations(

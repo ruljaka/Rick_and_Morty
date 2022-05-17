@@ -58,10 +58,10 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
         initRecyclerView()
         initSwipeToRefresh()
         initSearch()
-        subscribeUI()
+        collectData()
     }
 
-    private fun subscribeUI() {
+    private fun collectData() {
         collectingJob?.cancel()
         collectingJob = lifecycleScope.launchWhenStarted {
             viewModel.episodesFlow?.cancellable()?.collect { pagingData ->
@@ -80,16 +80,12 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
     }
 
     private fun initRecyclerView() {
-        pagingAdapter = EpisodesPagingAdapter { id -> onEpisodeClick(id) }
+        pagingAdapter = EpisodesPagingAdapter { id -> onListItemClick(id) }
         val gridLM = GridLayoutManager(activity, 2)
         val loaderStateAdapter = LoaderStateAdapter { pagingAdapter.retry() }
         gridLM.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (position == pagingAdapter.itemCount && loaderStateAdapter.itemCount > 0) {
-                    2
-                } else {
-                    1
-                }
+                return if (position == pagingAdapter.itemCount && loaderStateAdapter.itemCount > 0) { 2 } else { 1 }
             }
         }
         binding.episodesRecyclerView.apply {
@@ -97,16 +93,14 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
             adapter = pagingAdapter.withLoadStateFooter(loaderStateAdapter)
         }
 
-        pagingAdapter.addLoadStateListener {
-            val isLoading = it.refresh is LoadState.Loading
-            val isError = it.refresh is LoadState.Error
-            val isPagingEnded = it.append.endOfPaginationReached
-            binding.episodesProgressBar.isVisible = isLoading
-                    && !binding.episodesRefresher.isRefreshing
-            if (isError) "Failed to load data \nTry refresh".showToast(requireContext())
-            binding.episodesNothingTextView.isVisible = isPagingEnded
-                    && pagingAdapter.itemCount < 1
-            if (!isLoading || isError) binding.episodesRefresher.isRefreshing = false
+        pagingAdapter.addLoadStateListener { loadState ->
+            val isLoading = loadState.refresh is LoadState.Loading
+            val isError = loadState.refresh is LoadState.Error
+            val isAppendEnded = loadState.append.endOfPaginationReached
+            binding.episodesRefresher.isRefreshing = isLoading
+            binding.episodesNothingTextView.isVisible = isAppendEnded
+                    && pagingAdapter.itemCount == 0
+            if (isError) showToast(requireContext(), getString(R.string.error_message))
         }
     }
 
@@ -114,41 +108,38 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
         with(binding) {
             episodesRefresher.setColorSchemeColors(resources.getColor(R.color.atlantis, null))
             episodesRefresher.setOnRefreshListener {
-                binding.episodesSearchView.apply {
-                    setQuery(null, false)
-                    clearFocus()
-                    onActionViewCollapsed()
-                }
-                searchQuery = null
                 filter = null
-                viewModel.getEpisodes()
-                subscribeUI()
+                resetSearch()
+                refreshData(filter)
             }
         }
     }
 
     private fun initSearch() {
-        binding.episodesSearchView.setOnQueryTextListener(
-            object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    searchQuery = query
-                    pagingAdapter.refresh()
-                    return false
-                }
+        binding.episodesSearchView.apply {
+            setOnCloseListener {
+                binding.episodesRecyclerView.layoutManager?.scrollToPosition(0)
+                false
+            }
+            setOnQueryTextFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    setOnQueryTextListener(
+                        object : SearchView.OnQueryTextListener {
+                            override fun onQueryTextSubmit(query: String?): Boolean {
+                                searchQuery = query
+                                refreshData(filter)
+                                return false
+                            }
 
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    searchQuery = newText
-                    pagingAdapter.refresh()
-                    return false
+                            override fun onQueryTextChange(newText: String?): Boolean {
+                                searchQuery = newText
+                                refreshData(filter)
+                                return false
+                            }
+                        })
                 }
-            })
-    }
-
-    private fun onEpisodeClick(id: Int) {
-        navigator?.navigate(
-            EpisodeDetailsFragment.newInstance(id),
-            true
-        )
+            }
+        }
     }
 
     private fun showFilter() {
@@ -160,9 +151,29 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
             viewLifecycleOwner
         ) { _, bundle ->
             filter = bundle.getSerializable(EPISODES_DIALOG_FILTER_ARG) as EpisodesFilter
-            viewModel.getEpisodes(filter)
-            subscribeUI()
+            resetSearch()
+            refreshData(filter)
         }
+    }
+
+    private fun refreshData(filter: EpisodesFilter?) {
+        viewModel.getEpisodes(filter)
+        collectData()
+    }
+
+    private fun resetSearch() {
+        binding.episodesSearchView.apply {
+            setQuery(null, false)
+            clearFocus()
+            onActionViewCollapsed()
+        }
+    }
+
+    private fun onListItemClick(id: Int) {
+        navigator?.navigate(
+            EpisodeDetailsFragment.newInstance(id),
+            true
+        )
     }
 
     private fun createMenu() {

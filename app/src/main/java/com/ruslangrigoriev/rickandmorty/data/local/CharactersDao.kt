@@ -5,19 +5,19 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
 
 @Dao
 interface CharactersDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCharacters(characters: List<CharacterDTO>)
+    suspend fun insertCharacters(characters: List<Character>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCharacter(character: CharacterDTO)
+    suspend fun insertCharacter(character: Character)
 
     @Query(
-        """SELECT * FROM CharacterDTO 
+        """SELECT * FROM Character 
         WHERE (:name IS NULL OR name LIKE '%' || :name || '%' ) 
         AND (:status IS NULL OR status = :status) 
         AND (:species IS NULL OR species LIKE '%' || :species || '%' ) 
@@ -30,15 +30,15 @@ interface CharactersDao {
         species: String? = null,
         type: String? = null,
         gender: String? = null
-    ): PagingSource<Int, CharacterDTO>
+    ): PagingSource<Int, Character>
 
-    @Query("SELECT * FROM CharacterDTO WHERE id = :characterID")
-    suspend fun getCharacterById(characterID: Int): CharacterDTO?
+    @Query("SELECT * FROM Character WHERE id = :characterID")
+    suspend fun getCharacterById(characterID: Int): Character?
 
-    @Query("SELECT * FROM CharacterDTO WHERE id IN (:characterIds)")
-    suspend fun getListCharactersByIds(characterIds: List<Int>): List<CharacterDTO>?
+    @Query("SELECT * FROM Character WHERE id IN (:characterIds)")
+    suspend fun getListCharactersByIds(characterIds: List<Int>): List<Character>?
 
-    @Query("DELETE FROM CharacterDTO")
+    @Query("DELETE FROM Character")
     suspend fun deleteAll(): Int
 
 }

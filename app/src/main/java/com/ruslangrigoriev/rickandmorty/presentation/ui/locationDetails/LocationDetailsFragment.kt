@@ -27,7 +27,6 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_location_details) {
     private val binding: FragmentLocationDetailsBinding by viewBinding()
     private var navigator: FragmentNavigator? = null
     private lateinit var residentsAdapter: CharactersAdapter
-    private var isLoaded: Boolean = false
     private val toolbar: ActionBar?
         get() = (activity as MainActivity).supportActionBar
     private val locationId: Int
@@ -58,9 +57,8 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_location_details) {
     }
 
     private fun fetchData() {
-        if (!isLoaded) {
+        if (viewModel.data.value == null) {
             viewModel.fetchLocation(locationId)
-            isLoaded = true
         }
         viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
             with(binding) {
@@ -73,12 +71,12 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_location_details) {
             bindUi(location)
         }
         viewModel.error.observe(viewLifecycleOwner) { message ->
-            message?.showToast(requireContext())
+            message?.let{showToast(requireContext(),it)}
         }
     }
 
     private fun bindUi(location: LocationModel) {
-        with(binding) {
+        binding.apply {
             nameLocDetTv.text = location.name
             typeLocDetTv.text = location.type
             dimensionLocDetTv.text = location.dimension
@@ -96,11 +94,7 @@ class LocationDetailsFragment : Fragment(R.layout.fragment_location_details) {
                 )
             )
             refresherLocDet.setOnRefreshListener {
-                isLoaded = false
-                viewModel.loading.removeObservers(viewLifecycleOwner)
-                viewModel.data.removeObservers(viewLifecycleOwner)
-                viewModel.error.removeObservers(viewLifecycleOwner)
-                fetchData()
+                viewModel.fetchLocation(locationId)
             }
         }
     }

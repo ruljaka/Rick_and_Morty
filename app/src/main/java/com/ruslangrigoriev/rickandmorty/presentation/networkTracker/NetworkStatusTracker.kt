@@ -7,8 +7,9 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
+import javax.inject.Inject
 
-class NetworkStatusTracker(context: Context) {
+class NetworkStatusTracker @Inject constructor(context: Context) {
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 

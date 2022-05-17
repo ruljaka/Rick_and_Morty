@@ -55,13 +55,13 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
         toolbar?.setDisplayHomeAsUpEnabled(false)
         toolbar?.title = "Characters"
         createMenu()
-        initRecyclerView()
         initSwipeToRefresh()
         initSearch()
-        subscribeUI()
+        initRecyclerView()
+        collectData()
     }
 
-    private fun subscribeUI() {
+    private fun collectData() {
         collectingJob?.cancel()
         collectingJob = lifecycleScope.launchWhenStarted {
             viewModel.charactersFlow?.cancellable()?.collect { pagingData ->
@@ -74,7 +74,6 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
                                 || it.species.lowercase(Locale.getDefault()).contains(query)
                     }
                     pagingAdapter.submitData(data)
-                    binding.charactersRecView.layoutManager?.scrollToPosition(0)
                 }
             }
         }
@@ -86,28 +85,21 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
         val loaderStateAdapter = LoaderStateAdapter { pagingAdapter.retry() }
         gridLM.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (position == pagingAdapter.itemCount && loaderStateAdapter.itemCount > 0) {
-                    2
-                } else {
-                    1
-                }
+                return if (position == pagingAdapter.itemCount && loaderStateAdapter.itemCount > 0) { 2 } else { 1 }
             }
         }
         binding.charactersRecView.apply {
             layoutManager = gridLM
             adapter = pagingAdapter.withLoadStateFooter(loaderStateAdapter)
         }
-
         pagingAdapter.addLoadStateListener { loadState ->
             val isLoading = loadState.refresh is LoadState.Loading
             val isError = loadState.refresh is LoadState.Error
-            val isPagingEnded = loadState.append.endOfPaginationReached
-            binding.charactersProgressBar.isVisible = isLoading
-                    && !binding.charactersRefresher.isRefreshing
-            if (isError) "Failed to load data \nTry refresh".showToast(requireContext())
+            val isAppendEnded = loadState.append.endOfPaginationReached
+            binding.charactersRefresher.isRefreshing = isLoading
             binding.charactersNothingTextView.isVisible =
-                isPagingEnded && pagingAdapter.itemCount < 1
-            if (!isLoading || isError) binding.charactersRefresher.isRefreshing = false
+                isAppendEnded && pagingAdapter.itemCount == 0
+            if (isError) showToast(requireContext(), getString(R.string.error_message))
         }
     }
 
@@ -115,34 +107,38 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
         with(binding) {
             charactersRefresher.setColorSchemeColors(resources.getColor(R.color.atlantis, null))
             charactersRefresher.setOnRefreshListener {
-                searchQuery = null
                 filter = null
-                viewModel.getCharacters()
-                subscribeUI()
-                binding.charactersSearchView.apply {
-                    setQuery(null, false)
-                    clearFocus()
-                    onActionViewCollapsed()
-                }
+                resetSearch()
+                refreshData(filter)
             }
         }
     }
 
     private fun initSearch() {
-        binding.charactersSearchView.setOnQueryTextListener(
-            object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    searchQuery = query
-                    pagingAdapter.refresh()
-                    return false
-                }
+        binding.charactersSearchView.apply {
+            setOnCloseListener {
+                binding.charactersRecView.layoutManager?.scrollToPosition(0)
+                false
+            }
+            setOnQueryTextFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    setOnQueryTextListener(
+                        object : SearchView.OnQueryTextListener {
+                            override fun onQueryTextSubmit(query: String?): Boolean {
+                                searchQuery = query
+                                refreshData(filter)
+                                return false
+                            }
 
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    searchQuery = newText
-                    pagingAdapter.refresh()
-                    return false
+                            override fun onQueryTextChange(newText: String?): Boolean {
+                                searchQuery = newText
+                                refreshData(filter)
+                                return false
+                            }
+                        })
                 }
-            })
+            }
+        }
     }
 
     private fun showFilter() {
@@ -154,8 +150,21 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
             viewLifecycleOwner
         ) { _, bundle ->
             filter = bundle.getSerializable(CHARACTERS_DIALOG_FILTER_ARG) as CharactersFilter
-            viewModel.getCharacters(filter)
-            subscribeUI()
+            resetSearch()
+            refreshData(filter)
+        }
+    }
+
+    private fun refreshData(filter: CharactersFilter?) {
+        viewModel.getCharacters(filter)
+        collectData()
+    }
+
+    private fun resetSearch() {
+        binding.charactersSearchView.apply {
+            setQuery(null, false)
+            clearFocus()
+            onActionViewCollapsed()
         }
     }
 
@@ -184,4 +193,5 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
             }
         }, viewLifecycleOwner, Lifecycle.State.STARTED)
     }
+
 }

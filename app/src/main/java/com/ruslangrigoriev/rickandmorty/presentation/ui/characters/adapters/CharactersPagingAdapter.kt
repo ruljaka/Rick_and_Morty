@@ -5,19 +5,19 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.ruslangrigoriev.rickandmorty.R
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characterDTO.CharacterDTO
+import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
 
 class CharactersPagingAdapter(
     private val onItemClicked: (id: Int) -> Unit,
-) : PagingDataAdapter<CharacterDTO, CharacterViewHolder>(diffCallback) {
+) : PagingDataAdapter<Character, CharacterViewHolder>(diffCallback) {
 
     companion object {
-        val diffCallback = object : DiffUtil.ItemCallback<CharacterDTO>() {
-            override fun areItemsTheSame(oldItem: CharacterDTO, newItem: CharacterDTO): Boolean {
+        val diffCallback = object : DiffUtil.ItemCallback<Character>() {
+            override fun areItemsTheSame(oldItem: Character, newItem: Character): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: CharacterDTO, newItem: CharacterDTO): Boolean {
+            override fun areContentsTheSame(oldItem: Character, newItem: Character): Boolean {
                 return oldItem == newItem
             }
         }

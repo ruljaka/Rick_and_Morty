@@ -21,11 +21,12 @@
                 android:layout_width="170dp"
                 android:layout_height="170dp"
                 android:scaleType="centerCrop"
+                android:src="@drawable/placeholder"
                 app:layout_constraintBottom_toBottomOf="@+id/shadow"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/placeholder" />
+                android:contentDescription="@string/character_image" />
 
             <ImageView
                 android:id="@+id/shadow"
@@ -35,7 +36,8 @@
                 android:src="@drawable/gradient_shadow"
                 app:layout_constraintEnd_toEndOf="@+id/character_image_view"
                 app:layout_constraintStart_toStartOf="@+id/character_image_view"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/shadow" />
 
             <TextView
                 android:id="@+id/character_name_textView"
@@ -44,6 +46,7 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:textColor="@color/white"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/character_species_textView"
                 app:layout_constraintEnd_toEndOf="@+id/character_image_view"
                 app:layout_constraintStart_toStartOf="@+id/character_image_view"
@@ -55,7 +58,8 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:textColor="@color/white"
+                android:textColor="#E6E6E6"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toTopOf="@+id/character_gender_textView"
                 app:layout_constraintEnd_toEndOf="@+id/character_image_view"
                 app:layout_constraintStart_toStartOf="@+id/character_name_textView"
@@ -65,10 +69,11 @@
                 android:id="@+id/character_gender_textView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="4dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:textColor="@color/white"
+                android:textColor="#E6E6E6"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@+id/character_image_view"
                 app:layout_constraintEnd_toEndOf="@+id/character_image_view"
                 app:layout_constraintStart_toStartOf="@+id/character_species_textView"
@@ -78,11 +83,13 @@
                 android:id="@+id/character_status_imageView"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
+
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:srcCompat="@drawable/icon_status_alive" />
+                tools:srcCompat="@drawable/icon_status_alive"
+                android:contentDescription="@string/character_status" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
