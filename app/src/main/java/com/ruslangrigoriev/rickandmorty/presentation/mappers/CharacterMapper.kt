@@ -2,7 +2,6 @@ package com.ruslangrigoriev.rickandmorty.presentation.mappers
 
 import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
 import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodes.Episode
-import com.ruslangrigoriev.rickandmorty.presentation.common.getId
 import com.ruslangrigoriev.rickandmorty.presentation.model.CharacterModel
 import javax.inject.Inject
 
@@ -19,9 +18,14 @@ class CharacterMapper @Inject constructor() :
             image = input.image,
             episodes = list,
             locationName = input.location.name,
-            locationID = input.location.url.getId(),
+            locationID = getId(input.location.url),
             originName = input.origin.name,
-            originID = input.origin.url.getId()
+            originID = getId(input.origin.url)
         )
     }
+
+    private fun getId(url: String): Int? = if (url.isNotEmpty()) {
+        url.replace("\"", "")
+            .substringAfterLast('/').toInt()
+    } else null
 }

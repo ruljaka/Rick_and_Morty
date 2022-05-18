@@ -23,7 +23,7 @@ fun showToast(context: Context, message: String) {
 }
 
 fun List<String>.toListIds(): List<Int> {
-    return this.map { it.getId()!! }
+    return this.map { Uri.parse(it).lastPathSegment!!.toInt() }
 }
 
-fun String.getId(): Int? = Uri.parse(this).lastPathSegment?.toInt()
+

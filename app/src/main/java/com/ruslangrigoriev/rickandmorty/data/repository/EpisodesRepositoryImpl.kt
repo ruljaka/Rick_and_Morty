@@ -29,7 +29,7 @@ class EpisodesRepositoryImpl @Inject constructor(
 
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private var isNetworkAvailable: Boolean = false
-    private var isCacheCleared: Boolean = false
+    private var isCacheCleared: Boolean = true
 
     override fun setNetworkStatus(status: Boolean) {
         isNetworkAvailable = status

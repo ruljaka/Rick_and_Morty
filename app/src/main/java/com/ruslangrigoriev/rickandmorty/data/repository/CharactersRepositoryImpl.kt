@@ -29,7 +29,7 @@ class CharactersRepositoryImpl @Inject constructor(
 
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private var isNetworkAvailable: Boolean = false
-    private var isCacheCleared: Boolean = false
+    private var isCacheCleared: Boolean = true
 
     override fun setNetworkStatus(status: Boolean) {
         isNetworkAvailable = status
@@ -51,6 +51,7 @@ class CharactersRepositoryImpl @Inject constructor(
             { charactersDao.insertCharacter(it) }
         )
 
+
     override suspend fun getCharacterEpisodes(ids: List<Int>): List<Episode>? =
         getRemoteOrCachedData(
             isNetworkAvailable,
@@ -58,6 +59,7 @@ class CharactersRepositoryImpl @Inject constructor(
             { episodesDao.getListEpisodesByIds(ids) },
             { episodesDao.insertEpisodes(it) }
         )
+
 
     override fun getCharacters(
         name: String?, status: String?, species: String?, type: String?, gender: String?

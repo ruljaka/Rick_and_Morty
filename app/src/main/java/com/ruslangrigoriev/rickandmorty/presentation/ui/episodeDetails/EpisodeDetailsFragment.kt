@@ -76,7 +76,7 @@ class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
     }
 
     private fun bindUi(episode: EpisodeModel) {
-        with(binding) {
+        binding.apply {
             nameEpDetTv.text = episode.name
             dateEpDetTv.text = episode.airDate
             episodeEpDetTv.text = episode.episode

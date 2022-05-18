@@ -30,4 +30,5 @@ class CharactersViewModel @Inject constructor(
             gender = filter?.gender
         ).cachedIn(viewModelScope)
     }
+
 }
