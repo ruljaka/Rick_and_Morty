@@ -1,7 +1,6 @@
 package com.ruslangrigoriev.rickandmorty.presentation.common
 
 import android.content.Context
-import android.net.Uri
 import android.widget.Toast
 import com.ruslangrigoriev.rickandmorty.App
 import com.ruslangrigoriev.rickandmorty.di.AppComponent
@@ -23,8 +22,10 @@ fun showToast(context: Context, message: String) {
 }
 
 fun List<String>.toListIds(): List<Int> {
-    return this.map { it.replace("\"", "")
-        .substringAfterLast('/').toInt() }
+    return this.map {
+        it.replace("\"", "")
+            .substringAfterLast('/').toInt()
+    }
 }
 
 

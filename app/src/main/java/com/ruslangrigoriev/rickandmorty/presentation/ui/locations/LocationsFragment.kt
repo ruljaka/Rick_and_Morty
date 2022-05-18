@@ -118,6 +118,7 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
     private fun initSearch() {
         binding.locationsSearchView.apply {
             setOnCloseListener {
+                collectData()
                 binding.locationsRecyclerView.layoutManager?.scrollToPosition(0)
                 false
             }
@@ -164,6 +165,7 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
 
     private fun resetSearch() {
         binding.locationsSearchView.apply {
+            searchQuery = null
             setQuery(null, false)
             clearFocus()
             onActionViewCollapsed()

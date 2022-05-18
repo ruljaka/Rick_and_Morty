@@ -117,6 +117,7 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
     private fun initSearch() {
         binding.charactersSearchView.apply {
             setOnCloseListener {
+                collectData()
                 binding.charactersRecView.layoutManager?.scrollToPosition(0)
                 false
             }
@@ -162,6 +163,7 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
 
     private fun resetSearch() {
         binding.charactersSearchView.apply {
+            searchQuery = null
             setQuery(null, false)
             clearFocus()
             onActionViewCollapsed()

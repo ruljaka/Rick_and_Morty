@@ -9,7 +9,6 @@ class SetNetworkAvailabilityUseCase @Inject constructor(
     private val charactersRepository: CharactersRepository,
     private val episodesRepository: EpisodesRepository,
     private val locationsRepository: LocationsRepository
-
 ) {
     operator fun invoke(status: Boolean) {
         charactersRepository.setNetworkStatus(status)

@@ -118,6 +118,7 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
     private fun initSearch() {
         binding.episodesSearchView.apply {
             setOnCloseListener {
+                collectData()
                 binding.episodesRecyclerView.layoutManager?.scrollToPosition(0)
                 false
             }
@@ -163,6 +164,7 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
 
     private fun resetSearch() {
         binding.episodesSearchView.apply {
+            searchQuery = null
             setQuery(null, false)
             clearFocus()
             onActionViewCollapsed()
