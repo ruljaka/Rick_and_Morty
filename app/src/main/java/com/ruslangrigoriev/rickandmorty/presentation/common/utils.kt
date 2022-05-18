@@ -23,7 +23,8 @@ fun showToast(context: Context, message: String) {
 }
 
 fun List<String>.toListIds(): List<Int> {
-    return this.map { Uri.parse(it).lastPathSegment!!.toInt() }
+    return this.map { it.replace("\"", "")
+        .substringAfterLast('/').toInt() }
 }
 
 

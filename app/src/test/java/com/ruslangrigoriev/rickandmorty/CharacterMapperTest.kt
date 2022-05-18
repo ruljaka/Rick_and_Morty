@@ -10,21 +10,7 @@ class CharacterMapperTest {
     private val testPOJO = TestPOJO()
     private val character = testPOJO.character
     private val episodesList = testPOJO.episodesList
-
-    private val testCharacterModel = CharacterModel(
-        id = 2,
-        name = "Morty Smith",
-        status = "Alive",
-        species = "Human",
-        type = "",
-        gender = "Male",
-        originName = "Earth",
-        originID = 1,
-        locationName = "Earth",
-        locationID = 20,
-        image = "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
-        episodes = episodesList
-    )
+    private val testCharacterModel = testPOJO.characterModel
 
     @Test
     fun ` should map character to characterModel`() {
@@ -32,5 +18,4 @@ class CharacterMapperTest {
         val actualCharacterModel = mapper.map(character, episodesList)
         assertThat(actualCharacterModel, equalTo(testCharacterModel))
     }
-
 }

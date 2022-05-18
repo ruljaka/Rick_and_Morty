@@ -4,6 +4,7 @@ import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
 import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Location
 import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Origin
 import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodes.Episode
+import com.ruslangrigoriev.rickandmorty.presentation.model.CharacterModel
 
 class TestPOJO {
 
@@ -38,5 +39,20 @@ class TestPOJO {
             url = "https://rickandmortyapi.com/api/episode/28",
             created = "2017-11-10T12:56:36.618Z"
         )
+    )
+
+     val characterModel = CharacterModel(
+        id = 2,
+        name = "Morty Smith",
+        status = "Alive",
+        species = "Human",
+        type = "",
+        gender = "Male",
+        originName = "Earth",
+        originID = 1,
+        locationName = "Earth",
+        locationID = 20,
+        image = "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
+        episodes = episodesList
     )
 }
