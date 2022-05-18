@@ -38,7 +38,7 @@ class LocationsRepositoryImpl @Inject constructor(
 
     private fun clearCache() {
         coroutineScope.launch {
-            charactersDao.deleteAll()
+            locationsDao.deleteAll()
             isCacheCleared = true
         }
     }

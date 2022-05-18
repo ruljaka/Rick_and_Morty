@@ -68,15 +68,15 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), FragmentNavigato
     }
 
     private fun observeConnection() {
-        lifecycleScope.launchWhenCreated {
+        lifecycleScope.launchWhenResumed {
             viewModel.networkState.collect {
                 when (it) {
                     NetworkStatus.Available -> {
-                        showToast(this@MainActivity, "Network Available")
+                        showToast(this@MainActivity, "Network available")
                         viewModel.setNetworkStatus(true)
                     }
                     NetworkStatus.Unavailable -> {
-                        showToast(this@MainActivity, "Network Unavailable")
+                        showToast(this@MainActivity, "Network unavailable \n   Going offline")
                         viewModel.setNetworkStatus(false)
                     }
                 }

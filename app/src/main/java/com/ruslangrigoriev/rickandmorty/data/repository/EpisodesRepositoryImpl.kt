@@ -38,7 +38,7 @@ class EpisodesRepositoryImpl @Inject constructor(
 
     private fun clearCache() {
         coroutineScope.launch {
-            charactersDao.deleteAll()
+            episodesDao.deleteAll()
             isCacheCleared = true
         }
     }
