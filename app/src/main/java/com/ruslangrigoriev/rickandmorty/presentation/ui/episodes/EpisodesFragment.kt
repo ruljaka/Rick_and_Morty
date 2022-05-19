@@ -118,8 +118,10 @@ class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
     private fun initSearch() {
         binding.episodesSearchView.apply {
             setOnCloseListener {
-                collectData()
-                binding.episodesRecyclerView.layoutManager?.scrollToPosition(0)
+                if(!searchQuery.isNullOrEmpty()) {
+                    searchQuery = null
+                    refreshData(filter)
+                }
                 false
             }
             setOnQueryTextFocusChangeListener { _, hasFocus ->

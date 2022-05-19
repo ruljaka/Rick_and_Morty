@@ -117,8 +117,10 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
     private fun initSearch() {
         binding.charactersSearchView.apply {
             setOnCloseListener {
-                collectData()
-                binding.charactersRecView.layoutManager?.scrollToPosition(0)
+                if(!searchQuery.isNullOrEmpty()) {
+                    searchQuery = null
+                    refreshData(filter)
+                }
                 false
             }
             setOnQueryTextFocusChangeListener { _, hasFocus ->

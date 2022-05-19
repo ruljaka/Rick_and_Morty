@@ -118,8 +118,10 @@ class LocationsFragment : Fragment(R.layout.fragment_locations) {
     private fun initSearch() {
         binding.locationsSearchView.apply {
             setOnCloseListener {
-                collectData()
-                binding.locationsRecyclerView.layoutManager?.scrollToPosition(0)
+                if(!searchQuery.isNullOrEmpty()) {
+                    searchQuery = null
+                    refreshData(filter)
+                }
                 false
             }
             setOnQueryTextFocusChangeListener { _, hasFocus ->
