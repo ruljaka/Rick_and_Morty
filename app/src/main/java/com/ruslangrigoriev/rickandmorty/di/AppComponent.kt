@@ -1,5 +1,6 @@
 package com.ruslangrigoriev.rickandmorty.di
 
+import android.content.Context
 import com.ruslangrigoriev.rickandmorty.presentation.ui.characterDetails.CharacterDetailsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.ui.characters.CharactersFragment
 import com.ruslangrigoriev.rickandmorty.presentation.ui.episodeDetails.EpisodeDetailsFragment
@@ -7,14 +8,30 @@ import com.ruslangrigoriev.rickandmorty.presentation.ui.episodes.EpisodesFragmen
 import com.ruslangrigoriev.rickandmorty.presentation.ui.locationDetails.LocationDetailsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.ui.locations.LocationsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.ui.main.MainActivity
+import dagger.BindsInstance
 import dagger.Component
-import javax.inject.Singleton
 
-@Singleton
-@Component(
-    modules = [AppModule::class, NetworkModule::class, RoomModule::class, RepositoryModule::class]
-)
+@AppScope
+@Component(modules = [AppModule::class])
 interface AppComponent {
+
+    /*
+    Вариант с билдером:
+    @Component.Builder
+    interface Builder {
+
+        fun build(): AppComponent
+
+        @BindsInstance
+        fun context(context: Context): Builder
+    }*/
+
+
+    @Component.Factory
+    interface Factory {
+        fun create(@BindsInstance context: Context): AppComponent
+    }
+
     fun inject(mainActivity: MainActivity)
     fun inject(charactersFragment: CharactersFragment)
     fun inject(charactersDetailsFragment: CharacterDetailsFragment)

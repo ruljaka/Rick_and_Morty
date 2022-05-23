@@ -12,7 +12,9 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.filter
@@ -34,7 +36,8 @@ import javax.inject.Inject
 class CharactersFragment : Fragment(R.layout.fragment_characters) {
 
     @Inject
-    lateinit var viewModel: CharactersViewModel
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: CharactersViewModel by viewModels { viewModelFactory }
     private val binding: FragmentCharactersBinding by viewBinding()
     private var navigator: FragmentNavigator? = null
     private var collectingJob: Job? = null
@@ -45,8 +48,8 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
         get() = (activity as MainActivity).supportActionBar
 
     override fun onAttach(context: Context) {
-        super.onAttach(context)
         context.appComponent.inject(this)
+        super.onAttach(context)
         navigator = context.navigator
     }
 
@@ -85,7 +88,11 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
         val loaderStateAdapter = LoaderStateAdapter { pagingAdapter.retry() }
         gridLM.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (position == pagingAdapter.itemCount && loaderStateAdapter.itemCount > 0) { 2 } else { 1 }
+                return if (position == pagingAdapter.itemCount && loaderStateAdapter.itemCount > 0) {
+                    2
+                } else {
+                    1
+                }
             }
         }
         binding.charactersRecView.apply {
@@ -117,7 +124,7 @@ class CharactersFragment : Fragment(R.layout.fragment_characters) {
     private fun initSearch() {
         binding.charactersSearchView.apply {
             setOnCloseListener {
-                if(!searchQuery.isNullOrEmpty()) {
+                if (!searchQuery.isNullOrEmpty()) {
                     searchQuery = null
                     refreshData(filter)
                 }

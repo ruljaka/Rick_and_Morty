@@ -7,6 +7,8 @@ import androidx.appcompat.app.ActionBar
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentEpisodeDetailsBinding
@@ -23,7 +25,8 @@ import javax.inject.Inject
 class EpisodeDetailsFragment : Fragment(R.layout.fragment_episode_details) {
 
     @Inject
-    lateinit var viewModel: EpisodeDetailsViewModel
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: EpisodeDetailsViewModel by viewModels{viewModelFactory}
     private val binding: FragmentEpisodeDetailsBinding by viewBinding()
     private var navigator: FragmentNavigator? = null
     private lateinit var charactersAdapter: CharactersAdapter

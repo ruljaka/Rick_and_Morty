@@ -16,7 +16,7 @@ class NetworkModule {
         private const val BASE_URL = "https://rickandmortyapi.com/api/"
     }
 
-    @Singleton
+    @AppScope
     @Provides
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
@@ -25,19 +25,19 @@ class NetworkModule {
             .build()
     }
 
-    @Singleton
+    @AppScope
     @Provides
     fun provideCharactersService(retrofit: Retrofit): CharactersService {
         return retrofit.create(CharactersService::class.java)
     }
 
-    @Singleton
+    @AppScope
     @Provides
     fun provideEpisodesService(retrofit: Retrofit): EpisodesService {
         return retrofit.create(EpisodesService::class.java)
     }
 
-    @Singleton
+    @AppScope
     @Provides
     fun provideLocationsService(retrofit: Retrofit): LocationsService {
         return retrofit.create(LocationsService::class.java)

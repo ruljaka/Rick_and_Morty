@@ -7,6 +7,8 @@ import androidx.appcompat.app.ActionBar
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import by.kirich1409.viewbindingdelegate.viewBinding
 import coil.load
 import com.ruslangrigoriev.rickandmorty.R
@@ -25,7 +27,8 @@ import javax.inject.Inject
 class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
 
     @Inject
-    lateinit var viewModel: CharacterDetailsViewModel
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: CharacterDetailsViewModel by viewModels { viewModelFactory }
     private val binding: FragmentCharacterDetailsBinding by viewBinding()
     private var navigator: FragmentNavigator? = null
     private lateinit var episodesAdapter: EpisodesAdapter
@@ -45,8 +48,8 @@ class CharacterDetailsFragment : Fragment(R.layout.fragment_character_details) {
     }
 
     override fun onAttach(context: Context) {
-        super.onAttach(context)
         context.appComponent.inject(this)
+        super.onAttach(context)
         navigator = context.navigator
     }
 

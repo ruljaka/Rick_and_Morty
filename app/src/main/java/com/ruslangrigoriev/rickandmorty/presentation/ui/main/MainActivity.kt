@@ -3,9 +3,12 @@ package com.ruslangrigoriev.rickandmorty.presentation.ui.main
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.ruslangrigoriev.rickandmorty.R
@@ -17,12 +20,14 @@ import com.ruslangrigoriev.rickandmorty.presentation.networkTracker.NetworkStatu
 import com.ruslangrigoriev.rickandmorty.presentation.ui.characters.CharactersFragment
 import com.ruslangrigoriev.rickandmorty.presentation.ui.episodes.EpisodesFragment
 import com.ruslangrigoriev.rickandmorty.presentation.ui.locations.LocationsFragment
+import com.ruslangrigoriev.rickandmorty.presentation.ui.locations.LocationsViewModel
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(R.layout.activity_main), FragmentNavigator {
 
     @Inject
-    lateinit var viewModel: MainViewModel
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: MainViewModel by viewModels{viewModelFactory}
     private var keep = true
     private val delay = 1000L
     private val binding by viewBinding(ActivityMainBinding::bind)

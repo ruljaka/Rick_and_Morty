@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @Module
 class RoomModule {
 
-    @Singleton
+    @AppScope
     @Provides
     fun provideAppDataBase(appContext: Context): AppDataBase {
         return Room.databaseBuilder(
@@ -31,19 +31,19 @@ class RoomModule {
             .build()
     }
 
-    @Singleton
+    @AppScope
     @Provides
     fun provideCharactersDao(appDataBase: AppDataBase): CharactersDao {
         return appDataBase.getCharactersDao()
     }
 
-    @Singleton
+    @AppScope
     @Provides
     fun provideEpisodesDao(appDataBase: AppDataBase): EpisodesDao {
         return appDataBase.getEpisodesDao()
     }
 
-    @Singleton
+    @AppScope
     @Provides
     fun provideLocationsDao(appDataBase: AppDataBase): LocationsDao {
         return appDataBase.getLocationsDao()

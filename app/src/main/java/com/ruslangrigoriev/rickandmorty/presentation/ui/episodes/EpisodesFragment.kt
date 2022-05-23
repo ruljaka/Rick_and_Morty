@@ -12,7 +12,9 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.filter
@@ -22,6 +24,7 @@ import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentEpisodesBinding
 import com.ruslangrigoriev.rickandmorty.presentation.common.*
 import com.ruslangrigoriev.rickandmorty.presentation.ui.episodeDetails.EpisodeDetailsFragment
+import com.ruslangrigoriev.rickandmorty.presentation.ui.episodeDetails.EpisodeDetailsViewModel
 import com.ruslangrigoriev.rickandmorty.presentation.ui.episodes.EpisodesFilterDialog.Companion.EPISODES_DIALOG_FILTER_ARG
 import com.ruslangrigoriev.rickandmorty.presentation.ui.episodes.EpisodesFilterDialog.Companion.EPISODES_DIALOG_REQUEST_KEY
 import com.ruslangrigoriev.rickandmorty.presentation.ui.episodes.adapters.EpisodesPagingAdapter
@@ -34,7 +37,8 @@ import javax.inject.Inject
 class EpisodesFragment : Fragment(R.layout.fragment_episodes) {
 
     @Inject
-    lateinit var viewModel: EpisodesViewModel
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: EpisodesViewModel by viewModels{viewModelFactory}
     private val binding: FragmentEpisodesBinding by viewBinding()
     private var navigator: FragmentNavigator? = null
     private var collectingJob: Job? = null

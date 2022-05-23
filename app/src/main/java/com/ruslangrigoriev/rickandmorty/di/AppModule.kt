@@ -1,17 +1,17 @@
 package com.ruslangrigoriev.rickandmorty.di
 
-import android.content.Context
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
-@Module
-class AppModule(private val context: Context) {
+@Module(includes = [NetworkModule::class, RoomModule::class, AppBindModule::class,ViewModelModule::class])
+class AppModule {
 
-    @Singleton
+    @AppScope
     @Provides
-    fun provideContext(): Context {
-        return context
+    fun providesCoroutineScope(): CoroutineScope {
+        return CoroutineScope(SupervisorJob() + Dispatchers.IO)
     }
-
 }

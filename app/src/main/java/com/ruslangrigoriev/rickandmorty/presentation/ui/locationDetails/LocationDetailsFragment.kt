@@ -7,6 +7,8 @@ import androidx.appcompat.app.ActionBar
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.ruslangrigoriev.rickandmorty.R
 import com.ruslangrigoriev.rickandmorty.databinding.FragmentLocationDetailsBinding
@@ -17,13 +19,15 @@ import com.ruslangrigoriev.rickandmorty.presentation.common.showToast
 import com.ruslangrigoriev.rickandmorty.presentation.model.LocationModel
 import com.ruslangrigoriev.rickandmorty.presentation.ui.characterDetails.CharacterDetailsFragment
 import com.ruslangrigoriev.rickandmorty.presentation.ui.characters.adapters.CharactersAdapter
+import com.ruslangrigoriev.rickandmorty.presentation.ui.episodeDetails.EpisodeDetailsViewModel
 import com.ruslangrigoriev.rickandmorty.presentation.ui.main.MainActivity
 import javax.inject.Inject
 
 class LocationDetailsFragment : Fragment(R.layout.fragment_location_details) {
 
     @Inject
-    lateinit var viewModel: LocationDetailsViewModel
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: LocationDetailsViewModel by viewModels{viewModelFactory}
     private val binding: FragmentLocationDetailsBinding by viewBinding()
     private var navigator: FragmentNavigator? = null
     private lateinit var residentsAdapter: CharactersAdapter
