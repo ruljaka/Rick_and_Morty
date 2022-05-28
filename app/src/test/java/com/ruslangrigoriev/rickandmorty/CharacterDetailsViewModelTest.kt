@@ -1,10 +1,10 @@
 package com.ruslangrigoriev.rickandmorty
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.ruslangrigoriev.rickandmorty.domain.useCases.characters.GetCharacterByIdUseCase
-import com.ruslangrigoriev.rickandmorty.domain.useCases.characters.GetCharacterEpisodesUseCase
-import com.ruslangrigoriev.rickandmorty.presentation.mappers.CharacterMapper
-import com.ruslangrigoriev.rickandmorty.presentation.ui.characterDetails.CharacterDetailsViewModel
+import com.ruslangrigoriev.rickandmorty.characters.domain.useCases.GetCharacterByIdUseCase
+import com.ruslangrigoriev.rickandmorty.characters.domain.useCases.GetCharacterEpisodesUseCase
+import com.ruslangrigoriev.rickandmorty.characters.presentation.details.mapper.CharacterMapper
+import com.ruslangrigoriev.rickandmorty.characters.presentation.details.CharacterDetailsViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers

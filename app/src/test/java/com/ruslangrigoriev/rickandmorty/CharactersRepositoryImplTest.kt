@@ -1,16 +1,13 @@
 package com.ruslangrigoriev.rickandmorty
 
-import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
-import com.ruslangrigoriev.rickandmorty.data.local.EpisodesDao
-import com.ruslangrigoriev.rickandmorty.data.remote.CharactersService
-import com.ruslangrigoriev.rickandmorty.data.repository.CharactersRepositoryImpl
+import com.ruslangrigoriev.rickandmorty.characters.data.local.CharactersDao
+import com.ruslangrigoriev.rickandmorty.characters.data.remote.CharactersService
+import com.ruslangrigoriev.rickandmorty.characters.data.repository.CharactersRepositoryImpl
+import com.ruslangrigoriev.rickandmorty.episodes.data.local.EpisodesDao
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.StandardTestDispatcher
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert.assertTrue
@@ -29,11 +26,9 @@ class CharactersRepositoryImplTest {
     private val testIds = listOf(1, 2)
 
     @ExperimentalCoroutinesApi
-    private val coroutineScope: CoroutineScope =
-        CoroutineScope(SupervisorJob() + StandardTestDispatcher())
+
     private lateinit var charactersService: CharactersService
     private lateinit var charactersDao: CharactersDao
-    private lateinit var episodesDao: EpisodesDao
 
     private lateinit var sut: CharactersRepositoryImpl
     private val privateIsNetworkAvailableField: Field =
@@ -51,13 +46,11 @@ class CharactersRepositoryImplTest {
         charactersDao = mockk()
         coEvery { charactersDao.getCharacterById(any()) } returns testCharacter
         coEvery { charactersDao.insertCharacter(any()) } returns Unit
-
-        episodesDao = mockk()
-        coEvery { episodesDao.getListEpisodesByIds(any()) } returns testEpisodesList
-        coEvery { episodesDao.insertEpisodes(any()) } returns Unit
+        coEvery { charactersDao.getListEpisodesByIds(any()) } returns testEpisodesList
+        coEvery { charactersDao.insertEpisodes(any()) } returns Unit
 
         sut =
-            CharactersRepositoryImpl(coroutineScope, charactersService, charactersDao, episodesDao)
+            CharactersRepositoryImpl(charactersService, charactersDao)
         privateIsNetworkAvailableField.isAccessible = true
 
     }

@@ -1,6 +1,6 @@
 package com.ruslangrigoriev.rickandmorty
 
-import com.ruslangrigoriev.rickandmorty.presentation.mappers.CharacterMapper
+import com.ruslangrigoriev.rickandmorty.characters.presentation.details.mapper.CharacterMapper
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test

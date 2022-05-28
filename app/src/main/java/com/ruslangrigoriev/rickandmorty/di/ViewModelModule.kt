@@ -2,14 +2,14 @@ package com.ruslangrigoriev.rickandmorty.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ruslangrigoriev.rickandmorty.presentation.common.ViewModelFactory
-import com.ruslangrigoriev.rickandmorty.presentation.ui.characterDetails.CharacterDetailsViewModel
-import com.ruslangrigoriev.rickandmorty.presentation.ui.characters.CharactersViewModel
-import com.ruslangrigoriev.rickandmorty.presentation.ui.episodeDetails.EpisodeDetailsViewModel
-import com.ruslangrigoriev.rickandmorty.presentation.ui.episodes.EpisodesViewModel
-import com.ruslangrigoriev.rickandmorty.presentation.ui.locationDetails.LocationDetailsViewModel
-import com.ruslangrigoriev.rickandmorty.presentation.ui.locations.LocationsViewModel
-import com.ruslangrigoriev.rickandmorty.presentation.ui.main.MainViewModel
+import com.ruslangrigoriev.rickandmorty.core.presentation.common.ViewModelFactory
+import com.ruslangrigoriev.rickandmorty.characters.presentation.details.CharacterDetailsViewModel
+import com.ruslangrigoriev.rickandmorty.characters.presentation.list.CharactersViewModel
+import com.ruslangrigoriev.rickandmorty.episodes.presentation.details.EpisodeDetailsViewModel
+import com.ruslangrigoriev.rickandmorty.episodes.presentation.list.EpisodesViewModel
+import com.ruslangrigoriev.rickandmorty.locations.presentation.details.LocationDetailsViewModel
+import com.ruslangrigoriev.rickandmorty.locations.presentation.list.LocationsViewModel
+import com.ruslangrigoriev.rickandmorty.core.presentation.main.MainViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

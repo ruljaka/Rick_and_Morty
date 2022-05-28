@@ -1,11 +1,11 @@
 package com.ruslangrigoriev.rickandmorty.di
 
-import com.ruslangrigoriev.rickandmorty.data.repository.CharactersRepositoryImpl
-import com.ruslangrigoriev.rickandmorty.data.repository.EpisodesRepositoryImpl
-import com.ruslangrigoriev.rickandmorty.data.repository.LocationsRepositoryImpl
-import com.ruslangrigoriev.rickandmorty.domain.repository.CharactersRepository
-import com.ruslangrigoriev.rickandmorty.domain.repository.EpisodesRepository
-import com.ruslangrigoriev.rickandmorty.domain.repository.LocationsRepository
+import com.ruslangrigoriev.rickandmorty.characters.data.repository.CharactersRepositoryImpl
+import com.ruslangrigoriev.rickandmorty.episodes.data.repository.EpisodesRepositoryImpl
+import com.ruslangrigoriev.rickandmorty.locations.data.repository.LocationsRepositoryImpl
+import com.ruslangrigoriev.rickandmorty.characters.domain.CharactersRepository
+import com.ruslangrigoriev.rickandmorty.episodes.domain.EpisodesRepository
+import com.ruslangrigoriev.rickandmorty.locations.domain.LocationsRepository
 import dagger.Binds
 import dagger.Module
 

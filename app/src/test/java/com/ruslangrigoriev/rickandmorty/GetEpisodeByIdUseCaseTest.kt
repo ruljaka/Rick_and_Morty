@@ -1,8 +1,8 @@
 package com.ruslangrigoriev.rickandmorty
 
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodes.Episode
-import com.ruslangrigoriev.rickandmorty.domain.repository.EpisodesRepository
-import com.ruslangrigoriev.rickandmorty.domain.useCases.episodes.GetEpisodeByIdUseCase
+import com.ruslangrigoriev.rickandmorty.core.data.dto.episode_dto.Episode
+import com.ruslangrigoriev.rickandmorty.episodes.domain.EpisodesRepository
+import com.ruslangrigoriev.rickandmorty.episodes.domain.useCases.GetEpisodeByIdUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

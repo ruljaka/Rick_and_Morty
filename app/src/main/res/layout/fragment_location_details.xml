@@ -5,7 +5,7 @@
     android:id="@+id/refresher_loc_det"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.ui.locationDetails.LocationDetailsFragment">
+    tools:context=".locations.presentation.details.LocationDetailsFragment">
 
     <FrameLayout
         android:layout_width="match_parent"

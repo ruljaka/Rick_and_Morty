@@ -1,13 +1,13 @@
 package com.ruslangrigoriev.rickandmorty.di
 
 import android.content.Context
-import com.ruslangrigoriev.rickandmorty.presentation.ui.characterDetails.CharacterDetailsFragment
-import com.ruslangrigoriev.rickandmorty.presentation.ui.characters.CharactersFragment
-import com.ruslangrigoriev.rickandmorty.presentation.ui.episodeDetails.EpisodeDetailsFragment
-import com.ruslangrigoriev.rickandmorty.presentation.ui.episodes.EpisodesFragment
-import com.ruslangrigoriev.rickandmorty.presentation.ui.locationDetails.LocationDetailsFragment
-import com.ruslangrigoriev.rickandmorty.presentation.ui.locations.LocationsFragment
-import com.ruslangrigoriev.rickandmorty.presentation.ui.main.MainActivity
+import com.ruslangrigoriev.rickandmorty.characters.presentation.details.CharacterDetailsFragment
+import com.ruslangrigoriev.rickandmorty.characters.presentation.list.CharactersFragment
+import com.ruslangrigoriev.rickandmorty.episodes.presentation.details.EpisodeDetailsFragment
+import com.ruslangrigoriev.rickandmorty.episodes.presentation.list.EpisodesFragment
+import com.ruslangrigoriev.rickandmorty.locations.presentation.details.LocationDetailsFragment
+import com.ruslangrigoriev.rickandmorty.locations.presentation.list.LocationsFragment
+import com.ruslangrigoriev.rickandmorty.core.presentation.main.MainActivity
 import dagger.BindsInstance
 import dagger.Component
 
