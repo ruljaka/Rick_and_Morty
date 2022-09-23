@@ -3,14 +3,12 @@ package com.ruslangrigoriev.rickandmorty.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodes.Episode
-import com.ruslangrigoriev.rickandmorty.data.getRemoteOrCachedData
-import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
-import com.ruslangrigoriev.rickandmorty.data.local.EpisodesDao
-import com.ruslangrigoriev.rickandmorty.data.paging.EpisodesPagingSource
-import com.ruslangrigoriev.rickandmorty.data.remote.EpisodesService
-import com.ruslangrigoriev.rickandmorty.data.toRequestString
+import com.ruslangrigoriev.rickandmorty.data.source.local.CharactersDao
+import com.ruslangrigoriev.rickandmorty.data.source.local.EpisodesDao
+import com.ruslangrigoriev.rickandmorty.data.source.remote.EpisodesService
+import com.ruslangrigoriev.rickandmorty.data.source.remote.paging.EpisodesPagingSource
+import com.ruslangrigoriev.rickandmorty.domain.entity.characters.Character
+import com.ruslangrigoriev.rickandmorty.domain.entity.episodes.Episode
 import com.ruslangrigoriev.rickandmorty.domain.repository.EpisodesRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -34,13 +32,6 @@ class EpisodesRepositoryImpl @Inject constructor(
     override fun setNetworkStatus(status: Boolean) {
         isNetworkAvailable = status
         isCacheCleared = !status
-    }
-
-    private fun clearCache() {
-        coroutineScope.launch {
-            episodesDao.deleteAll()
-            isCacheCleared = true
-        }
     }
 
     override suspend fun getEpisodeById(episodeID: Int): Episode? =
@@ -72,9 +63,15 @@ class EpisodesRepositoryImpl @Inject constructor(
             true -> {
                 Pager(pagingConfig) {
                     EpisodesPagingSource(name, episode, episodesService, episodesDao)
-                }
-                    .flow.flowOn(ioDispatcher)
+                }.flow.flowOn(ioDispatcher)
             }
+        }
+    }
+
+    private fun clearCache() {
+        coroutineScope.launch {
+            episodesDao.deleteAll()
+            isCacheCleared = true
         }
     }
 }

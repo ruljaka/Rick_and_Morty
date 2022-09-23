@@ -15,18 +15,6 @@ import dagger.Component
 @Component(modules = [AppModule::class])
 interface AppComponent {
 
-    /*
-    Вариант с билдером:
-    @Component.Builder
-    interface Builder {
-
-        fun build(): AppComponent
-
-        @BindsInstance
-        fun context(context: Context): Builder
-    }*/
-
-
     @Component.Factory
     interface Factory {
         fun create(@BindsInstance context: Context): AppComponent

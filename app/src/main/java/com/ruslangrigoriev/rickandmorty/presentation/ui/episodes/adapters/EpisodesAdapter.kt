@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ruslangrigoriev.rickandmorty.R
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodes.Episode
+import com.ruslangrigoriev.rickandmorty.domain.entity.episodes.Episode
 
 class EpisodesAdapter(
     private val dataList: List<Episode>,

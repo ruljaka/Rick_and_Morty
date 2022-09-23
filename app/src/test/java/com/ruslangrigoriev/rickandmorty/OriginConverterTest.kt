@@ -1,7 +1,7 @@
 package com.ruslangrigoriev.rickandmorty
 
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Origin
-import com.ruslangrigoriev.rickandmorty.data.local.coverters.OriginConverter
+import com.ruslangrigoriev.rickandmorty.domain.entity.characters.Origin
+import com.ruslangrigoriev.rickandmorty.data.source.local.coverters.OriginConverter
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before

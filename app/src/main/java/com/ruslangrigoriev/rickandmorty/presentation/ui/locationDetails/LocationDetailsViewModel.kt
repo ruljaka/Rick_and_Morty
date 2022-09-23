@@ -5,11 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ruslangrigoriev.rickandmorty.presentation.mappers.LocationMapper
-import com.ruslangrigoriev.rickandmorty.presentation.model.LocationModel
+import com.ruslangrigoriev.rickandmorty.domain.entity.characters.Character
+import com.ruslangrigoriev.rickandmorty.domain.entity.locations.Location
 import com.ruslangrigoriev.rickandmorty.domain.useCases.locations.GetLocationByIdUseCase
 import com.ruslangrigoriev.rickandmorty.domain.useCases.locations.GetLocationResidentsUseCase
 import com.ruslangrigoriev.rickandmorty.presentation.common.toListIds
+import com.ruslangrigoriev.rickandmorty.presentation.mappers.Mapper
+import com.ruslangrigoriev.rickandmorty.presentation.model.LocationModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,7 +19,7 @@ import javax.inject.Inject
 class LocationDetailsViewModel @Inject constructor(
     private val getLocationByIdUseCase: GetLocationByIdUseCase,
     private val getLocationResidentsUseCase: GetLocationResidentsUseCase,
-    private val locationMapper: LocationMapper
+    private val locationMapper: Mapper<@JvmSuppressWildcards Location, List<@JvmSuppressWildcards Character>, @JvmSuppressWildcards LocationModel>
 ) : ViewModel() {
 
     private val _loading: MutableLiveData<Boolean> = MutableLiveData()

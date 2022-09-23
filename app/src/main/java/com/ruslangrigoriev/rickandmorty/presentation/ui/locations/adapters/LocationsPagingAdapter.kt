@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.ruslangrigoriev.rickandmorty.R
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locations.Location
+import com.ruslangrigoriev.rickandmorty.domain.entity.locations.Location
 
 class LocationsPagingAdapter(
     private val onItemClicked: (id: Int) -> Unit,

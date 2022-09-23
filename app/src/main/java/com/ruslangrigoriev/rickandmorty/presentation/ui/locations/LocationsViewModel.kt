@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locations.Location
+import com.ruslangrigoriev.rickandmorty.domain.entity.locations.Location
 import com.ruslangrigoriev.rickandmorty.domain.useCases.locations.GetLocationsUseCase
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

@@ -1,13 +1,12 @@
 package com.ruslangrigoriev.rickandmorty.di
 
-import com.ruslangrigoriev.rickandmorty.data.remote.CharactersService
-import com.ruslangrigoriev.rickandmorty.data.remote.EpisodesService
-import com.ruslangrigoriev.rickandmorty.data.remote.LocationsService
+import com.ruslangrigoriev.rickandmorty.data.source.remote.CharactersService
+import com.ruslangrigoriev.rickandmorty.data.source.remote.EpisodesService
+import com.ruslangrigoriev.rickandmorty.data.source.remote.LocationsService
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Singleton
 
 @Module
 class NetworkModule {

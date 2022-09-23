@@ -3,14 +3,12 @@ package com.ruslangrigoriev.rickandmorty.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locations.Location
-import com.ruslangrigoriev.rickandmorty.data.getRemoteOrCachedData
-import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
-import com.ruslangrigoriev.rickandmorty.data.local.LocationsDao
-import com.ruslangrigoriev.rickandmorty.data.paging.LocationsPagingSource
-import com.ruslangrigoriev.rickandmorty.data.remote.LocationsService
-import com.ruslangrigoriev.rickandmorty.data.toRequestString
+import com.ruslangrigoriev.rickandmorty.data.source.local.CharactersDao
+import com.ruslangrigoriev.rickandmorty.data.source.local.LocationsDao
+import com.ruslangrigoriev.rickandmorty.data.source.remote.LocationsService
+import com.ruslangrigoriev.rickandmorty.data.source.remote.paging.LocationsPagingSource
+import com.ruslangrigoriev.rickandmorty.domain.entity.characters.Character
+import com.ruslangrigoriev.rickandmorty.domain.entity.locations.Location
 import com.ruslangrigoriev.rickandmorty.domain.repository.LocationsRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -34,13 +32,6 @@ class LocationsRepositoryImpl @Inject constructor(
     override fun setNetworkStatus(status: Boolean) {
         isNetworkAvailable = status
         isCacheCleared = !status
-    }
-
-    private fun clearCache() {
-        coroutineScope.launch {
-            locationsDao.deleteAll()
-            isCacheCleared = true
-        }
     }
 
     override suspend fun getLocationById(locationID: Int): Location? =
@@ -72,9 +63,15 @@ class LocationsRepositoryImpl @Inject constructor(
             true -> {
                 Pager(pagingConfig) {
                     LocationsPagingSource(name, type, dimension, locationsService, locationsDao)
-                }
-                    .flow.flowOn(ioDispatcher)
+                }.flow.flowOn(ioDispatcher)
             }
+        }
+    }
+
+    private fun clearCache() {
+        coroutineScope.launch {
+            locationsDao.deleteAll()
+            isCacheCleared = true
         }
     }
 }

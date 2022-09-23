@@ -1,8 +1,8 @@
 package com.ruslangrigoriev.rickandmorty.domain.repository
 
 import androidx.paging.PagingData
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locations.Location
+import com.ruslangrigoriev.rickandmorty.domain.entity.characters.Character
+import com.ruslangrigoriev.rickandmorty.domain.entity.locations.Location
 import kotlinx.coroutines.flow.Flow
 
 interface LocationsRepository {

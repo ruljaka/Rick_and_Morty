@@ -1,12 +1,12 @@
 package com.ruslangrigoriev.rickandmorty.presentation.mappers
 
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.locations.Location
+import com.ruslangrigoriev.rickandmorty.domain.entity.characters.Character
+import com.ruslangrigoriev.rickandmorty.domain.entity.locations.Location
 import com.ruslangrigoriev.rickandmorty.presentation.model.LocationModel
 import javax.inject.Inject
 
 class LocationMapper @Inject constructor() :
-    Mapper<Location, List<Character>, LocationModel> {
+    Mapper<@JvmSuppressWildcards Location, List<@JvmSuppressWildcards Character>, @JvmSuppressWildcards LocationModel> {
     override fun map(input: Location, list: List<Character>): LocationModel {
         return LocationModel(
             id = input.id,

@@ -1,6 +1,6 @@
 package com.ruslangrigoriev.rickandmorty.presentation.model
 
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
+import com.ruslangrigoriev.rickandmorty.domain.entity.characters.Character
 
 data class LocationModel(
     val id: Int,

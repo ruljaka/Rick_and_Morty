@@ -3,14 +3,12 @@ package com.ruslangrigoriev.rickandmorty.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodes.Episode
-import com.ruslangrigoriev.rickandmorty.data.getRemoteOrCachedData
-import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
-import com.ruslangrigoriev.rickandmorty.data.local.EpisodesDao
-import com.ruslangrigoriev.rickandmorty.data.paging.CharactersPagingSource
-import com.ruslangrigoriev.rickandmorty.data.remote.CharactersService
-import com.ruslangrigoriev.rickandmorty.data.toRequestString
+import com.ruslangrigoriev.rickandmorty.data.source.local.CharactersDao
+import com.ruslangrigoriev.rickandmorty.data.source.local.EpisodesDao
+import com.ruslangrigoriev.rickandmorty.data.source.remote.CharactersService
+import com.ruslangrigoriev.rickandmorty.data.source.remote.paging.CharactersPagingSource
+import com.ruslangrigoriev.rickandmorty.domain.entity.characters.Character
+import com.ruslangrigoriev.rickandmorty.domain.entity.episodes.Episode
 import com.ruslangrigoriev.rickandmorty.domain.repository.CharactersRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -34,13 +32,6 @@ class CharactersRepositoryImpl @Inject constructor(
     override fun setNetworkStatus(status: Boolean) {
         isNetworkAvailable = status
         isCacheCleared = !status
-    }
-
-    private fun clearCache() {
-        coroutineScope.launch {
-            charactersDao.deleteAll()
-            isCacheCleared = true
-        }
     }
 
     override suspend fun getCharacterById(characterID: Int): Character? =
@@ -68,8 +59,7 @@ class CharactersRepositoryImpl @Inject constructor(
             false -> {
                 Pager(pagingConfig) {
                     charactersDao.getCharacters(name, status, species, type, gender)
-                }
-                    .flow.flowOn(ioDispatcher)
+                }.flow.flowOn(ioDispatcher)
             }
             true -> {
                 Pager(pagingConfig) {
@@ -78,6 +68,13 @@ class CharactersRepositoryImpl @Inject constructor(
                     )
                 }.flow.flowOn(ioDispatcher)
             }
+        }
+    }
+
+    private fun clearCache() {
+        coroutineScope.launch {
+            charactersDao.deleteAll()
+            isCacheCleared = true
         }
     }
 

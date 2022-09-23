@@ -6,7 +6,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 
-@Module(includes = [NetworkModule::class, RoomModule::class, AppBindModule::class,ViewModelModule::class])
+@Module(
+    includes = [
+        NetworkModule::class,
+        RoomModule::class,
+        RepositoryModule::class,
+        ViewModelModule::class,
+        MapperModule::class
+    ]
+)
 class AppModule {
 
     @AppScope

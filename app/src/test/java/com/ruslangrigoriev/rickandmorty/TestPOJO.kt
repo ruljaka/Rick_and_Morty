@@ -1,9 +1,9 @@
 package com.ruslangrigoriev.rickandmorty
 
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Location
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Origin
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodes.Episode
+import com.ruslangrigoriev.rickandmorty.domain.entity.characters.Character
+import com.ruslangrigoriev.rickandmorty.domain.entity.characters.Location
+import com.ruslangrigoriev.rickandmorty.domain.entity.characters.Origin
+import com.ruslangrigoriev.rickandmorty.domain.entity.episodes.Episode
 import com.ruslangrigoriev.rickandmorty.presentation.model.CharacterModel
 
 class TestPOJO {

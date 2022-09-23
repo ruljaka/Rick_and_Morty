@@ -4,7 +4,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.ruslangrigoriev.rickandmorty.R
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.characters.Character
+import com.ruslangrigoriev.rickandmorty.domain.entity.characters.Character
 import com.ruslangrigoriev.rickandmorty.databinding.ItemCharacterBinding
 
 class CharacterViewHolder(

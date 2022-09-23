@@ -5,11 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ruslangrigoriev.rickandmorty.presentation.mappers.CharacterMapper
-import com.ruslangrigoriev.rickandmorty.presentation.model.CharacterModel
+import com.ruslangrigoriev.rickandmorty.domain.entity.characters.Character
+import com.ruslangrigoriev.rickandmorty.domain.entity.episodes.Episode
 import com.ruslangrigoriev.rickandmorty.domain.useCases.characters.GetCharacterByIdUseCase
 import com.ruslangrigoriev.rickandmorty.domain.useCases.characters.GetCharacterEpisodesUseCase
 import com.ruslangrigoriev.rickandmorty.presentation.common.toListIds
+import com.ruslangrigoriev.rickandmorty.presentation.mappers.Mapper
+import com.ruslangrigoriev.rickandmorty.presentation.model.CharacterModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,7 +19,7 @@ import javax.inject.Inject
 class CharacterDetailsViewModel @Inject constructor(
     private val getCharacterByIdUseCase: GetCharacterByIdUseCase,
     private val getCharacterEpisodesUseCase: GetCharacterEpisodesUseCase,
-    private val characterMapper: CharacterMapper
+    private val characterMapper: Mapper<@JvmSuppressWildcards Character, List<@JvmSuppressWildcards Episode>, @JvmSuppressWildcards CharacterModel>
 ) : ViewModel() {
 
     private val _loading: MutableLiveData<Boolean> = MutableLiveData()

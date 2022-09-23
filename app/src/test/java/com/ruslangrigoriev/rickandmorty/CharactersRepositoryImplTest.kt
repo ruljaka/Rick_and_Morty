@@ -1,8 +1,8 @@
 package com.ruslangrigoriev.rickandmorty
 
-import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
-import com.ruslangrigoriev.rickandmorty.data.local.EpisodesDao
-import com.ruslangrigoriev.rickandmorty.data.remote.CharactersService
+import com.ruslangrigoriev.rickandmorty.data.source.local.CharactersDao
+import com.ruslangrigoriev.rickandmorty.data.source.local.EpisodesDao
+import com.ruslangrigoriev.rickandmorty.data.source.remote.CharactersService
 import com.ruslangrigoriev.rickandmorty.data.repository.CharactersRepositoryImpl
 import io.mockk.coEvery
 import io.mockk.mockk

@@ -2,16 +2,15 @@ package com.ruslangrigoriev.rickandmorty.di
 
 import android.content.Context
 import androidx.room.Room
-import com.ruslangrigoriev.rickandmorty.data.local.AppDataBase
-import com.ruslangrigoriev.rickandmorty.data.local.CharactersDao
-import com.ruslangrigoriev.rickandmorty.data.local.EpisodesDao
-import com.ruslangrigoriev.rickandmorty.data.local.LocationsDao
-import com.ruslangrigoriev.rickandmorty.data.local.coverters.ListConverter
-import com.ruslangrigoriev.rickandmorty.data.local.coverters.LocationConverter
-import com.ruslangrigoriev.rickandmorty.data.local.coverters.OriginConverter
+import com.ruslangrigoriev.rickandmorty.data.source.local.AppDataBase
+import com.ruslangrigoriev.rickandmorty.data.source.local.CharactersDao
+import com.ruslangrigoriev.rickandmorty.data.source.local.EpisodesDao
+import com.ruslangrigoriev.rickandmorty.data.source.local.LocationsDao
+import com.ruslangrigoriev.rickandmorty.data.source.local.coverters.ListConverter
+import com.ruslangrigoriev.rickandmorty.data.source.local.coverters.LocationConverter
+import com.ruslangrigoriev.rickandmorty.data.source.local.coverters.OriginConverter
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 @Module
 class RoomModule {

@@ -2,7 +2,7 @@ package com.ruslangrigoriev.rickandmorty.presentation.ui.episodes.adapters
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.ruslangrigoriev.rickandmorty.data.dto_and_entity.episodes.Episode
+import com.ruslangrigoriev.rickandmorty.domain.entity.episodes.Episode
 import com.ruslangrigoriev.rickandmorty.databinding.ItemEpisodeBinding
 
 class EpisodeViewHolder(
